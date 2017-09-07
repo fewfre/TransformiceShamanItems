@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Items qui restent à charger: {0}" },
+		"loading_finished":		{ "text":"Chargement complet. Initialisation..." },
+		"btn_color_defaults":	{ "text":"Défauts" },
+		"share_header":			{ "text":"Partage ta Création!" },
+		"share_link_copied":	{ "text":"Lien copié au presse-papiers! Coller pour utiliser.", "scale":0.9 },
+		"share_copy":			{ "text":"Copier" },
+		"version":				{ "text":"Version: {0}" },
+		"translated_by":		{ "text":"Traduit par: Virus_code" },
+		
+		"tab_box_small":		{ "text":"Boîte (p)" },
+		"tab_box_large":		{ "text":"Boîte (G)" },
+		"tab_plank_small":		{ "text":"Planche\n(p)", "scale":0.9 },
+		"tab_plank_large":		{ "text":"Planche\n(G)", "scale":0.9 },
+		"tab_ball":				{ "text":"Balle" },
+		"tab_trampoline":		{ "text":"Tramp-\noline", "scale":0.85 },
+		"tab_anvil":			{ "text":"Enclume" },
+		"tab_cannonball":		{ "text":"Boulet" },
+		"tab_balloon":			{ "text":"Ballon" }
+	}
+}

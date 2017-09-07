@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Itens que faltam carregar: {0}" },
+		"loading_finished":		{ "text":"Carregamento completo. Inicializando..." },
+		"btn_color_defaults":	{ "text":"Padrões" },
+		"share_header":			{ "text":"Compartilhe sua criação!" },
+		"share_link_copied":	{ "text":"Link copiado. Cole para usá-lo." },
+		"share_copy":			{ "text":"Copiar" },
+		"version":				{ "text":"Versão: {0}" },
+		"translated_by":		{ "text":"Traduzido por: Buwho" },
+		
+		"tab_box_small":		{ "text":"Caixa (p)", "scale":0.95 },
+		"tab_box_large":		{ "text":"Caixa (G)", "scale":0.95 },
+		"tab_plank_small":		{ "text":"Tábua (p)", "scale":0.95 },
+		"tab_plank_large":		{ "text":"Tábua (G)", "scale":0.95 },
+		"tab_ball":				{ "text":"Bola" },
+		"tab_trampoline":		{ "text":"Trampolim", "scale":0.75 },
+		"tab_anvil":			{ "text":"Bigorna" },
+		"tab_cannonball":		{ "text":"Canhão" },
+		"tab_balloon":			{ "text":"Balão" }
+	}
+}

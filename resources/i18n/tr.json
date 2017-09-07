@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"Kimlik: {0}" },
+		
+		"loading":				{ "text":"Yüklenmesi için geriye kalan ögeler: {0}" },
+		"loading_finished":		{ "text":"Yükleme tamamlandı. Başlatılıyor..." },
+		"btn_color_defaults":	{ "text":"Varsayılanlar" },
+		"share_header":			{ "text":"Eserini paylaş!" },
+		"share_link_copied":	{ "text":"Bağlantı panoya kopyalandı! Kullanmak için yapıştırın.", "scale":0.9 },
+		"share_copy":			{ "text":"kopyala" },
+		"version":				{ "text":"Sürüm: {0}" },
+		"translated_by":		{ "text":"Çeviri: Honorabilis" },
+		
+		"tab_box_small":		{ "text":"Kutu (k)" },
+		"tab_box_large":		{ "text":"Kutu (B)" },
+		"tab_plank_small":		{ "text":"Kalas (k)" },
+		"tab_plank_large":		{ "text":"Kalas (B)" },
+		"tab_ball":				{ "text":"Top" },
+		"tab_trampoline":		{ "text":"Trambolin", "scale":0.85 },
+		"tab_anvil":			{ "text":"Örs" },
+		"tab_cannonball":		{ "text":"Gülle" },
+		"tab_balloon":			{ "text":"Balon" }
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"هوية: {0}" },
+		
+		"loading":				{ "text":"العناصر المتبقية للتحميل: {0}" },
+		"loading_finished":		{ "text":"اكتمل التحميل. جار التهيئة..." },
+		"btn_color_defaults":	{ "text":"العادية" },
+		"share_header":			{ "text":"شارك معنا ابداعك !" },
+		"share_link_copied":	{ "text":"تم نسخ الرابط إلى الحافظة! الصق للاستخدام." },
+		"share_copy":			{ "text":"نسخ" },
+		"version":				{ "text":"الإصدار: {0}" },
+		"translated_by":		{ "text":"الترجمة من طرف: Hmiida" },
+		
+		"tab_box_small":		{ "text":"صندوق (ص)", "scale":0.95 },
+		"tab_box_large":		{ "text":"صندوق (ك)", "scale":0.95 },
+		"tab_plank_small":		{ "text":"اللوح (ص)" },
+		"tab_plank_large":		{ "text":"اللوح (ك)" },
+		"tab_ball":				{ "text":"الكرة" },
+		"tab_trampoline":		{ "text":"الترامبولين" },
+		"tab_anvil":			{ "text":"السندان" },
+		"tab_cannonball":		{ "text":"المدفع" },
+		"tab_balloon":			{ "text":"البالون" }
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Saker kvar att ladda {0}" },
+		"loading_finished":		{ "text":"Laddning avslutad" },
+		"btn_color_defaults":	{ "text":"Uteblivna färger" },
+		"share_header":			{ "text":"Visa ditt mästervärk" },
+		"share_link_copied":	{ "text":"Länk kopierad! den finns nu i din clipboard" },
+		"share_copy":			{ "text":"Kopiera" },
+		"version":				{ "text":"Version {0}" },
+		"translated_by":		{ "text":"Översätt av: Elinormus" },
+		
+		"tab_box_small":		{ "text":"Box (l)" },
+		"tab_box_large":		{ "text":"Box (S)" },
+		"tab_plank_small":		{ "text":"Planka (l)", "scale":0.85 },
+		"tab_plank_large":		{ "text":"Planka (S)", "scale":0.85 },
+		"tab_ball":				{ "text":"Boll" },
+		"tab_trampoline":		{ "text":"Tramp-\noliner", "scale":0.9 },
+		"tab_anvil":			{ "text":"Städ" },
+		"tab_cannonball":		{ "text":"Kanonkula", "scale":0.8 },
+		"tab_balloon":			{ "text":"Ballong" }
+	}
+}

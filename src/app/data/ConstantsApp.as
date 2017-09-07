@@ -12,8 +12,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: int = 1.0;
-		public static var LANG						: String= "en";
+		public static const VERSION					: String = "1.1";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceShamanItems";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;

@@ -14,10 +14,13 @@
 		"tab_plank_small":		{ "text":"Plank (s)", "scale":0.8 },
 		"tab_plank_large":		{ "text":"Plank (L)", "scale":0.8 },
 		"tab_ball":				{ "text":"Ball" },
-		"tab_trampoline":		{ "text":"Trampoline", "scale":0.65 },
+		"tab_trampoline":		{ "text":"Tramp-\noline", "scale":0.8 },
 		"tab_anvil":			{ "text":"Anvil" },
-		"tab_cannonball":		{ "text":"Cannonball", "scale":0.65 },
+		"tab_cannonball":		{ "text":"Cannon-\nball", "scale":0.8 },
 		"tab_balloon":			{ "text":"Balloon" },
+		
+		"version":				{ "text":"Version: {0}" },
+		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },
 		
 		"btn_color_defaults":	{ "text":"Defaults" },
 		

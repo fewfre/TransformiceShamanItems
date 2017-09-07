@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Betöltendő tételek száma: {0}" },
+		"loading_finished":		{ "text":"Betöltés sikeres. Indítás..." },
+		"btn_color_defaults":	{ "text":"Alapértelmezett" },
+		"share_header":			{ "text":"Oszd meg a kinézeted!" },
+		"share_link_copied":	{ "text":"Link a vágólapra másolva! Illeszd be a használathoz.", "scale":0.9 },
+		"share_copy":			{ "text":"másolás" },
+		"version":				{ "text":"Verzió: {0}" },
+		"translated_by":		{ "text":"Fordította: Fire_tiger" },
+		
+		"tab_box_small":		{ "text":"Doboz (k)", "scale":0.85 },
+		"tab_box_large":		{ "text":"Doboz (N)", "scale":0.85 },
+		"tab_plank_small":		{ "text":"Deszka (k)", "scale":0.75 },
+		"tab_plank_large":		{ "text":"Deszka (N)", "scale":0.75 },
+		"tab_ball":				{ "text":"Labda" },
+		"tab_trampoline":		{ "text":"Trambulin", "scale":0.95 },
+		"tab_anvil":			{ "text":"Üllő" },
+		"tab_cannonball":		{ "text":"Ágyúgolyó", "scale":0.8 },
+		"tab_balloon":			{ "text":"Lufi" }
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"defaultFont": "Verdana",
+	"defaultScale": 1,
+	"strings": {
+		"loading_progress":		{ "text":"{0}" },
+		"infobar_id":			{ "text":"ID: {0}" },
+		
+		"loading":				{ "text":"Rzeczy pozostałe do załadowania {0}" },
+		"loading_finished":		{ "text":"Ładowanie zakończone. Inicjowanie..." },
+		"btn_color_defaults":	{ "text":"Domyślny" },
+		"share_header":			{ "text":"Podziel się swoją kreacją!" },
+		"share_link_copied":	{ "text":"Link skopiowany! Wklej by go użyć." },
+		"share_copy":			{ "text":"Kopiuj" },
+		"version":				{ "text":"Wersja: {0}" },
+		"translated_by":		{ "text":"Przetłumaczone przez: Akanaria" },
+		
+		"tab_box_small":		{ "text":"Pudło\n(małe)", "scale":0.9 },
+		"tab_box_large":		{ "text":"Pudło\n(duże)", "scale":0.9 },
+		"tab_plank_small":		{ "text":"Deska\n(mała)", "scale":0.9 },
+		"tab_plank_large":		{ "text":"Deska\n(duża)", "scale":0.9 },
+		"tab_ball":				{ "text":"Piłka" },
+		"tab_trampoline":		{ "text":"Trampolina", "scale":0.75 },
+		"tab_anvil":			{ "text":"Kowadło" },
+		"tab_cannonball":		{ "text":"Kule\narmatnie", "scale":0.9 },
+		"tab_balloon":			{ "text":"Balon" }
+	}
+}
