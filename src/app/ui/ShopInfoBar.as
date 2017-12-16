@@ -160,7 +160,7 @@ package app.ui
 		{
 			if(!data) { return; }
 			var tName = "shop-"+data.type+data.id;
-			FewfDisplayUtils.saveAsPNG(Costumes.instance.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
+			FewfDisplayUtils.saveAsPNG(GameAssets.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
 		}
 	}
 }

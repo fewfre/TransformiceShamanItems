@@ -95,7 +95,7 @@ package app.world.elements
 				if(pParams[pParam] == '') {
 					tData = null;
 				} else {
-					tData = Costumes.instance.getItemFromTypeID(pType, pParams[pParam]);
+					tData = GameAssets.getItemFromTypeID(pType, pParams[pParam]);
 				}
 			}
 			_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );
@@ -127,7 +127,7 @@ package app.world.elements
 		}
 
 		public function colorItem(pType:String, arg2:int, pColor:String) : Array {
-			_itemDataMap[pType].colors[arg2] = Costumes.instance.convertColorToNumber(pColor);
+			_itemDataMap[pType].colors[arg2] = GameAssets.convertColorToNumber(pColor);
 			updatePose();
 		}
 

@@ -52,16 +52,16 @@ package app.world.elements
 			for(var i:int = 0; i < outfit.numChildren; i++) {
 				tChild = outfit.getChildAt(i);
 				if(_itemData.colors != null) {
-					Costumes.instance.colorItem({ obj:tChild, colors:_itemData.colors });
+					GameAssets.colorItem({ obj:tChild, colors:_itemData.colors });
 				}
-				else { Costumes.instance.colorDefault(tChild); }
+				else { GameAssets.colorDefault(tChild); }
 			}
 			tChild = null;*/
 			
 			if(_itemData.colors != null) {
-				Costumes.instance.colorItem({ obj:outfit, colors:_itemData.colors });
+				GameAssets.colorItem({ obj:outfit, colors:_itemData.colors });
 			}
-			else { Costumes.instance.colorDefault(outfit); }
+			else { GameAssets.colorDefault(outfit); }
 			
 			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
@@ -77,7 +77,7 @@ package app.world.elements
 				if(pParams[pParam] == '') {
 					tData = null;
 				} else {
-					tData = Costumes.instance.getItemFromTypeID(pType, pParams[pParam]);
+					tData = GameAssets.getItemFromTypeID(pType, pParams[pParam]);
 				}
 			}
 			_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );*/
@@ -100,7 +100,7 @@ package app.world.elements
 		}
 
 		public function colorItem(pType:String, arg2:int, pColor:String) : Array {
-			_itemData.colors[arg2] = Costumes.instance.convertColorToNumber(pColor);
+			_itemData.colors[arg2] = GameAssets.convertColorToNumber(pColor);
 			updateItem();
 		}
 

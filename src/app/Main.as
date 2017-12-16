@@ -66,12 +66,15 @@ package app
 		
 		// Start main load
 		private function _startLoad() : void {
-			Fewf.assets.load([
+			var tPacks = [
 				["resources/interface.swf", { useCurrentDomain:true }],
-				"resources/flags.swf",
-				// Game assets
-				"resources/resources.swf",
-			]);
+				"resources/flags.swf"
+			];
+			
+			var tPack = _config.packs.items;
+			for(var i:int = 0; i < tPack.length; i++) { tPacks.push("resources/"+tPack[i]); }
+			
+			Fewf.assets.load(tPacks);
 			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
 		}
 		

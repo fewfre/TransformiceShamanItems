@@ -50,13 +50,13 @@ package app.ui.panes
 			yy += 15; xx = 15;
 			var grid:Grid = this.addItem( new Grid({ x:xx, y:yy, width:385, columns:5, margin:5 }) );
 
-			this.button_hand = new PushButton({ width:grid.radius, height:grid.radius, obj:new Costumes.instance.hand.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_hand = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.hand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_hand);
 			
-			this.button_back = new PushButton({ width:grid.radius, height:grid.radius, obj:new Costumes.instance.fromage.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_back = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.fromage.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_back);
 			
-			this.button_backHand = new PushButton({ width:grid.radius, height:grid.radius, obj:new Costumes.instance.backHand.itemClass(), obj_scale:1.5, id:i++ });
+			this.button_backHand = new PushButton({ width:grid.radius, height:grid.radius, obj:new GameAssets.backHand.itemClass(), obj_scale:1.5, id:i++ });
 			grid.add(this.button_backHand);
 			
 			yy += grid.Height + 10;
@@ -100,16 +100,16 @@ package app.ui.panes
 		
 		private function _onShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons, pEvent.target);
-			Costumes.instance.shamanMode = pEvent.target.id;
+			GameAssets.shamanMode = pEvent.target.id;
 			if(pEvent.target.pushed) {
-				Costumes.instance.shamanMode = SHAMAN_MODE.OFF;
+				GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			}
 			character.updatePose();
 		}
 		
 		private function _onNoShamanButtonClicked(pEvent:Event) {
 			_untoggle(shamanButtons);
-			Costumes.instance.shamanMode = SHAMAN_MODE.OFF;
+			GameAssets.shamanMode = SHAMAN_MODE.OFF;
 			character.updatePose();
 		}
 

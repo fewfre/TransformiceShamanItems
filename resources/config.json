@@ -17,5 +17,11 @@
 			{ "code":"hr", "name":"Hrvatski", "flags_swf_linkage":"$HR" },
 			{ "code":"lv", "name":"latviešu valoda", "flags_swf_linkage":"$LV" }
 		]
+	},
+	
+	"packs": {
+		"items": [
+			"resources.swf"
+		]
 	}
 }
