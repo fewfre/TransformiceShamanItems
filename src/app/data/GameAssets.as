@@ -81,7 +81,7 @@ package app.data
 		* Color
 		*****************************/
 		public static function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
-			if (copyFromMC == null || copyToMC == null) { return; }
+			if (copyFromMC == null || copyToMC == null) { return null; }
 			var tChild1:*=null;
 			var tChild2:*=null;
 			var i:int = 0;
@@ -97,7 +97,7 @@ package app.data
 		}
 
 		public static function colorDefault(pMC:MovieClip) : MovieClip {
-			if (pMC == null) { return; }
+			if (pMC == null) { return null; }
 
 			var tChild:*=null;
 			var tHex:int=0;
@@ -117,7 +117,7 @@ package app.data
 
 		// pData = { obj:DisplayObject, color:String OR int, ?swatch:int, ?name:String, ?colors:Array<int> }
 		public static function colorItem(pData:Object) : DisplayObject {
-			if (pData.obj == null) { return; }
+			if (pData.obj == null) { return null; }
 
 			var tHex:int = convertColorToNumber(pData.color);
 
@@ -182,7 +182,7 @@ package app.data
 		}
 		
 		public static function getColoredItemImage(pData:ItemData) : MovieClip {
-			return colorItem({ obj:getItemImage(pData), colors:pData.colors });
+			return colorItem({ obj:getItemImage(pData), colors:pData.colors }) as MovieClip;
 		}
 
 		/****************************

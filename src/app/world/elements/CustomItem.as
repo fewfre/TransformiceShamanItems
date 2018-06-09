@@ -45,7 +45,7 @@ package app.world.elements
 		public function updateItem() {
 			var tScale = 1.75;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
-			outfit = addChild(new (_itemData.itemClass)());
+			outfit = addChild(new (_itemData.itemClass)()) as MovieClip;
 			outfit.scaleX = outfit.scaleY = tScale;
 			
 			/*var tChild:DisplayObject = null;
@@ -90,6 +90,7 @@ package app.world.elements
 			tParms.s = (tData = getItemData(ITEM.SKIN)) ? tData.id : '';
 
 			return tParms;*/
+			return null;
 		}
 
 		/****************************
@@ -99,7 +100,7 @@ package app.world.elements
 			return _itemData.colors;
 		}
 
-		public function colorItem(pType:String, arg2:int, pColor:String) : Array {
+		public function colorItem(pType:String, arg2:int, pColor:String) : void {
 			_itemData.colors[arg2] = GameAssets.convertColorToNumber(pColor);
 			updateItem();
 		}

@@ -1,9 +1,10 @@
-package app.ui
+package app.ui.screens
 {
 	import com.fewfre.display.*;
 	import com.fewfre.utils.*;
 	import com.fewfre.events.FewfEvent;
 	import app.data.*;
+	import app.ui.*;
 	import flash.display.*;
 	import flash.events.*
 	import flash.text.*;
@@ -27,13 +28,13 @@ package app.ui
 			Fewf.assets.addEventListener(ProgressEvent.PROGRESS, _onLoadProgress);
 			Fewf.assets.addEventListener(AssetManager.PACK_LOADED, _onPackLoaded);
 			
-			_loadingSpinner = addChild( new $Loader() );
+			_loadingSpinner = addChild( new $Loader() ) as MovieClip;
 			_loadingSpinner.y -= 45;
 			_loadingSpinner.scaleX = 2;
 			_loadingSpinner.scaleY = 2;
 			
-			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 }));
-			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 }));
+			_leftToLoadText = addChild(new TextBase({ text:"loading", values:"", size:18, x:0, y:10 })) as TextBase;
+			_loadProgressText = addChild(new TextBase({ text:"loading_progress", values:"", size:18, x:0, y:35 })) as TextBase;
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
@@ -47,7 +48,7 @@ package app.ui
 		
 		public function update(pEvent:Event):void
 		{
-			dt = 0.1;
+			var dt = 0.1;
 			if(_loadingSpinner != null) {
 				_loadingSpinner.rotation += 360 * dt;
 			}

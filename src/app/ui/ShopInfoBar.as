@@ -24,7 +24,7 @@ package app.ui
 		
 		public var Text				: TextBase;
 		public var colorWheel		: ScaleButton;
-		/*public var downloadButton	: SpriteButton;*/
+		public var downloadButton	: SpriteButton;
 		/*public var refreshButton	: SpriteButton;
 		public var refreshLockButton: PushButton;*/
 		public var eyeDropButton	: SpriteButton;
@@ -41,17 +41,17 @@ package app.ui
 			this.Width = ConstantsApp.PANE_WIDTH;
 			data = null;
 			
-			imageCont = addChild(new RoundedRectangle({ x:0, y:0, width:50, height:50 }));
+			imageCont = addChild(new RoundedRectangle({ x:0, y:0, width:50, height:50 })) as RoundedRectangle;
 			imageCont.draw(0x6A7495, 15, 0x5d7d90, 0x11171c, 0x3c5064);
 			
 			ChangeImage( new $NoItem() );
 			
-			this.colorWheel = addChild(new ScaleButton({ x:80, y:24, obj:pData.showBackButton ? new $BackArrow() : new $ColorWheel() }));
+			this.colorWheel = addChild(new ScaleButton({ x:80, y:24, obj:pData.showBackButton ? new $BackArrow() : new $ColorWheel() })) as ScaleButton;
 			this.colorWheel.x = 80;
 			this.colorWheel.y = 24;
 			// Add event listener in Main
 			
-			this.Text = addChild(new TextBase({ text:"infobar_id", x:115, y:13, size:18, origin:0, alpha:0 }));
+			this.Text = addChild(new TextBase({ text:"infobar_id", x:115, y:13, size:18, origin:0, alpha:0 })) as TextBase;
 			
 			showColorWheel(pData.showBackButton);
 			
@@ -71,14 +71,14 @@ package app.ui
 				refreshButton = addChild(new SpriteButton({ x:tX - 24, y:0, width:24, height:24, obj_scale:0.5, obj:new $Refresh() }));
 				refreshLockButton = addChild(new PushButton({ x:tX - 24, y:26, width:24, height:24, obj_scale:0.8, obj:new $Lock() }));
 				tX -= refreshButton.Width + 2;
-			}
+			}*/
 			
-			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:24, height:24, obj_scale:0.45, obj:new $SimpleDownload() }));
+			downloadButton = addChild(new SpriteButton({ x:tX - 25, y:0, width:24, height:24, obj_scale:0.45, obj:new $SimpleDownload() })) as SpriteButton;
 			downloadButton.addEventListener(ButtonBase.CLICK, saveSprite);
-			downloadButton.disable().alpha = 0;*/
+			downloadButton.disable().alpha = 0;
 			
 			if(pData.showEyeDropButton) {
-				eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:0/*26*/, width:25, height:25, obj_scale:0.45, obj:new $EyeDropper() }));
+				eyeDropButton = addChild(new SpriteButton({ x:tX - 25, y:26, width:25, height:25, obj_scale:0.45, obj:new $EyeDropper() })) as SpriteButton;
 				eyeDropButton.disable().alpha = 0;
 			}
 			
@@ -135,14 +135,14 @@ package app.ui
 		public function addInfo(pData:ItemData, pMC:MovieClip) : void {
 			if(pData == null) { return; }
 			data = pData;
-			if(data.type == ITEM.POSE || data.type == ITEM.SKIN) {
-				pMC.scaleX = pMC.scaleY = 1;
-			}
+			// if(data.type == ITEM.POSE || data.type == ITEM.SKIN) {
+			// 	pMC.scaleX = pMC.scaleY = 1;
+			// }
 			ChangeImage(pMC);
 			_updateID();
 			
 			Text.alpha = 1;
-			/*downloadButton.enable().alpha = 1;*/
+			downloadButton.enable().alpha = 1;
 			if(eyeDropButton) eyeDropButton.enable().alpha = 1;
 		}
 		
@@ -152,7 +152,7 @@ package app.ui
 			
 			Text.alpha = 0;
 			showColorWheel(false);
-			/*downloadButton.disable().alpha = 0;*/
+			downloadButton.disable().alpha = 0;
 			if(eyeDropButton) eyeDropButton.disable().alpha = 0;
 		}
 		

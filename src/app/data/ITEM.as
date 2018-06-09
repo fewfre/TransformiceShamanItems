@@ -2,10 +2,10 @@ package app.data
 {
 	public class ITEM
 	{
-		public static const BOX_SMALL			: String = "box_s";
-		public static const BOX_LARGE			: String = "box_l";
-		public static const PLANK_SMALL			: String = "plank_s";
-		public static const PLANK_LARGE			: String = "plank_l";
+		public static const BOX_SMALL			: String = "smallbox";
+		public static const BOX_LARGE			: String = "largebox";
+		public static const PLANK_SMALL			: String = "smallplank";
+		public static const PLANK_LARGE			: String = "largeplank";
 		public static const BALL				: String = "ball";
 		public static const TRAMPOLINE			: String = "trampoline";
 		public static const ANVIL				: String = "anvil";

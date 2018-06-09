@@ -1,0 +1,19 @@
+{
+    "config":"flex",
+    "type":"app",
+    "compilerOptions": {
+        "output": "app2.swf",
+		"warnings": false,
+		"strict": true,
+		"library-path": [
+			"fla/interface.swc",
+			"fla/assets.swc",
+			"C:/Program Files (x86)/Adobe/Adobe Flash CS6/Common/Configuration/ActionScript 3.0/libs/flash.swc"
+		]
+    },
+    "files": [
+        "src/app/Main.as"
+    ],
+    "__comment":"Needed since main is inside two sub folders? https://stackoverflow.com/a/3885656/1411473",
+    "additionalOptions": "-compiler.source-path=./src"
+}

@@ -1,3 +1,9 @@
+== V1.3 - 9 June 2018 ==
+- Code cleanup / validation for "strict" compilation
+- Small changes to code strucutre (including old file removal)
+- Re-added infobar download button (for consitent name/scale for wiki)
+
+
 == V1.2 - 16 December 2017 ==
 - Increased color swatches to 10 so there are enough for all items.
 - Item resource swfs now loaded based on config.json

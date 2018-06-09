@@ -9,7 +9,7 @@ package app.world
 
 	import app.ui.*;
 	import app.ui.panes.*;
-	import app.ui.lang.*;
+	import app.ui.screens.*;
 	import app.ui.buttons.*;
 	import app.data.*;
 	import app.world.data.*;
@@ -24,6 +24,9 @@ package app.world
 	import flash.geom.*;
 	import flash.net.*;
 	import flash.utils.*;
+	import flash.display.MovieClip;
+	import app.ui.panes.ColorPickerTabPane;
+	import app.ui.panes.ColorFinderPane;
 	
 	public class World extends MovieClip
 	{
@@ -47,7 +50,7 @@ package app.world
 		public static const COLOR_PANE_ID = "colorPane";
 		public static const COLOR_FINDER_PANE_ID = "colorFinderPane";
 		public static const TAB_OTHER:String = "other";
-		public static const CONFIG_COLOR_PANE_ID = "configColorPane";
+		// public static const CONFIG_COLOR_PANE_ID = "configColorPane";
 		
 		// Constructor
 		public function World(pStage:Stage) {
@@ -75,14 +78,14 @@ package app.world
 			this.character = addChild(new CustomItem({ x:190, y:275,
 				item:GameAssets.boxes_small[0],
 				params:parms
-			}));
+			})) as CustomItem;
 
 			/****************************
 			* Setup UI
 			*****************************/
-			var tShop:RoundedRectangle = addChild(new RoundedRectangle({ x:450, y:10, width:ConstantsApp.SHOP_WIDTH, height:ConstantsApp.APP_HEIGHT }));
+			var tShop:RoundedRectangle = addChild(new RoundedRectangle({ x:450, y:10, width:ConstantsApp.SHOP_WIDTH, height:ConstantsApp.APP_HEIGHT })) as RoundedRectangle;
 			tShop.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
-			_paneManager = tShop.addChild(new PaneManager());
+			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
 			this.shopTabs = addChild(new ShopTabContainer({ x:375, y:10, width:70, height:ConstantsApp.APP_HEIGHT,
 				tabs:[
@@ -96,15 +99,15 @@ package app.world
 					{ text:"tab_cannonball", event:ITEM.CANNONBALL },
 					{ text:"tab_balloon", event:ITEM.BALLOON },
 				]
-			}));
+			})) as ShopTabContainer;
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
 
 			// Toolbox
 			_toolbox = addChild(new Toolbox({
 				x:188, y:28, character:character,
-				onSave:_onSaveClicked, /*onAnimate:_onPlayerAnimationToggle,*/ onRandomize:_onRandomizeDesignClicked,
+				onSave:_onSaveClicked, /*onAnimate:_onPlayerAnimationToggle,*/ /*onRandomize:_onRandomizeDesignClicked,*/
 				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
-			}));
+			})) as Toolbox;
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
@@ -253,7 +256,7 @@ package app.world
 				this.character.setItemData(tData);
 
 				tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
-				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image) > 0);
+				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0);
 			} else {
 				_removeItem(tType);
 			}
@@ -286,12 +289,12 @@ package app.world
 			_paneManager.openPane(pEvent.data);
 		}
 
-		private function _onRandomizeDesignClicked(pEvent:Event) : void {
-			for(var i:int = 0; i < ITEM.LAYERING.length; i++) {
-				_randomItemOfType(ITEM.LAYERING[i]);
-			}
-			_randomItemOfType(ITEM.POSE);
-		}
+		// private function _onRandomizeDesignClicked(pEvent:Event) : void {
+		// 	for(var i:int = 0; i < ITEM.LAYERING.length; i++) {
+		// 		_randomItemOfType(ITEM.LAYERING[i]);
+		// 	}
+		// 	_randomItemOfType(ITEM.POSE);
+		// }
 
 		private function _randomItemOfType(pType:String) : void {
 			/*if(getInfoBarByType(pType).isRefreshLocked) { return; }*/
@@ -352,7 +355,7 @@ package app.world
 			private function _onColorPickChanged(pEvent:flash.events.DataEvent):void
 			{
 				var tVal:uint = uint(pEvent.data);
-				this.character.getItemData(this.currentlyColoringType).colors[_paneManager.getPane(COLOR_PANE_ID).selectedSwatch] = tVal;
+				this.character.getItemData(this.currentlyColoringType).colors[(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).selectedSwatch] = tVal;
 				_refreshSelectedItemColor();
 			}
 
@@ -360,7 +363,7 @@ package app.world
 			{
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
 				_refreshSelectedItemColor();
-				_paneManager.getPane(COLOR_PANE_ID).setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 			
 			private function _refreshSelectedItemColor() : void {
@@ -388,7 +391,7 @@ package app.world
 				var tData:ItemData = getInfoBarByType(pType).data;
 				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
-				_paneManager.getPane(COLOR_PANE_ID).setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(this.currentlyColoringType) );
 				_paneManager.openPane(COLOR_PANE_ID);
 			}
 
@@ -396,19 +399,19 @@ package app.world
 				_paneManager.openPane(_paneManager.getPane(COLOR_PANE_ID).infoBar.data.type);
 			}
 
-			private function _onConfigColorPickChanged(pEvent:flash.events.DataEvent):void
-			{
-				var tVal:uint = uint(pEvent.data);
-				/*_paneManager.getPane(TAB_OTHER).updateCustomColor(configCurrentlyColoringType, tVal);*/
-				GameAssets.shamanColor = tVal;
-				character.updateItem();
-			}
+			// private function _onConfigColorPickChanged(pEvent:flash.events.DataEvent):void
+			// {
+			// 	var tVal:uint = uint(pEvent.data);
+			// 	/*_paneManager.getPane(TAB_OTHER).updateCustomColor(configCurrentlyColoringType, tVal);*/
+			// 	GameAssets.shamanColor = tVal;
+			// 	character.updateItem();
+			// }
 
-			private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
-				/*this.configCurrentlyColoringType = pType;*/
-				_paneManager.getPane(CONFIG_COLOR_PANE_ID).setupSwatches( [ GameAssets.shamanColor ] );
-				_paneManager.openPane(CONFIG_COLOR_PANE_ID);
-			}
+			// private function _shamanColorButtonClicked(/*pType:String, pColor:int*/) : void {
+			// 	/*this.configCurrentlyColoringType = pType;*/
+			// 	_paneManager.getPane(CONFIG_COLOR_PANE_ID).setupSwatches( [ GameAssets.shamanColor ] );
+			// 	_paneManager.openPane(CONFIG_COLOR_PANE_ID);
+			// }
 
 			private function _eyeDropButtonClicked(pType:String) : void {
 				if(this.character.getItemData(pType) == null) { return; }
@@ -418,7 +421,7 @@ package app.world
 				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
 				_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.addInfo( tData, tItem );
 				this.currentlyColoringType = pType;
-				_paneManager.getPane(COLOR_FINDER_PANE_ID).setItem(tItem2);
+				(_paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane).setItem(tItem2);
 				_paneManager.openPane(COLOR_FINDER_PANE_ID);
 			}
 
