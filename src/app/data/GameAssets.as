@@ -101,16 +101,16 @@ package app.data
 
 			var tChild:*=null;
 			var tHex:int=0;
-			var loc1:*=0;
-			while (loc1 < pMC.numChildren)
-			{
-				tChild = pMC.getChildAt(loc1);
+			var i:int=0;
+			while (i < pMC.numChildren) {
+				tChild = pMC.getChildAt(i);
 				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)
 				{
-					tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
+					// tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
+					tHex = int("0x" + tChild.name.split("_")[1].substr(-6, 6));
 					applyColorToObject(tChild, tHex);
 				}
-				++loc1;
+				i++;
 			}
 			return pMC;
 		}
