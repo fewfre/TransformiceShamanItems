@@ -47,6 +47,9 @@ package app.world.elements
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
 			outfit = addChild(new (_itemData.itemClass)()) as MovieClip;
 			outfit.scaleX = outfit.scaleY = tScale;
+			// Don't let the pose eat mouse input
+			outfit.mouseChildren = false;
+			outfit.mouseEnabled = false;
 			
 			/*var tChild:DisplayObject = null;
 			for(var i:int = 0; i < outfit.numChildren; i++) {

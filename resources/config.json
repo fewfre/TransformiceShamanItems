@@ -23,5 +23,9 @@
 		"items": [
 			"x_items_chaman.swf"
 		]
-	}
+	},
+	
+	"packs_external": [
+		"https://www.transformice.com/images/x_bibliotheques/x_items_chaman.swf"
+	]
 }
