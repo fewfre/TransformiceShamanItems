@@ -1,5 +1,5 @@
 <?php
-$resources_base = array("x_items_chaman");
+$resources_base = array("x_items_chaman", "x_macarons");
 
 $resources = array();
 foreach ($resources_base as $filebase) {

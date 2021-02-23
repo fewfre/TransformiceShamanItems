@@ -22,6 +22,7 @@
 		"tab_trampoline":		{ "text":"Trambolin", "scale":0.85 },
 		"tab_anvil":			{ "text":"Örs" },
 		"tab_cannonball":		{ "text":"Gülle" },
-		"tab_balloon":			{ "text":"Balon" }
+		"tab_balloon":			{ "text":"Balon" },
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
 	}
 }

@@ -160,6 +160,9 @@ package app.ui
 		{
 			if(!data) { return; }
 			var tName = "shop-"+data.type+data.id;
+			if(data.type == ITEM.CARTOUCHE) {
+				tName = "Macaron "+data.id;
+			}
 			FewfDisplayUtils.saveAsPNG(GameAssets.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
 		}
 	}

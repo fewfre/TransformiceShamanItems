@@ -22,6 +22,7 @@
 		"tab_trampoline":		{ "text":"الترامبولين" },
 		"tab_anvil":			{ "text":"السندان" },
 		"tab_cannonball":		{ "text":"المدفع" },
-		"tab_balloon":			{ "text":"البالون" }
+		"tab_balloon":			{ "text":"البالون" },
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
 	}
 }

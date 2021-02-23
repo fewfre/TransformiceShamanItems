@@ -22,6 +22,7 @@
 		"tab_trampoline":		{ "text":"Батут" },
 		"tab_anvil":			{ "text":"Наков-\nальня", "scale":0.9 },
 		"tab_cannonball":		{ "text":"Пушечное\nядро", "scale":0.8 },
-		"tab_balloon":			{ "text":"Шарик" }
+		"tab_balloon":			{ "text":"Шарик" },
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
 	}
 }

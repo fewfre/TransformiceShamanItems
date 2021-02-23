@@ -98,6 +98,7 @@ package app.world
 					{ text:"tab_anvil", event:ITEM.ANVIL },
 					{ text:"tab_cannonball", event:ITEM.CANNONBALL },
 					{ text:"tab_balloon", event:ITEM.BALLOON },
+					{ text:"tab_cartouche", event:ITEM.CARTOUCHE },
 				]
 			})) as ShopTabContainer;
 			this.shopTabs.addEventListener(ShopTabContainer.EVENT_SHOP_TAB_CLICKED, _onTabClicked);
@@ -137,7 +138,7 @@ package app.world
 			tPane.addEventListener(ColorPickerTabPane.EVENT_EXIT, _onColorFinderBackClicked);
 
 			// Create the panes
-			var tTypes = [ ITEM.BOX_SMALL, ITEM.BOX_LARGE, ITEM.PLANK_SMALL, ITEM.PLANK_LARGE, ITEM.BALL, ITEM.TRAMPOLINE, ITEM.ANVIL, ITEM.CANNONBALL, ITEM.BALLOON ], tData:ItemData, tType:String;
+			var tTypes = [ ITEM.BOX_SMALL, ITEM.BOX_LARGE, ITEM.PLANK_SMALL, ITEM.PLANK_LARGE, ITEM.BALL, ITEM.TRAMPOLINE, ITEM.ANVIL, ITEM.CANNONBALL, ITEM.BALLOON, ITEM.CARTOUCHE ], tData:ItemData, tType:String;
 			for(var i:int = 0; i < tTypes.length; i++) { tType = tTypes[i];
 				tPane = _paneManager.addPane(tType, _setupPane(tType));
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.

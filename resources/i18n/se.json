@@ -22,6 +22,7 @@
 		"tab_trampoline":		{ "text":"Tramp-\noliner", "scale":0.9 },
 		"tab_anvil":			{ "text":"Städ" },
 		"tab_cannonball":		{ "text":"Kanonkula", "scale":0.8 },
-		"tab_balloon":			{ "text":"Ballong" }
+		"tab_balloon":			{ "text":"Ballong" },
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
 	}
 }

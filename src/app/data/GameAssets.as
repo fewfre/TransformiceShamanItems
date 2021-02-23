@@ -23,6 +23,7 @@ package app.data
 		public static var anvils:Array;
 		public static var cannonballs:Array;
 		public static var balloons:Array;
+		public static var cartouches:Array;
 
 		public static function init() : void {
 			boxes_small = _setupCostumeArray({ base:"$Objet_1", type:ITEM.BOX_SMALL, pad:2 });
@@ -34,6 +35,7 @@ package app.data
 			anvils = _setupCostumeArray({ base:"$Objet_10", type:ITEM.ANVIL, pad:2 });
 			cannonballs = _setupCostumeArray({ base:"$Objet_17", type:ITEM.CANNONBALL, pad:2 });
 			balloons = _setupCostumeArray({ base:"$Objet_28", type:ITEM.BALLOON, pad:2 });
+			cartouches = _setupCostumeArray({ base:"$Macaron_", type:ITEM.CARTOUCHE });
 		}
 
 		// pData = { base:String, type:String, after:String, pad:int }
@@ -68,6 +70,7 @@ package app.data
 				case ITEM.ANVIL:		return anvils;
 				case ITEM.CANNONBALL:	return cannonballs;
 				case ITEM.BALLOON:		return balloons;
+				case ITEM.CARTOUCHE:	return cartouches;
 				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
 			}
 			return null;

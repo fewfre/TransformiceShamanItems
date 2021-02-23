@@ -11,7 +11,8 @@ package app.data
 		public static const ANVIL				: String = "anvil";
 		public static const CANNONBALL			: String = "cannonball";
 		public static const BALLOON				: String = "balloon";
+		public static const CARTOUCHE			: String = "cartouche";
 		
-		public static const ALL : Array = [ BOX_SMALL, BOX_LARGE, PLANK_SMALL, PLANK_LARGE, BALL, TRAMPOLINE, ANVIL, CANNONBALL, BALLOON ];
+		public static const ALL : Array = [ BOX_SMALL, BOX_LARGE, PLANK_SMALL, PLANK_LARGE, BALL, TRAMPOLINE, ANVIL, CANNONBALL, BALLOON, CARTOUCHE ];
 	}
 }

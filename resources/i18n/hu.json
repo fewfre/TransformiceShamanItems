@@ -22,6 +22,7 @@
 		"tab_trampoline":		{ "text":"Trambulin", "scale":0.95 },
 		"tab_anvil":			{ "text":"Üllő" },
 		"tab_cannonball":		{ "text":"Ágyúgolyó", "scale":0.8 },
-		"tab_balloon":			{ "text":"Lufi" }
+		"tab_balloon":			{ "text":"Lufi" },
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
 	}
 }

@@ -18,6 +18,7 @@
 		"tab_anvil":			{ "text":"Anvil" },
 		"tab_cannonball":		{ "text":"Cannon-\nball", "scale":0.8 },
 		"tab_balloon":			{ "text":"Balloon" },
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
 		
 		"version":				{ "text":"Version: {0}" },
 		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },

@@ -21,11 +21,13 @@
 	
 	"packs": {
 		"items": [
-			"x_items_chaman.swf"
+			"x_items_chaman.swf",
+			"x_macarons.swf"
 		]
 	},
 	
 	"packs_external": [
-		"https://www.transformice.com/images/x_bibliotheques/x_items_chaman.swf"
+		"https://www.transformice.com/images/x_bibliotheques/x_items_chaman.swf",
+		"https://www.transformice.com/images/x_bibliotheques/x_macarons.swf"
 	]
 }
