@@ -163,7 +163,7 @@ package app.ui
 			if(data.type == ITEM.CARTOUCHE) {
 				tName = "Macaron "+data.id;
 			}
-			FewfDisplayUtils.saveAsPNG(GameAssets.getItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
+			FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(data), tName, ConstantsApp.ITEM_SAVE_SCALE);
 		}
 	}
 }

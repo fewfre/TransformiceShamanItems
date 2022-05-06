@@ -56,6 +56,14 @@ package app.ui.panes
 			return this.content.addChild(pItem) as Sprite;
 		}
 
+		public function addItemDO(pItem:DisplayObject) : DisplayObject {
+			return this.content.addChild(pItem) as DisplayObject;
+		}
+
+		public function removeItem(pItem:Sprite) : Sprite {
+			return this.content.removeChild(pItem) as Sprite;
+		}
+
 		public function addInfoBar(pBar:ShopInfoBar) : void {
 			this.infoBar = this.addChild(pBar) as ShopInfoBar;
 		}
@@ -77,16 +85,29 @@ package app.ui.panes
 			var tStyle:*=new MovieClip();
 			tStyle.graphics.clear();
 			if(!_scrollPane) {
-				_scrollPane = new ScrollPane();
+				_scrollPane = new ScrollPaneWithDragFix();
 				_scrollPane.setStyle("upSkin", tStyle);
-				_scrollPane.setSize(ConstantsApp.PANE_WIDTH, 325);//350);
+				_scrollPane.setSize(ConstantsApp.PANE_WIDTH, this.infoBar!=null ? 325 : 325+60);//350);
 				_scrollPane.move(0, this.infoBar==null ? 0 : 60);
 				_scrollPane.verticalLineScrollSize = 25;
 				_scrollPane.verticalPageScrollSize = 25;
+				_scrollPane.scrollDrag = true;
 			}
 			_scrollPane.source = this.content;
 
 			addChild(_scrollPane);
 		}
 	}
+}
+
+import fl.containers.ScrollPane;
+import flash.events.MouseEvent;
+// https://stackoverflow.com/a/14332350/1411473
+class ScrollPaneWithDragFix extends ScrollPane
+{
+    protected override function endDrag(event:MouseEvent):void {
+        if (stage) {
+            stage.removeEventListener(MouseEvent.MOUSE_MOVE, doDrag);
+        }
+    }
 }
