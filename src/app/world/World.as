@@ -160,11 +160,12 @@ package app.world
 
 		private function _setupPane(pType:String) : TabPane {
 			var tPane:TabPane = new TabPane();
-			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:true }) );
+			tPane.addInfoBar( new ShopInfoBar({ showEyeDropButton:true, showReverseIcon:true }) );
 			_setupPaneButtons(pType, tPane, GameAssets.getArrayByType(pType));
 			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
 			/*tPane.infoBar.imageCont.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });*/
 			/*tPane.infoBar.refreshButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });*/
+			tPane.infoBar.reverseButton.addEventListener(ButtonBase.CLICK, function(){ _reverseGrid(pType); });
 			if(tPane.infoBar.eyeDropButton) {
 				tPane.infoBar.eyeDropButton.addEventListener(ButtonBase.CLICK, function(){ _eyeDropButtonClicked(pType); });
 			}
@@ -195,6 +196,7 @@ package app.world
 				pPane.buttons.push(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
+			grid.reverse();
 			pPane.UpdatePane();
 		}
 
@@ -303,6 +305,11 @@ package app.world
 			var tLength = tButtons.length;
 			tButtons[ Math.floor(Math.random() * tLength) ].toggleOn();
 		}
+		
+		private function _reverseGrid(pType:String) : void {
+			var tPane = getTabByType(pType);
+			tPane.grid.reverse();
+		}
 
 		private function _onShareButtonClicked(pEvent:Event) : void {
 			var tURL = "";
@@ -355,8 +362,14 @@ package app.world
 		//{REGION Color Tab
 			private function _onColorPickChanged(pEvent:flash.events.DataEvent):void
 			{
-				var tVal:uint = uint(pEvent.data);
-				this.character.getItemData(this.currentlyColoringType).colors[(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).selectedSwatch] = tVal;
+				var tVal:int = int(pEvent.data);
+				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
+				// Negative number indicates that all colors were randomized
+				if(tVal < 0) {
+					this.character.getItemData(this.currentlyColoringType).colors = pane.getAllColors();
+				} else {
+					this.character.getItemData(this.currentlyColoringType).colors[pane.selectedSwatch] = tVal;
+				}
 				_refreshSelectedItemColor();
 			}
 
@@ -364,7 +377,8 @@ package app.world
 			{
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
 				_refreshSelectedItemColor();
-				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
+				pane.setupSwatches( this.character.getColors(this.currentlyColoringType) );
 			}
 			
 			private function _refreshSelectedItemColor() : void {

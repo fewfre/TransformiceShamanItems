@@ -46,14 +46,12 @@ package app
 		}
 		
 		private function _startPreload() : void {
-			Fewf.assets.load([
+			_load([
 				Fewf.swfUrlBase+"resources/config.json",
-			]);
-			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
+			], String( new Date().getTime() ), _onPreloadComplete);
 		}
 		
-		private function _onPreloadComplete(event:Event) : void {
-			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onPreloadComplete);
+		private function _onPreloadComplete() : void {
 			_config = Fewf.assets.getData("config");
 			_defaultLang = _getDefaultLang(_config.languages["default"]);
 			
@@ -61,14 +59,12 @@ package app
 		}
 		
 		private function _startInitialLoad() : void {
-			Fewf.assets.load([
+			_load([
 				Fewf.swfUrlBase+"resources/i18n/"+_defaultLang+".json",
-			]);
-			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
+			], Fewf.assets.getData("config").cachebreaker, _onInitialLoadComplete);
 		}
 		
-		private function _onInitialLoadComplete(event:Event) : void {
-			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onInitialLoadComplete);
+		private function _onInitialLoadComplete() : void {
 			Fewf.i18n.parseFile(_defaultLang, Fewf.assets.getData(_defaultLang));
 			
 			_startLoad();
@@ -89,12 +85,10 @@ package app
 				for(var i:int = 0; i < tPack.length; i++) { tPacks.push(Fewf.swfUrlBase+"resources/"+tPack[i]); }
 			}
 			
-			Fewf.assets.load(tPacks);
-			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
+			_load(tPacks, Fewf.assets.getData("config").cachebreaker, _onLoadComplete);
 		}
 		
-		private function _onLoadComplete(event:Event) : void {
-			Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, _onLoadComplete);
+		private function _onLoadComplete() : void {
 			_loaderDisplay.destroy();
 			removeChild( _loaderDisplay );
 			_loaderDisplay = null;
@@ -102,13 +96,29 @@ package app
 			_world = addChild(new World(stage)) as World;
 		}
 		
+		/***************************
+		* Helper Methods
+		****************************/
+		private function _load(pPacks:Array, pCacheBreaker:String, pCallback:Function) : void {
+			Fewf.assets.load(pPacks, pCacheBreaker);
+			var tFunc = function(event:Event){
+				Fewf.assets.removeEventListener(AssetManager.LOADING_FINISHED, tFunc);
+				pCallback();
+				tFunc = null; pCallback = null;
+			};
+			Fewf.assets.addEventListener(AssetManager.LOADING_FINISHED, tFunc);
+		}
+		
 		private function _getDefaultLang(pConfigLang:String) : String {
+			// If user manually picked a language previously, override system check
+			var detectedLang = Fewf.sharedObject.getData("lang") || Capabilities.language;
+			
 			var tFlagDefaultLangExists:Boolean = false;
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#language
-			if(Capabilities.language) {
+			if(detectedLang) {
 				var tLanguages:Array = _config.languages.list;
 				for(var i:Object in tLanguages) {
-					if(Capabilities.language == tLanguages[i].code || Capabilities.language == tLanguages[i].code.split("-")[0]) {
+					if(detectedLang == tLanguages[i].code || detectedLang == tLanguages[i].code.split("-")[0]) {
 						return tLanguages[i].code;
 					}
 					if(pConfigLang == tLanguages[i].code) {

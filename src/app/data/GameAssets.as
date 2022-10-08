@@ -12,7 +12,7 @@ package app.data
 
 	public class GameAssets
 	{
-		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 100;//999;
+		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
 		
 		public static var boxes_small:Array;
 		public static var boxes_large:Array;
@@ -43,10 +43,17 @@ package app.data
 			var tArray:Array = new Array();
 			var tClassName:String;
 			var tClass:Class;
+			var breakCount = 0; // quit early if enough nulls in a row
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				tClass = Fewf.assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 				if(tClass != null) {
+					breakCount = 0;
 					tArray.push( new ItemData({ id:i, type:pData.type, itemClass:tClass}) );
+				} else {
+					breakCount++;
+					if(breakCount > 5) {
+						break;
+					}
 				}
 			}
 			return tArray;

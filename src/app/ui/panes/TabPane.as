@@ -19,7 +19,7 @@ package app.ui.panes
 
 		protected var _scrollPane : ScrollPane;
 		private var content:MovieClip;
-		private var contentBack:MovieClip;//For scrollwheel to work, it has to hit a child element of the ScrollPane source.
+		protected var contentBack:MovieClip;//For scrollwheel to work, it has to hit a child element of the ScrollPane source.
 		
 		// Properties
 		public function get flagOpen() : Boolean { return _flagOpen; }
@@ -62,6 +62,10 @@ package app.ui.panes
 
 		public function removeItem(pItem:Sprite) : Sprite {
 			return this.content.removeChild(pItem) as Sprite;
+		}
+
+		public function containsItem(pItem:DisplayObject) : Boolean {
+			return this.content.contains(pItem);
 		}
 
 		public function addInfoBar(pBar:ShopInfoBar) : void {
