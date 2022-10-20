@@ -24,6 +24,9 @@ package app.data
 		public static var cannonballs:Array;
 		public static var balloons:Array;
 		public static var cartouches:Array;
+		
+		// { type:ITEM, id:String, colorI:int }
+		public static var swatchHoverPreviewData:Object = null;
 
 		public static function init() : void {
 			boxes_small = _setupCostumeArray({ base:"$Objet_1", type:ITEM.BOX_SMALL, pad:2 });
@@ -192,7 +195,25 @@ package app.data
 		}
 		
 		public static function getColoredItemImage(pData:ItemData) : MovieClip {
-			return colorItem({ obj:getItemImage(pData), colors:pData.colors }) as MovieClip;
+			return colorItem({ obj:getItemImage(pData), colors:getColorsWithPossibleHoverEffect(pData) }) as MovieClip;
+		}
+		
+		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Array {
+			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }
+			var colors = pData.colors.concat();
+			if(pData.type == swatchHoverPreviewData.type && pData.id == swatchHoverPreviewData.id) {
+				var i = swatchHoverPreviewData.colorI;
+				colors[i] = GameAssets.invertColor(colors[i]);
+			}
+			return colors;
+		}
+		
+		public static function invertColor(pColor:uint) : uint {
+			var tR:*=pColor >> 16 & 255;
+			var tG:*=pColor >> 8 & 255;
+			var tB:*=pColor & 255;
+			
+			return (255-tR)<<16 | (255-tG)<<8 | (255-tB);
 		}
 
 		/****************************

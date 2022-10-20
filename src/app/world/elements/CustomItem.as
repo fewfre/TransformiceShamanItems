@@ -55,14 +55,14 @@ package app.world.elements
 			for(var i:int = 0; i < outfit.numChildren; i++) {
 				tChild = outfit.getChildAt(i);
 				if(_itemData.colors != null) {
-					GameAssets.colorItem({ obj:tChild, colors:_itemData.colors });
+					GameAssets.colorItem({ obj:tChild, colors:GameAssets.getColorsWithPossibleHoverEffect(_itemData) });
 				}
 				else { GameAssets.colorDefault(tChild); }
 			}
 			tChild = null;*/
 			
 			if(_itemData.colors != null) {
-				GameAssets.colorItem({ obj:outfit, colors:_itemData.colors });
+				GameAssets.colorItem({ obj:outfit, colors:GameAssets.getColorsWithPossibleHoverEffect(_itemData) });
 			}
 			else { GameAssets.colorDefault(outfit); }
 			
