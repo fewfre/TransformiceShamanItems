@@ -27,6 +27,7 @@ package app.world
 	import flash.display.MovieClip;
 	import app.ui.panes.ColorPickerTabPane;
 	import app.ui.panes.ColorFinderPane;
+	import flash.ui.Keyboard;
 	
 	public class World extends MovieClip
 	{
@@ -57,6 +58,7 @@ package app.world
 			super();
 			_buildWorld(pStage);
 			pStage.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
+			pStage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDownListener);
 		}
 		
 		private function _buildWorld(pStage:Stage) {
@@ -176,8 +178,12 @@ package app.world
 		private function _setupPaneButtons(pType:String, pPane:TabPane, pItemArray:Array) : void {
 			var buttonPerRow = 6;
 			var scale = 1;
-			if(pType == ITEM.BOX_LARGE || pType == ITEM.PLANK_LARGE) {
+			if(pType == ITEM.BOX_LARGE) {
 					buttonPerRow = 5;
+					scale = 1;
+			}
+			else if(pType == ITEM.PLANK_LARGE) {
+					buttonPerRow = 4;
 					scale = 1;
 			}
 
@@ -205,6 +211,37 @@ package app.world
 			if(this.mouseX < this.shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
 				character.scale = _toolbox.scaleSlider.getValueAsScale();
+			}
+		}
+
+		private function _onKeyDownListener(e:KeyboardEvent) : void {
+			var pane:TabPane = _paneManager.getOpenPane();
+			trace('down', new Date(), !!pane,
+			pane && !!pane.grid,
+			pane && pane.grid && !!pane.buttons,
+			pane && pane.grid && pane.buttons && pane.buttons.length > 0,
+			pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton);
+			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
+				var activeButtonIndex:int = 0;
+				// Find the pressed button
+				for(var i:int = 0; i < pane.buttons.length; i++){
+					if((pane.buttons[i] as PushButton).pushed){
+						activeButtonIndex = i;
+						break;
+					}
+				}
+				
+				var dir:int = pane.grid.reversed ? -1 : 1, length:uint = pane.buttons.length;
+				if(Fewf.i18n.lang == 'ar') {
+					dir *= -1;
+				}
+				// `length` added before mod to allow `-1` to properly wrap
+				if (e.keyCode == Keyboard.RIGHT){
+					pane.buttons[(length+activeButtonIndex+dir) % length].toggleOn();
+				}
+				else if (e.keyCode == Keyboard.LEFT) {
+					pane.buttons[(length+activeButtonIndex-dir) % length].toggleOn();
+				}
 			}
 		}
 

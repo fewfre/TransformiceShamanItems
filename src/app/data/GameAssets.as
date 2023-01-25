@@ -48,6 +48,11 @@ package app.data
 			var tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
+				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
+				if(i == 26 && pData.type == ITEM.BALLOON) {
+					continue;
+				}
+				
 				tClass = Fewf.assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 				if(tClass != null) {
 					breakCount = 0;
