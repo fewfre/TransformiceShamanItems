@@ -154,7 +154,7 @@ package app.world
 			
 			// Select First Pane
 			shopTabs.tabs[0].toggleOn();
-			_paneManager.getPane(tTypes[0]).buttons[0].toggleOn();
+			_paneManager.getPane(tTypes[0]).buttons[ _paneManager.getPane(tTypes[0]).buttons.length-1 ].toggleOn();
 			
 			tPane = null;
 			tTypes = null;
@@ -178,7 +178,7 @@ package app.world
 		private function _setupPaneButtons(pType:String, pPane:TabPane, pItemArray:Array) : void {
 			var buttonPerRow = 6;
 			var scale = 1;
-			if(pType == ITEM.BOX_LARGE) {
+			if(pType == ITEM.BOX_LARGE || pType == ITEM.TRAMPOLINE) {
 					buttonPerRow = 5;
 					scale = 1;
 			}
@@ -216,33 +216,33 @@ package app.world
 
 		private function _onKeyDownListener(e:KeyboardEvent) : void {
 			var pane:TabPane = _paneManager.getOpenPane();
-			trace('down', new Date(), !!pane,
-			pane && !!pane.grid,
-			pane && pane.grid && !!pane.buttons,
-			pane && pane.grid && pane.buttons && pane.buttons.length > 0,
-			pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton);
 			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
-				var activeButtonIndex:int = 0;
-				// Find the pressed button
-				for(var i:int = 0; i < pane.buttons.length; i++){
-					if((pane.buttons[i] as PushButton).pushed){
-						activeButtonIndex = i;
-						break;
-					}
-				}
+				var buttons:Array = pane.buttons;
+				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
+				if(activeButtonIndex == -1) { activeButtonIndex = pane.grid.reversed ? buttons.length-1 : 0; }
 				
-				var dir:int = pane.grid.reversed ? -1 : 1, length:uint = pane.buttons.length;
+				var dir:int = pane.grid.reversed ? -1 : 1, length:uint = buttons.length;
 				if(Fewf.i18n.lang == 'ar') {
 					dir *= -1;
 				}
 				// `length` added before mod to allow `-1` to properly wrap
 				if (e.keyCode == Keyboard.RIGHT){
-					pane.buttons[(length+activeButtonIndex+dir) % length].toggleOn();
+					buttons[(length+activeButtonIndex+dir) % length].toggleOn();
 				}
 				else if (e.keyCode == Keyboard.LEFT) {
-					pane.buttons[(length+activeButtonIndex-dir) % length].toggleOn();
+					buttons[(length+activeButtonIndex-dir) % length].toggleOn();
 				}
 			}
+		}
+		
+		// Find the pressed button
+		private function _findIndexActivePushButton(pButtons:Array):int {
+			for(var i:int = 0; i < pButtons.length; i++){
+				if((pButtons[i] as PushButton).pushed){
+					return i;
+				}
+			}
+			return -1;
 		}
 
 		private function _onScaleSliderChange(pEvent:Event):void {
@@ -276,17 +276,17 @@ package app.world
 				}
 			}
 			
-			// Select buttons on other tabs
-			var tButtons2:Array = null;
-			for(var j:int = 0; j < ITEM.ALL.length; j++) {
-				if(ITEM.ALL[j] == tType) { continue; }
-				tButtons2 = getButtonArrayByType(ITEM.ALL[j]);
-				for(var i:int = 0; i < tButtons2.length; i++) {
-					if (tButtons2[i].pushed)  { tButtons2[i].toggleOff(); }
-				}
-				_paneManager.getPane(ITEM.ALL[j]).infoBar.removeInfo();
-			}
-			tButtons2 = null;
+			// // Select buttons on other tabs
+			// var tButtons2:Array = null;
+			// for(var j:int = 0; j < ITEM.ALL.length; j++) {
+			// 	if(ITEM.ALL[j] == tType) { continue; }
+			// 	tButtons2 = getButtonArrayByType(ITEM.ALL[j]);
+			// 	for(var i:int = 0; i < tButtons2.length; i++) {
+			// 		if (tButtons2[i].pushed)  { tButtons2[i].toggleOff(); }
+			// 	}
+			// 	_paneManager.getPane(ITEM.ALL[j]).infoBar.removeInfo();
+			// }
+			// tButtons2 = null;
 
 			var tButton:PushButton = tButtons[pEvent.data.id];
 			var tData:ItemData;
@@ -328,6 +328,13 @@ package app.world
 		
 		private function _onTabClicked(pEvent:flash.events.DataEvent) : void {
 			_paneManager.openPane(pEvent.data);
+			
+			var buttons = getButtonArrayByType(pEvent.data);
+			var i:int = _findIndexActivePushButton(buttons);
+			if(i > -1) {
+				buttons[i].toggleOff();
+				buttons[i].toggleOn();
+			}
 		}
 
 		// private function _onRandomizeDesignClicked(pEvent:Event) : void {

@@ -1,3 +1,9 @@
+== V1.8b - 17 February 2023 ==
+- One item in each category may now be selected
+	- changing back to a tab pane with a selected item will now change active item back to it
+- Item selected by default on launch is now newest small box, not oldest
+
+
 == V1.8 - 24 January 2023 ==
 - Removed duplicate balloon (hardcoded)
 - Added ability to traverse through item buttons using left/right arrow key (suggestion by Barberserk)
