@@ -1,4 +1,4 @@
-package app.ui.panes
+package app.ui.panes.colorpicker
 {
 	import com.piterwilson.utils.*;
 	import com.fewfre.display.*;
@@ -11,6 +11,7 @@ package app.ui.panes
 	import flash.events.*;
 	import flash.utils.Dictionary;
 	import ext.ParentApp;
+	import app.ui.panes.TabPane;
 	
 	public class ColorPickerTabPane extends TabPane
 	{
@@ -21,20 +22,18 @@ package app.ui.panes
 		public static const EVENT_PREVIEW_COLOR		: String = "event_preview_color";
 		public static const EVENT_EXIT				: String = "event_exit";
 		
-		private static var HISTORY					: Dictionary = new Dictionary();
-		
 		// Storage
-		private var _colorSwatches         : Array;
-		private var _selectedSwatch        : int=0;
-		private var _psColorPick           : ColorPicker;
+		private var _colorSwatches             : Vector.<ColorSwatch>;
+		private var _selectedSwatch            : int=0;
+		private var _psColorPick               : ColorPicker;
 		
-		private var _lastColorChangeValue  : int;
-		private var _dontTrackNextRecentChange	: Boolean;
+		private var _lastColorChangeValue      : int;
+		private var _dontTrackNextRecentChange : Boolean;
 		
-		private var _recentColorsDisplay   : RecentColorsListDisplay;
-		private var _refreshButton         : SpriteButton;
+		private var _recentColorsDisplay       : RecentColorsListDisplay;
+		private var _randomizeButton           : SpriteButton;
 		
-		private var _historyTray          : Sprite;
+		private var _colorHistory              : ColorHistoryOverlay;
 		
 		// Properties
 		public function get selectedSwatch():int { return _selectedSwatch; }
@@ -44,7 +43,7 @@ package app.ui.panes
 		{
 			super();
 			
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showRefreshButton:false }) );
+			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onColorPickerBackClicked);
 			
 			var tClickOffDetector = addChild(new Sprite()) as Sprite;
@@ -57,13 +56,12 @@ package app.ui.panes
 				_addRecentColor();
 			});
 			
-			_psColorPick = new ColorPicker();
+			_psColorPick = this.addItem(new ColorPicker()) as ColorPicker;
 			_psColorPick.x = 105;
 			_psColorPick.y = 5;
 			_psColorPick.addEventListener(ColorPicker.COLOR_PICKED, _onColorPickChanged);
-			this.addItem(_psColorPick);
 			
-			_colorSwatches = new Array();
+			_colorSwatches = new Vector.<ColorSwatch>();
 			
 			if(!pData.hide_default) {
 				var defaults_btn:SpriteButton;
@@ -71,20 +69,18 @@ package app.ui.panes
 				defaults_btn.addEventListener(ButtonBase.CLICK, _onDefaultButtonClicked);
 			}
 			
-			_refreshButton = this.addItem(new SpriteButton({ x:ConstantsApp.PANE_WIDTH - 24 - 11, y:14, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
-			_refreshButton.addEventListener(ButtonBase.CLICK, function(){ _randomizeAllColors(); });
+			_randomizeButton = this.addItem(new SpriteButton({ x:ConstantsApp.PANE_WIDTH - 24 - 11, y:14, width:24, height:24, obj_scale:0.8, obj:new $Dice() })) as SpriteButton;
+			_randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomizeAllColors(); });
 			
 			_recentColorsDisplay = new RecentColorsListDisplay({ x:ConstantsApp.PANE_WIDTH/2, y:316+60+17 });
 			_recentColorsDisplay.addEventListener(RecentColorsListDisplay.EVENT_COLOR_PICKED, _onRecentColorBtnClicked);
 			addChild(_recentColorsDisplay);
 			
 			var historySize = 270;
-			_historyTray = new Sprite();
-			_historyTray.x = _psColorPick.x + 10 + historySize*0.5;
-			_historyTray.y = _psColorPick.y + 40 + historySize*0.5;
-			
-			_historyTray.graphics.beginFill( 0x000000, 0.5 );
-			_historyTray.graphics.drawRect( -historySize*0.5, -historySize*0.5, historySize, historySize );
+			_colorHistory = new ColorHistoryOverlay(historySize);
+			_colorHistory.x = _psColorPick.x + 10 + historySize*0.5;
+			_colorHistory.y = _psColorPick.y + 40 + historySize*0.5;
+			_colorHistory.addEventListener(ColorHistoryOverlay.EVENT_COLOR_PICKED, _onHistoryColorClicked);
 			
 			this.UpdatePane(false);
 		}
@@ -105,16 +101,16 @@ package app.ui.panes
 		/****************************
 		* Public
 		*****************************/
-		public function setupSwatches(pSwatches:Array) : void {
+		public function setupSwatches(pSwatches:Vector.<uint>) : void {
 			for each(var btn:ColorSwatch in _colorSwatches) {
 				this.removeItem(btn);
 			}
-			_colorSwatches = [];
+			_colorSwatches = new Vector.<ColorSwatch>;
 			
 			var swatch:ColorSwatch;
 			for(var i:int = 0; i < pSwatches.length; i++) {
 				swatch = _createColorSwatch(i, 5, 45 + (i * 27));
-				swatch.value = pSwatches[i];
+				swatch.color = pSwatches[i];
 				_colorSwatches.push(swatch);
 				if(_getHistoryColors(i).length == 0) {
 					_addHistory(pSwatches[i], i);
@@ -123,11 +119,11 @@ package app.ui.panes
 				this.addItem(swatch);
 				
 				if (_selectedSwatch == i) {
-					_psColorPick.setCursor(swatch.textValue);
+					_psColorPick.setCursor(swatch.color);
 				}
 			}
 			
-			_selectSwatch(0, false);
+			_selectSwatch(0);
 			renderRecents();
 		}
 		
@@ -135,8 +131,12 @@ package app.ui.panes
 			_recentColorsDisplay.render();
 		}
 		
-		public function getAllColors() : Array {
-			return _colorSwatches.map(function(swatch){ return swatch.intValue });
+		public function getAllColors() : Vector.<uint> {
+			var colors:Vector.<uint> = new Vector.<uint>();
+			for(var i:int = 0; i < _colorSwatches.length; i++){
+				colors.push( _colorSwatches[i].color );
+			}
+			return colors;
 		}
 		
 		/****************************
@@ -144,13 +144,19 @@ package app.ui.panes
 		*****************************/
 		private function _createColorSwatch(pNum:int, pX:int, pY:int) : ColorSwatch {
 			var swatch:ColorSwatch = new ColorSwatch();
-			swatch.addEventListener(ColorSwatch.USER_MODIFIED_TEXT, function(){ _selectSwatch(pNum); });
-			swatch.addEventListener(ColorSwatch.ENTER_PRESSED, function(){ _selectSwatch(pNum); _addRecentColor(); });
+			swatch.addEventListener(ColorSwatch.USER_MODIFIED_TEXT, function(){
+				_selectSwatch(pNum);
+				changeColor(swatch.color, true);
+			});
+			swatch.addEventListener(ColorSwatch.ENTER_PRESSED, function(){
+				_selectSwatch(pNum);
+				_addRecentColor();
+			});
 			swatch.addEventListener(ColorSwatch.BUTTON_CLICK, function(){
 				// Add here since we just changed what swatch we're on and current one is thus "finalized"
 				_addRecentColor();
 				// don't track a change just from clicking a swatch, but do still set cursor/add a recent if needed
-				_selectSwatch(pNum, true, false);
+				_selectSwatch(pNum);
 			});
 			swatch.swatch.addEventListener(MouseEvent.MOUSE_OVER, function(){
 				if(!!infoBar.data) {
@@ -179,23 +185,22 @@ package app.ui.panes
 			return swatch;
 		}
 		
-		private function _selectSwatch(pNum:int, pSetCursor:Boolean=true, pAllowTrackRecentChange:Boolean=true) : void {
+		private function _selectSwatch(pNum:int) : void {
 			for(var i = 0; i < _colorSwatches.length; i++) {
 				_colorSwatches[i].unselect();
 			}
 			_selectedSwatch = pNum;
 			_colorSwatches[pNum].select();
-			if(pSetCursor) {
-				_dontTrackNextRecentChange = !pAllowTrackRecentChange;
-				_psColorPick.setCursor(_colorSwatches[pNum].textValue);
-			}
+			
+			_psColorPick.setCursor(_colorSwatches[pNum].color);
 		}
 		
-		private function changeColor(color:uint) {
+		private function changeColor(color:uint, pSkipColorSwatch:Boolean=false, pSkipSetSursor:Boolean=false) {
 			// trace("changeColor()");
-			_colorSwatches[_selectedSwatch].value = color;
+			if(!pSkipColorSwatch) _colorSwatches[_selectedSwatch].color = color;
+			if(!pSkipSetSursor) _psColorPick.setCursor(color);
 			_trackRecentColor(color);
-			dispatchEvent(new DataEvent(EVENT_COLOR_PICKED, false, false, color.toString()));
+			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { color:color }));
 		}
 		
 		private function _trackRecentColor(color:uint) {
@@ -224,6 +229,7 @@ package app.ui.panes
 			if(_lastColorChangeValue == -1) { return; }
 			_recentColorsDisplay.addColor(_lastColorChangeValue);
 			_addHistory(_lastColorChangeValue, _selectedSwatch);
+			_colorSwatches[_selectedSwatch].padCodeIfNeeded();
 			_untrackRecentColor();
 		}
 		
@@ -232,67 +238,44 @@ package app.ui.panes
 				_colorSwatches[i].unselect();
 				if(_colorSwatches[i].locked == false) {
 					var randomColor = uint(Math.random() * 0xFFFFFF);
-					_colorSwatches[i].value = randomColor;
+					_colorSwatches[i].color = randomColor;
+					_colorSwatches[i].padCodeIfNeeded();
 					_addHistory(randomColor, i);
 				}
 			}
 			_colorSwatches[_selectedSwatch].select();
-			// Set the cursor to match swatch's new color, but don't count it as a manual color change
-			_lastColorChangeValue = -1;
-			_dontTrackNextRecentChange = true;
-			_psColorPick.setCursor(_colorSwatches[_selectedSwatch].textValue);
-			// Sent number back as negative as an indicator that all swatches were randomized
-			dispatchEvent(new DataEvent(EVENT_COLOR_PICKED, false, false, (-_colorSwatches[_selectedSwatch].intValue).toString()));
+			_psColorPick.setCursor(_colorSwatches[_selectedSwatch].color);
+			_untrackRecentColor();
+			dispatchEvent(new FewfEvent(EVENT_COLOR_PICKED, { randomizedAll:true, color:_colorSwatches[_selectedSwatch].color }));
 		}
 		
+		/****************************
+		* History
+		*****************************/
 		// Return a key unique to both this item and this swatch
 		private function _getHistoryDictKey(swatchI:int) {
 			return !infoBar.data ? ["misc", swatchI].join('_') : [infoBar.data.type, infoBar.data.id, swatchI].join('_');
 		}
 		private function _addHistory(color:int, swatchI:int) {
 			var itemID = _getHistoryDictKey(swatchI);
-			if(!HISTORY[itemID]) HISTORY[itemID] = [];
-			var itemHistory = HISTORY[itemID];
-			// Remove old value if there is one, and move it to front of the list
-			if(itemHistory.indexOf(color) != -1) {
-				itemHistory.splice(itemHistory.indexOf(color), 1);
-			}
-			itemHistory.unshift(color);
+			_colorHistory.addHistory(itemID, color)
 			_showHistoryButtonIfValid(swatchI);
 		}
 		private function _getHistoryColors(swatchI:int) {
 			var itemID = _getHistoryDictKey(swatchI);
-			if(!HISTORY[itemID]) HISTORY[itemID] = [];
-			return HISTORY[itemID];
+			return _colorHistory.getHistoryColors(itemID);
 		}
 		private function _showHistory(swatchI:int) {
-			var colors = _getHistoryColors(swatchI);
-			if(colors.length > 0) {
-				_selectSwatch(swatchI, true, false);
-				
-				// Clear old history tray data
-				while(_historyTray.numChildren){
-					_historyTray.removeChildAt(0);
-				}
-				
-				var length = Math.min(colors.length, 9);
-				var btnSize = 70, spacing = 10, columns = 3,
-				tX = -(btnSize+spacing) * (columns-1)/2, tY = -(btnSize+spacing) * (columns-1)/2;
-				for(var i = 0; i < length; i++) {
-					var color = colors[i];
-					var btn = new ColorButton({ color:color, x:tX+((i%columns) * (btnSize+spacing)), y:tY+(Math.floor(i/columns)*(btnSize+spacing)), size:btnSize });
-					btn.addEventListener(ButtonBase.CLICK, _onHistoryColorClicked);
-					_historyTray.addChild(btn);
-				}
-				addItem(_historyTray);
-			}
-		}
-		private function _onHistoryColorClicked(e:FewfEvent) {
-			changeColor(uint(e.data));
+			// Also select the swatch related to history, and submit any tracked recent color
+			_selectSwatch(swatchI);
 			_addRecentColor();
+			
+			var itemID = _getHistoryDictKey(swatchI);
+			_colorHistory.renderHistory(itemID);
+			addItem(_colorHistory);
 		}
 		private function _hideHistory() {
-			if(containsItem(_historyTray)) removeItem(_historyTray);
+			if(containsItem(_colorHistory)) removeItem(_colorHistory);
 		}
 		private function _showHistoryButtonIfValid(swatchI:int) {
 			if(_getHistoryColors(swatchI).length > 1) {
@@ -304,14 +287,20 @@ package app.ui.panes
 		* Events
 		*****************************/
 		private function _onColorPickChanged(pEvent:DataEvent) : void {
-			changeColor(uint(pEvent.data));
+			// Skip cursor set since otherwise the top color bar gets updated when just dragging cursor around
+			changeColor(uint(pEvent.data), false, true);
 		}
 		
-		private function _onRecentColorBtnClicked(pEvent:DataEvent) : void {
+		private function _onRecentColorBtnClicked(pEvent:FewfEvent) : void {
 			changeColor(uint(pEvent.data));
 			_lastColorChangeValue = uint(pEvent.data);
 			_dontTrackNextRecentChange = false;
 			_addHistory(_lastColorChangeValue, _selectedSwatch);
+		}
+		
+		private function _onHistoryColorClicked(e:FewfEvent) {
+			changeColor(uint(e.data));
+			_addRecentColor();
 		}
 		
 		private function _onDefaultButtonClicked(pEvent:Event) : void {

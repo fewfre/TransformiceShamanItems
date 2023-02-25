@@ -1,3 +1,30 @@
+== V1.9 - 25 February 2023 ==
+- Each category now has newest item selected by default
+- Items can no longer be unselected; there will always be something selected in a given category
+- Ported over TFM dressroom changes:
+	- TabPane infobar redesigned
+	- Added left/right arrows to infobar that do same as keyboard arrow keys (mobile support)
+	- Using arrows / randomize button to select an item off-screen will now scroll the button into view
+	- Copy button added to toolbox (app only, due to AIR requirements)
+	- Resource update system redone to be more user friendly - it is now run from `/resources/update/` instead of `/resources/update.php`
+	- Fixed color swatches not formatting number with 0s
+		- Reworked color picker code a bit to finally fix this issue
+			- Moved `ColorSwatch` and `ColorPickerTab` into the same folder
+			- Moved color history into it's own component
+	- The black handle above color picker updated to be white to be more visible
+	- Up/Down arrow keys now traverse the grids vertically
+	- Some code cleanup / rework
+		- Moved shop item pane code from `World` into `ShopCategoryPane`
+		- `ITEM` renamed to `ItemType` and given proper enum typing
+		- `ImgurApi` moved to `com.fewfre.utils`
+		- `Grid` revamped and moved to `com.fewfre.display`
+		- Some components in `ui` moved to new `ui.common` folder
+		- Small `RoundedRectangle` revamp
+		- Multiple `_drawLine` function replaced with new `GameAssets.createHorizontalRule()`
+		- Updated/polished `GameAssets` color functions to be less awful
+		- `PNGEncoder` updated to match source
+		- `com.piterwilson` lib source polished + moved `com.paulcoyle`'s `AngularColour` into it
+
 == V1.8b - 17 February 2023 ==
 - One item in each category may now be selected
 	- changing back to a tab pane with a selected item will now change active item back to it

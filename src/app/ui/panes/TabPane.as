@@ -5,6 +5,7 @@ package app.ui.panes
 	import app.ui.buttons.*;
 	import fl.containers.ScrollPane;
 	import flash.display.*;
+	import com.fewfre.display.Grid;
 
 	public class TabPane extends MovieClip
 	{
@@ -76,6 +77,15 @@ package app.ui.panes
 			return this.grid = addItem(pGrid) as Grid;
 		}
 
+		public function scrollItemIntoView(pItem:Sprite) : void {
+			if(pItem.y+5 < _scrollPane.verticalScrollPosition) {
+				_scrollPane.verticalScrollPosition = pItem.y+5;
+			}
+			else if(pItem.y + pItem.height+5 - _scrollPane.height > _scrollPane.verticalScrollPosition) {
+				_scrollPane.verticalScrollPosition = pItem.y + pItem.height+5 - _scrollPane.height;
+			}
+		}
+
 		public function UpdatePane(pItemPane:Boolean=true) : void {
 			this.x = 5;
 			this.y = 5;//40;
@@ -96,6 +106,7 @@ package app.ui.panes
 				_scrollPane.verticalLineScrollSize = 25;
 				_scrollPane.verticalPageScrollSize = 25;
 				_scrollPane.scrollDrag = true;
+				_scrollPane.focusEnabled = false; // disables arrow keys moving scrollbars (we use arrows for grid traversal)
 			}
 			_scrollPane.source = this.content;
 

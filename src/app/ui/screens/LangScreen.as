@@ -1,8 +1,8 @@
 package app.ui.screens
 {
 	import app.data.*;
-	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import app.world.data.*;
 	import com.adobe.images.*;
 	import com.fewfre.display.*;
@@ -40,9 +40,8 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 200;
-			_tray = addChild(new RoundedRectangle({ x:0, y:0, width:tWidth, height:tHeight, origin:0.5 })) as RoundedRectangle;
-			_tray.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
-			
+			_tray = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
+
 			/****************************
 			* Languages
 			*****************************/
@@ -103,7 +102,7 @@ package app.ui.screens
 		
 		private function _onLanguageClicked(pEvent:FewfEvent) : void {
 			var tLangData = pEvent.data;
-			Fewf.sharedObject.setData("lang", tLangData.code);
+			Fewf.sharedObjectGlobal.setData(ConstantsApp.SHARED_OBJECT_KEY_GLOBAL_LANG, tLangData.code);
 			_close();
 			if(Fewf.assets.getData(tLangData.code)) {
 				Fewf.i18n.parseFile(tLangData.code, Fewf.assets.getData(tLangData.code));

@@ -3,6 +3,7 @@ package app.ui.panes
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import com.fewfre.display.*;
 	import com.fewfre.utils.*;
 	import flash.display.*;
@@ -50,7 +51,7 @@ package app.ui.panes
 		public function ColorFinderPane(pData:Object)
 		{
 			super();
-			this.addInfoBar( new ShopInfoBar({ showBackButton:true, showRefreshButton:false }) );
+			this.addInfoBar( new ShopInfoBar({ showBackButton:true }) );
 			this.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, _onBackClicked);
 			this.UpdatePane(false);
 			
@@ -105,11 +106,11 @@ package app.ui.panes
 			};
 			if(Fewf.isExternallyLoaded) {
 				_scaleSlider = _tray.addChild(ParentApp.newFancySlider(sliderProps));
-				_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
 			} else {
 				_scaleSlider = _tray.addChild(new FancySlider(sliderProps));
-				_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
 			}
+			_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
+			
 			// Attach scroll event to back to detect scroll anywhere on pane
 			// and also attach to item since it ignores the other scroll event if mouse over it
 			this.contentBack.addEventListener(MouseEvent.MOUSE_WHEEL, _onMouseWheel);
@@ -126,8 +127,8 @@ package app.ui.panes
 			*****************************/
 			var tTFWidth:Number = 65, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = _tray.addChild(new RoundedRectangle({ x:15, y:170, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })) as RoundedRectangle;
-			tTextBackground.draw(0xFFFFFF, 7, 0x444444, 0x444444, 0x444444);
+			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:15, y:170, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+				.appendTo(_tray).draw(0xFFFFFF, 7, 0x444444);
 			
 			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
@@ -237,21 +238,21 @@ package app.ui.panes
 		private function _setColorText(pColor:int) : void {
 			if(pColor != -1) {
 				_text.text = FewfUtils.lpad(pColor.toString(16).toUpperCase(), 6, "0");
-				_textColorBox.draw(pColor, 7, 0x444444, 0x444444, 0x444444);
+				_textColorBox.draw(pColor, 7, 0x444444);
 				_recentColorsDisplay.addColor(pColor);
 			} else {
 				_text.text = "000000";
-				_textColorBox.draw(0x000000, 7, 0x444444, 0x444444, 0x444444);
+				_textColorBox.draw(0x000000, 7, 0x444444);
 			}
 		}
 		
 		private function _setHoverColor(pColor:int) : void {
 			if(pColor != -1) {
 				/*_hoverText.text = FewfUtils.lpad(pColor.toString(16).toUpperCase(), 6, "0");*/
-				_hoverColorBox.draw(pColor, 7, 0x444444, 0x444444, 0x444444);
+				_hoverColorBox.draw(pColor, 7, 0x444444);
 			} else {
 				/*_hoverText.text = "000000";*/
-				_hoverColorBox.draw(0x000000, 7, 0x444444, 0x444444, 0x444444);
+				_hoverColorBox.draw(0x000000, 7, 0x444444);
 			}
 		}
 		

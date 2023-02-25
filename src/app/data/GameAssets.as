@@ -14,49 +14,48 @@ package app.data
 	{
 		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
 		
-		public static var boxes_small:Array;
-		public static var boxes_large:Array;
-		public static var planks_small:Array;
-		public static var planks_large:Array;
-		public static var balls:Array;
-		public static var trampolines:Array;
-		public static var anvils:Array;
-		public static var cannonballs:Array;
-		public static var balloons:Array;
-		public static var cartouches:Array;
+		public static var boxes_small: Vector.<ItemData>;
+		public static var boxes_large: Vector.<ItemData>;
+		public static var planks_small: Vector.<ItemData>;
+		public static var planks_large: Vector.<ItemData>;
+		public static var balls: Vector.<ItemData>;
+		public static var trampolines: Vector.<ItemData>;
+		public static var anvils: Vector.<ItemData>;
+		public static var cannonballs: Vector.<ItemData>;
+		public static var balloons: Vector.<ItemData>;
+		public static var cartouches: Vector.<ItemData>;
 		
 		// { type:ITEM, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
 
 		public static function init() : void {
-			boxes_small = _setupCostumeArray({ base:"$Objet_1", type:ITEM.BOX_SMALL, pad:2 });
-			boxes_large = _setupCostumeArray({ base:"$Objet_2", type:ITEM.BOX_LARGE, pad:2 });
-			planks_small = _setupCostumeArray({ base:"$Objet_3", type:ITEM.PLANK_SMALL, pad:2 });
-			planks_large = _setupCostumeArray({ base:"$Objet_4", type:ITEM.PLANK_LARGE, pad:2 });
-			balls = _setupCostumeArray({ base:"$Objet_6", type:ITEM.BALL, pad:2 });
-			trampolines = _setupCostumeArray({ base:"$Objet_7", type:ITEM.TRAMPOLINE, pad:2 });
-			anvils = _setupCostumeArray({ base:"$Objet_10", type:ITEM.ANVIL, pad:2 });
-			cannonballs = _setupCostumeArray({ base:"$Objet_17", type:ITEM.CANNONBALL, pad:2 });
-			balloons = _setupCostumeArray({ base:"$Objet_28", type:ITEM.BALLOON, pad:2 });
-			cartouches = _setupCostumeArray({ base:"$Macaron_", type:ITEM.CARTOUCHE });
+			boxes_small = _setupCostumeList(ItemType.BOX_SMALL, "$Objet_1", { pad:2 });
+			boxes_large = _setupCostumeList(ItemType.BOX_LARGE, "$Objet_2", { pad:2 });
+			planks_small = _setupCostumeList(ItemType.PLANK_SMALL, "$Objet_3", { pad:2 });
+			planks_large = _setupCostumeList(ItemType.PLANK_LARGE, "$Objet_4", { pad:2 });
+			balls = _setupCostumeList(ItemType.BALL, "$Objet_6", { pad:2 });
+			trampolines = _setupCostumeList(ItemType.TRAMPOLINE, "$Objet_7", { pad:2 });
+			anvils = _setupCostumeList(ItemType.ANVIL, "$Objet_10", { pad:2 });
+			cannonballs = _setupCostumeList(ItemType.CANNONBALL, "$Objet_17", { pad:2 });
+			balloons = _setupCostumeList(ItemType.BALLOON, "$Objet_28", { pad:2 });
+			cartouches = _setupCostumeList(ItemType.CARTOUCHE, "$Macaron_", {});
 		}
 
-		// pData = { base:String, type:String, after:String, pad:int }
-		private static function _setupCostumeArray(pData:Object) : Array {
-			var tArray:Array = new Array();
-			var tClassName:String;
-			var tClass:Class;
+		// pData = { after:String, pad:int }
+		private static function _setupCostumeList(type:ItemType, base:String, pData:Object) : Vector.<ItemData> {
+			var list:Vector.<ItemData> = new Vector.<ItemData>(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
+			
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
-				if(i == 26 && pData.type == ITEM.BALLOON) {
+				if(i == 26 && type == ItemType.BALLOON) {
 					continue;
 				}
 				
-				tClass = Fewf.assets.getLoadedClass( pData.base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
+				tClass = Fewf.assets.getLoadedClass( base+(pData.pad ? zeroPad(i, pData.pad) : i)+(pData.after ? pData.after : "") );
 				if(tClass != null) {
 					breakCount = 0;
-					tArray.push( new ItemData({ id:i, type:pData.type, itemClass:tClass}) );
+					list.push( new ItemData(type, i, { itemClass:tClass }) );
 				} else {
 					breakCount++;
 					if(breakCount > 5) {
@@ -64,7 +63,7 @@ package app.data
 					}
 				}
 			}
-			return tArray;
+			return list;
 		}
 
 		public static function zeroPad(number:int, width:int):String {
@@ -74,29 +73,86 @@ package app.data
 			return ret;
 		}
 
-		public static function getArrayByType(pType:String) : Array {
+		public static function getItemDataListByType(pType:ItemType) : Vector.<ItemData> {
 			switch(pType) {
-				case ITEM.BOX_SMALL:	return boxes_small;
-				case ITEM.BOX_LARGE:	return boxes_large;
-				case ITEM.PLANK_SMALL:	return planks_small;
-				case ITEM.PLANK_LARGE:	return planks_large;
-				case ITEM.BALL:			return balls;
-				case ITEM.TRAMPOLINE:	return trampolines;
-				case ITEM.ANVIL:		return anvils;
-				case ITEM.CANNONBALL:	return cannonballs;
-				case ITEM.BALLOON:		return balloons;
-				case ITEM.CARTOUCHE:	return cartouches;
+				case ItemType.BOX_SMALL:	return boxes_small;
+				case ItemType.BOX_LARGE:	return boxes_large;
+				case ItemType.PLANK_SMALL:	return planks_small;
+				case ItemType.PLANK_LARGE:	return planks_large;
+				case ItemType.BALL:			return balls;
+				case ItemType.TRAMPOLINE:	return trampolines;
+				case ItemType.ANVIL:		return anvils;
+				case ItemType.CANNONBALL:	return cannonballs;
+				case ItemType.BALLOON:		return balloons;
+				case ItemType.CARTOUCHE:	return cartouches;
 				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
 			}
 			return null;
 		}
 
-		public static function getItemFromTypeID(pType:String, pID:String) : ItemData {
-			return FewfUtils.getFromArrayWithKeyVal(getArrayByType(pType), "id", pID);
+		public static function getItemFromTypeID(pType:ItemType, pID:String) : ItemData {
+			return FewfUtils.getFromVectorWithKeyVal(getItemDataListByType(pType), "id", pID);
+		}
+
+		public static function getItemIndexFromTypeID(pType:ItemType, pID:String) : int {
+			return FewfUtils.getIndexFromVectorWithKeyVal(getItemDataListByType(pType), "id", pID);
 		}
 
 		/****************************
-		* Color
+		* Color - GET
+		*****************************/
+		public static function findDefaultColors(pMC:MovieClip) : Vector.<uint> {
+			return Vector.<uint>( _findDefaultColorsRecursive(pMC, []) );
+		}
+		private static function _findDefaultColorsRecursive(pMC:MovieClip, pList:Array) : Array {
+			if (!pMC) { return pList; }
+
+			var child:DisplayObject=null, name:String=null, colorI:int = 0;
+			var i:*=0;
+			while (i < pMC.numChildren)
+			{
+				child = pMC.getChildAt(i);
+				name = child.name;
+				
+				if(name) {
+					if (name.indexOf("Couleur") == 0 && name.length > 7) {
+						colorI = int(name.charAt(7));
+						pList[colorI] = int("0x" + name.substr(name.indexOf("_") + 1, 6));
+					}
+					else if(name.indexOf("slot_") == 0) {
+						_findDefaultColorsRecursive(child as MovieClip, pList);
+					}
+					i++;
+				}
+			}
+			return pList;
+		}
+
+		public static function getNumOfCustomColors(pMC:MovieClip) : int {
+			// Use recursive one since the array it returns is a bit more safe for this than the vector
+			return _findDefaultColorsRecursive(pMC, []).length;
+		}
+		
+		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {
+			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }
+			var colors = pData.colors.concat();
+			if(pData.type == swatchHoverPreviewData.type && pData.id == swatchHoverPreviewData.id) {
+				var i = swatchHoverPreviewData.colorI;
+				colors[i] = GameAssets.invertColor(colors[i]);
+			}
+			return colors;
+		}
+		
+		public static function invertColor(pColor:uint) : uint {
+			var tR:*=pColor >> 16 & 255;
+			var tG:*=pColor >> 8 & 255;
+			var tB:*=pColor & 255;
+			
+			return (255-tR)<<16 | (255-tG)<<8 | (255-tB);
+		}
+
+		/****************************
+		* Color - APPLY
 		*****************************/
 		public static function copyColor(copyFromMC:MovieClip, copyToMC:MovieClip) : MovieClip {
 			if (copyFromMC == null || copyToMC == null) { return null; }
@@ -113,51 +169,6 @@ package app.data
 			}
 			return copyToMC;
 		}
-
-		public static function colorDefault(pMC:MovieClip) : MovieClip {
-			if (pMC == null) { return null; }
-
-			var tChild:*=null;
-			var tHex:int=0;
-			var i:int=0;
-			while (i < pMC.numChildren) {
-				tChild = pMC.getChildAt(i);
-				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)
-				{
-					// tHex = int("0x" + tChild.name.substr(tChild.name.indexOf("_") + 1, 6));
-					tHex = int("0x" + tChild.name.split("_")[1].substr(-6, 6));
-					applyColorToObject(tChild, tHex);
-				}
-				i++;
-			}
-			return pMC;
-		}
-
-		// pData = { obj:DisplayObject, color:String OR int, ?swatch:int, ?name:String, ?colors:Array<int> }
-		public static function colorItem(pData:Object) : DisplayObject {
-			if (pData.obj == null) { return null; }
-
-			var tHex:int = convertColorToNumber(pData.color);
-
-			var tChild:DisplayObject;
-			var i:int=0;
-			while (i < pData.obj.numChildren) {
-				tChild = pData.obj.getChildAt(i);
-				if (tChild.name == pData.name || (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7)) {
-					if(pData.colors != null && pData.colors[tChild.name.charAt(7)] != null) {
-						applyColorToObject(tChild, convertColorToNumber(pData.colors[tChild.name.charAt(7)]));
-					}
-					else if (!pData.swatch || pData.swatch == tChild.name.charAt(7)) {
-						applyColorToObject(tChild, tHex);
-					}
-				}
-				i++;
-			}
-			return pData.obj;
-		}
-		public static function convertColorToNumber(pColor) : int {
-			return pColor is Number || pColor == null ? pColor : int("0x" + pColor);
-		}
 		
 		// pColor is an int hex value. ex: 0x000000
 		public static function applyColorToObject(pItem:DisplayObject, pColor:int) : void {
@@ -166,6 +177,35 @@ package app.data
 			var tG:*=pColor >> 8 & 255;
 			var tB:*=pColor & 255;
 			pItem.transform.colorTransform = new flash.geom.ColorTransform(tR / 128, tG / 128, tB / 128);
+		}
+
+		public static function colorItemUsingColorList(pSprite:Sprite, pColors:Vector.<uint>) : DisplayObject {
+			if (pSprite == null) { return null; }
+
+			var tChild: DisplayObject, name:String;
+			var i:int=0;
+			while (i < pSprite.numChildren) {
+				tChild = pSprite.getChildAt(i); name = tChild.name;
+				
+				if (name.indexOf("Couleur") == 0 && name.length > 7) {
+					// hardcoded fix for tfm eye:31, which has a color of: Couleur_08C7474 (0 and _ are swapped)
+					var colorI:int = int(name.charAt(7) == '_' ? name.charAt(8) : name.charAt(7));
+					// fallback encase colorI is outside of the list
+					var color:uint = colorI < pColors.length ? pColors[colorI] : int("0x" + name.split("_")[1]);
+					applyColorToObject(tChild, color);
+				}
+				else if(tChild.name.indexOf("slot_") == 0) {
+					colorItemUsingColorList(tChild as Sprite, pColors);
+				}
+				i++;
+			}
+			return pSprite;
+		}
+
+		public static function colorDefault(pMC:MovieClip) : MovieClip {
+			var colors:Vector.<uint> = findDefaultColors(pMC);
+			colorItemUsingColorList(pMC, colors);
+			return pMC;
 		}
 
 		public static function getColors(pMC:MovieClip) : Array {
@@ -185,42 +225,6 @@ package app.data
 			return tArray;
 		}
 
-		public static function getNumOfCustomColors(pMC:MovieClip) : int {
-			var tChild:*=null;
-			var num:int = 0;
-			var i:int = 0;
-			while (i < pMC.numChildren) {
-				tChild = pMC.getChildAt(i);
-				if (tChild.name.indexOf("Couleur") == 0 && tChild.name.length > 7) {
-					num++;
-				}
-				i++;
-			}
-			return num;
-		}
-		
-		public static function getColoredItemImage(pData:ItemData) : MovieClip {
-			return colorItem({ obj:getItemImage(pData), colors:getColorsWithPossibleHoverEffect(pData) }) as MovieClip;
-		}
-		
-		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Array {
-			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }
-			var colors = pData.colors.concat();
-			if(pData.type == swatchHoverPreviewData.type && pData.id == swatchHoverPreviewData.id) {
-				var i = swatchHoverPreviewData.colorI;
-				colors[i] = GameAssets.invertColor(colors[i]);
-			}
-			return colors;
-		}
-		
-		public static function invertColor(pColor:uint) : uint {
-			var tR:*=pColor >> 16 & 255;
-			var tG:*=pColor >> 8 & 255;
-			var tB:*=pColor & 255;
-			
-			return (255-tR)<<16 | (255-tG)<<8 | (255-tB);
-		}
-
 		/****************************
 		* Asset Creation
 		*****************************/
@@ -228,6 +232,27 @@ package app.data
 			var tItem:MovieClip = new pData.itemClass();
 			colorDefault(tItem);
 			return tItem;
+		}
+		
+		public static function getColoredItemImage(pData:ItemData) : MovieClip {
+			return colorItemUsingColorList(getItemImage(pData), getColorsWithPossibleHoverEffect(pData)) as MovieClip;
+		}
+		
+		/****************************
+		* Misc
+		*****************************/
+		public static function createHorizontalRule(pX:Number, pY:Number, pWidth:Number) : Sprite {
+			var tLine:Sprite = new Sprite(); tLine.x = pX; tLine.y = pY;
+			
+			tLine.graphics.lineStyle(1, 0x11181c, 1, true);
+			tLine.graphics.moveTo(0, 0);
+			tLine.graphics.lineTo(pWidth, 0);
+			
+			tLine.graphics.lineStyle(1, 0x608599, 1, true);
+			tLine.graphics.moveTo(0, 1);
+			tLine.graphics.lineTo(pWidth, 1);
+			
+			return tLine;
 		}
 	}
 }

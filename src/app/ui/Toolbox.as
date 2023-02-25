@@ -2,32 +2,38 @@ package app.ui
 {
 	import com.fewfre.display.ButtonBase;
 	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.ImgurApi;
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
+	import app.ui.common.*;
 	import flash.display.*;
 	import flash.net.*;
 	import ext.ParentApp;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import app.world.elements.CustomItem;
+	import flash.utils.setTimeout;
 	
 	public class Toolbox extends MovieClip
 	{
 		// Storage
 		private var _downloadTray	: FrameBase;
 		private var _bg				: RoundedRectangle;
+		private var _character		: CustomItem;
+		
 		public var scaleSlider		: Object;//FancySlider;
 		public var animateButton	: SpriteButton;
 		public var imgurButton		: SpriteButton;
 		
 		// Constructor
-		// pData = { x:Number, y:Number, character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onShare:Function, onScale:Function }
+		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onShare:Function, onScale:Function }
 		public function Toolbox(pData:Object) {
-			this.x = pData.x;
-			this.y = pData.y;
+			_character = pData.character;
 			
 			var btn:ButtonBase;
 			
 			_bg = addChild(new RoundedRectangle({ width:365, height:35, origin:0.5 })) as RoundedRectangle;
-			_bg.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);
+			_bg.drawAsTray();
 			
 			/********************
 			* Download Button
@@ -57,10 +63,21 @@ package app.ui
 			
 			if(!Fewf.isExternallyLoaded) {
 				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
-				var tCharacter = pData.character;
 				btn.addEventListener(ButtonBase.CLICK, function(e:*){
-					ImgurApi.uploadImage(tCharacter);
+					ImgurApi.uploadImage(_character);
 					imgurButton.disable();
+				});
+				tButtonsOnLeft++;
+			} else {
+				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
+				btn.addEventListener(ButtonBase.CLICK, function(e:*){
+					try {
+						FewfDisplayUtils.copyToClipboard(_character);
+						imgurButton.ChangeImage(new $Yes());
+					} catch(e) {
+						imgurButton.ChangeImage(new $No());
+					}
+					setTimeout(function(){ imgurButton.ChangeImage(new $CopyIcon()); }, 750)
 				});
 				tButtonsOnLeft++;
 			}
@@ -74,7 +91,7 @@ package app.ui
 			
 			animateButton = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new MovieClip(), origin:0.5 }));
 			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
-			toggleAnimateButtonAsset(pData.character.animatePose);
+			toggleAnimateButtonAsset(_character.animatePose);
 			tButtonOnRight++;*/
 			
 			/********************
@@ -84,7 +101,7 @@ package app.ui
 			var tSliderWidth = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			var sliderProps = {
 				x:-tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1, y:tY,
-				value: pData.character.outfit.scaleX*10, min:10, max:40, width:tSliderWidth
+				value: _character.outfit.scaleX*10, min:10, max:40, width:tSliderWidth
 			};
 			if(Fewf.isExternallyLoaded) {
 				scaleSlider = tTray.addChild(ParentApp.newFancySlider(sliderProps));
@@ -101,6 +118,8 @@ package app.ui
 			
 			pData = null;
 		}
+		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
 		
 		public function toggleAnimateButtonAsset(pOn:Boolean) : void {
 			animateButton.ChangeImage(pOn ? new $PauseButton() : new $PlayButton());

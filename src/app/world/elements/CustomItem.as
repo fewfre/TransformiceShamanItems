@@ -20,13 +20,9 @@ package app.world.elements
 		public function set scale(pVal:Number) : void { outfit.scaleX = outfit.scaleY = pVal; }
 
 		// Constructor
-		// pData = { x:Number, y:Number, item:ItemData, ?params:URLVariables }
-		public function CustomItem(pData:Object) {
+		public function CustomItem(item:ItemData=null, pParams:String=null) {
 			super();
 			animatePose = false;
-
-			this.x = pData.x;
-			this.y = pData.y;
 
 			this.buttonMode = true;
 			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
@@ -35,12 +31,14 @@ package app.world.elements
 			/****************************
 			* Store Data
 			*****************************/
-			_itemData = pData.item;
+			_itemData = item;
 			
 			/*if(pData.params) _parseParams(pData.params);*/
 
 			updateItem();
 		}
+		public function setXY(pX:Number, pY:Number) : CustomItem { x = pX; y = pY; return this; }
+		public function appendTo(target:Sprite): CustomItem { target.addChild(this); return this; }
 
 		public function updateItem() {
 			var tScale = 1.75;
@@ -62,7 +60,7 @@ package app.world.elements
 			tChild = null;*/
 			
 			if(_itemData.colors != null) {
-				GameAssets.colorItem({ obj:outfit, colors:GameAssets.getColorsWithPossibleHoverEffect(_itemData) });
+				GameAssets.colorItemUsingColorList(outfit, GameAssets.getColorsWithPossibleHoverEffect(_itemData));
 			}
 			else { GameAssets.colorDefault(outfit); }
 			
@@ -99,19 +97,14 @@ package app.world.elements
 		/****************************
 		* Color
 		*****************************/
-		public function getColors(pType:String) : Array {
+		public function getColors(pType:ItemType) : Vector.<uint> {
 			return _itemData.colors;
-		}
-
-		public function colorItem(pType:String, arg2:int, pColor:String) : void {
-			_itemData.colors[arg2] = GameAssets.convertColorToNumber(pColor);
-			updateItem();
 		}
 
 		/****************************
 		* Update Data
 		*****************************/
-		public function getItemData(pType:String) : ItemData {
+		public function getItemData(pType:ItemType) : ItemData {
 			return _itemData;
 		}
 
@@ -120,7 +113,7 @@ package app.world.elements
 			updateItem();
 		}
 
-		public function removeItem(pType:String) : void {
+		public function removeItem(pType:ItemType) : void {
 			_itemData = null;
 			updateItem();
 		}
