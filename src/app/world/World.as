@@ -44,6 +44,7 @@ package app.world
 		internal var configCurrentlyColoringType:String;
 		
 		// Constants
+		public static const TAB_OUTFITS:String = "outfits";
 		public static const COLOR_PANE_ID = "colorPane";
 		public static const COLOR_FINDER_PANE_ID = "colorFinderPane";
 		
@@ -103,6 +104,9 @@ package app.world
 				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange, onShareCodeEntered:_onShareCodeEntered
 			}).setXY(188, 28).appendTo(this);
 			
+			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
+			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
 			
@@ -133,6 +137,15 @@ package app.world
 			* Other panes
 			*****************************/
 			var tPane:TabPane = null;
+			
+			// Outfit Pane
+			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode));
+			tPane.infoBar.colorWheel.addEventListener(MouseEvent.MOUSE_UP, function(pEvent:Event){
+				_paneManager.openPane(character.getCurrentItemData().type.toString());
+			});
+			// Grid Management Events
+			tPane.infoBar.rightItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(_paneManager.getPane(TAB_OUTFITS), true); });
+			tPane.infoBar.leftItemButton.addEventListener(ButtonBase.CLICK, function(){ _traversePaneButtonGrid(_paneManager.getPane(TAB_OUTFITS), false); });
 			
 			// Color Picker Pane
 			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));

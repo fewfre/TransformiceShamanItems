@@ -2,6 +2,7 @@
 - [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid
 - Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag
 - Share code support added
+- "Outfit" manager for saving shaman items like in the tfm dressroom
 
 == V1.9 - 25 February 2023 ==
 - Each category now has newest item selected by default

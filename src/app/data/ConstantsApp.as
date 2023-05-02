@@ -23,6 +23,7 @@ package app.data
 		public static const ITEM_SAVE_SCALE			: int = 8; // Power of two is probably best
 		
 		public static const SHARED_OBJECT_KEY_GLOBAL_LANG: String = 'lang';
+		public static const SHARED_OBJECT_KEY_OUTFITS: String = 'saved-outfits';
 		
 		/****************************
 		* Colors
