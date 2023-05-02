@@ -101,7 +101,7 @@ package app.ui
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			tX = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
 			scaleSlider = new FancySlider(tSliderWidth).setXY(tX, tY)
-				.setSliderParams(1, 8, _character.outfit.scaleX)
+				.setSliderParams(1, 4, _character.outfit.scaleX)
 				.appendTo(tTray);
 			scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
 			
