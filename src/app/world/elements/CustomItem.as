@@ -161,6 +161,10 @@ package app.world.elements
 		/****************************
 		* Update Data
 		*****************************/
+		public function getCurrentItemData() : ItemData {
+			return _itemData;
+		}
+		
 		public function getItemData(pType:ItemType) : ItemData {
 			return _itemData;
 		}

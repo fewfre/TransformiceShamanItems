@@ -289,10 +289,10 @@ package app.world
 			character.updateItem();
 			
 			// for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
+			_refreshButtonCustomizationForItemData(character.getCurrentItemData());
 			
 			// // now update the infobars
-			// _updateUIBasedOnCharacter();
-			// (_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+			_updateUIBasedOnCharacter();
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
@@ -307,6 +307,20 @@ package app.world
 
 		private function _onSaveClicked(pEvent:Event) : void {
 			FewfDisplayUtils.saveAsPNG(this.character, "shamanitem");
+		}
+
+		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
+		// This function is required when setting data via parseParams
+		private function _updateUIBasedOnCharacter() : void {
+			var tType:ItemType = character.getCurrentItemData().type;
+			var tPane:ShopCategoryPane = getTabByType(tType);
+			tPane.toggleGridButtonWithData( character.getItemData(tType) );
+			shopTabs.getTabButton(tType.toString()).toggleOn(true);
+			// for each(var tType:ItemType in ItemType.ALL) {
+			// 	tPane = getTabByType(tType);
+			// 	// Based on what the character is wearing at start, toggle on the appropriate buttons.
+			// 	tPane.toggleGridButtonWithData( character.getItemData(tType) );
+			// }
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
@@ -494,6 +508,16 @@ package app.world
 					GameAssets.copyColor(tMC, _paneManager.getPane(COLOR_PANE_ID).infoBar.Image);
 					
 				}*/
+			}
+			
+			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
+				if(!data) { return; }
+				
+				var pane:ShopCategoryPane = getTabByType(data.type);
+				var i:int = GameAssets.getItemIndexFromTypeID(data.type, data.id);
+				
+				var tItem:MovieClip = GameAssets.getColoredItemImage(data);
+				GameAssets.copyColor(tItem, pane.buttons[i].Image );
 			}
 
 			private function _colorButtonClicked(pType:ItemType) : void {
