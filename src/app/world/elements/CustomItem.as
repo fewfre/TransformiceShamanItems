@@ -94,7 +94,7 @@ package app.world.elements
 		private function _parseItemDataShareString(pItemType:ItemType, pShareString:String) : ItemData {
 			var tData:ItemData = null;
 			var tShareStringSplit = pShareString.split("_");
-			var id = tShareStringSplit[0], colors = (tShareStringSplit[1] || "").split("+");
+			var id = tShareStringSplit[0], colors = (tShareStringSplit[1] || "").split(/[ \+]/); // split on + or space (since + turns into space in urls)
 			
 			tData = GameAssets.getItemFromTypeID(pItemType, id);
 			if(isOutfit) tData = tData.copy();
