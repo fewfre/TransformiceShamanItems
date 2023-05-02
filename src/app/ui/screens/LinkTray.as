@@ -56,25 +56,10 @@ package app.ui.screens
 			addChild(new TextBase({ text:"share_header", size:25, y:-63 }));
 			
 			/****************************
-			* Selectable text field
+			* #1 - Selectable text field + Copy Button and message
 			*****************************/
-			var tTFWidth:Number = tWidth-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			// So much easier than doing it with those darn native text field options which have no padding.
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
-				.appendTo(this).draw(0xFFFFFF, 7, 0x444444);
+			_text = _newCopyInput({ x:0, y:0 }, this);
 			
-			_text = tTextBackground.addChild(new TextField()) as TextField;
-			_text.type = TextFieldType.DYNAMIC;
-			_text.multiline = false;
-			_text.width = tTFWidth;
-			_text.height = tTFHeight;
-			_text.x = tTFPaddingX - tTextBackground.Width*0.5;
-			_text.y = tTFPaddingY - tTextBackground.Height*0.5;
-			_text.addEventListener(MouseEvent.CLICK, function(pEvent:Event){ _text.setSelection(0, _text.text.length); });
-			
-			/****************************
-			* Copy Button and message
-			*****************************/
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
@@ -101,18 +86,43 @@ package app.ui.screens
 		
 		public function open(pURL:String) : void {
 			_text.text = pURL;
-			_textCopiedMessage.alpha = 0;
+			_clearCopiedMessages();
 		}
 		
 		private function _onCloseClicked(pEvent:Event) : void {
 			dispatchEvent(new Event(CLOSE));
 		}
 		
+		private function _clearCopiedMessages() : void {
+			if(_textCopyTween) _textCopyTween.stop();
+			_textCopiedMessage.alpha = 0;
+		}
+		
 		private function _copyToClipboard() : void {
+			_clearCopiedMessages();
 			_text.setSelection(0, _text.text.length)
 			System.setClipboard(_text.text);
 			_textCopiedMessage.alpha = 0;
 			if(_textCopyTween) _textCopyTween.start(); else _textCopyTween = new Tween(_textCopiedMessage, "alpha", Elastic.easeOut, 0, 1, 1, true);
+		}
+		
+		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
+			var tTFWidth:Number = _bg.width-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
+			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+				.appendTo(pParent).draw(0xFFFFFF, 7, 0x444444);
+			
+			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;
+			tTextField.type = TextFieldType.DYNAMIC;
+			tTextField.multiline = false;
+			tTextField.width = tTFWidth;
+			tTextField.height = tTFHeight;
+			tTextField.x = tTFPaddingX - tTextBackground.Width*0.5;
+			tTextField.y = tTFPaddingY - tTextBackground.Height*0.5;
+			tTextField.addEventListener(MouseEvent.CLICK, function(pEvent:Event):void{
+				_clearCopiedMessages();
+				tTextField.setSelection(0, tTextField.text.length);
+			});
+			return tTextField;
 		}
 	}
 }

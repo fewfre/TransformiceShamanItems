@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Împărtășește-ți creația!" },
 		"share_link_copied":	{ "text":"Link copiat in clipboard! Lipiți-l pentru utilizare.", "scale":0.95 },
 		"share_copy":			{ "text":"Copiează" },
+		"share_paste":             { "text":"Lipește-ți codul/url-ul aici" },
+		"share_paste_success":     { "text":"Success!" },
+		"share_paste_invalid":     { "text":"Invalid" },
 		"version":				{ "text":"Versiune: {0}" },
 		"translated_by":		{ "text":"Translated by: Sky_dreams" },
 		

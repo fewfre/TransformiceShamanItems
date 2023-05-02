@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Teile deine Kreation!" },
 		"share_link_copied":	{ "text":"Link in Zwischenablage gelegt!" },
 		"share_copy":			{ "text":"Kopieren" },
+		"share_paste":             { "text":"Fügen Sie hier Ihren Freigabecode / Ihre URL ein" },
+		"share_paste_success":     { "text":"Erfolg!" },
+		"share_paste_invalid":     { "text":"Ungültig" },
 		"version":				{ "text":"Version: {0}" },
 		"translated_by":		{ "text":"Übersetzt von: Virus_Code" },
 		

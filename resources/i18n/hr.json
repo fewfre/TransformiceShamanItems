@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Podijeli svoju kreaciju!" },
 		"share_link_copied":	{ "text":"Link kopiran u međuspremnik! Zalijepi za upotrebu.", "scale":0.9 },
 		"share_copy":			{ "text":"Kopija" },
+		"share_paste":             { "text":"Paste your share code / url here" },
+		"share_paste_success":     { "text":"Success!" },
+		"share_paste_invalid":     { "text":"Invalid" },
 		"version":				{ "text":"Verzija: {0}" },
 		"translated_by":		{ "text":"Preveo: Brunocarfd" },
 		

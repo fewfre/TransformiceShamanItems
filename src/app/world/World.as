@@ -100,7 +100,7 @@ package app.world
 			_toolbox = new Toolbox({
 				character:character,
 				onSave:_onSaveClicked, /*onAnimate:_onPlayerAnimationToggle,*/ /*onRandomize:_onRandomizeDesignClicked,*/
-				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange
+				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange, onShareCodeEntered:_onShareCodeEntered
 			}).setXY(188, 28).appendTo(this);
 			
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
@@ -265,6 +265,36 @@ package app.world
 			character.scale = _toolbox.scaleSlider.value;
 		}
 
+		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
+			if(!pCode || pCode == "") { return; pProgressCallback("placeholder"); }
+			
+			try {
+				_useShareCode(pCode);
+				
+				// Now tell code box that we are done
+				pProgressCallback("success");
+			}
+			catch (error:Error) {
+				pProgressCallback("invalid");
+			};
+		}
+		
+		private function _useShareCode(pCode:String):void {
+			if(pCode.indexOf("?") > -1) {
+				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
+			}
+			
+			// Now update pose
+			character.parseShareCode(pCode);
+			character.updateItem();
+			
+			// for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
+			
+			// // now update the infobars
+			// _updateUIBasedOnCharacter();
+			// (_paneManager.getPane(TAB_OTHER) as OtherTabPane).updateButtonsBasedOnCurrentData();
+		}
+
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
 			character.animatePose = !character.animatePose;
 			if(character.animatePose) {
@@ -369,8 +399,12 @@ package app.world
 		private function _onShareButtonClicked(pEvent:Event) : void {
 			var tURL = "";
 			try {
-				tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-				tURL += "?"+this.character.getParams();
+				if(Fewf.isExternallyLoaded) {
+					tURL = this.character.getShareCodeFewfreSyntax();
+				} else {
+					tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
+					tURL += "?"+this.character.getShareCodeFewfreSyntax();
+				}
 			} catch (error:Error) {
 				tURL = "<error creating link>";
 			};

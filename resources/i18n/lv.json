@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Dalies ar savu meistardarbu!" },
 		"share_link_copied":	{ "text":"Saite kopēta uz starpliktuvi! Iekopē, lai lietotu.", "scale":0.95 },
 		"share_copy":			{ "text":"Kopēt" },
+		"share_paste":             { "text":"Iekopē savu kodu / url šeit" },
+		"share_paste_success":     { "text":"Veiksmīgi!" },
+		"share_paste_invalid":     { "text":"Kļūda" },
 		"version":				{ "text":"Versija: {0}" },
 		"translated_by":		{ "text":"Tulkoja: Marciskris" },
 		

@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"¡Comparte tu creación!" },
 		"share_link_copied":	{ "text":"¡Enlace copiado al portapapeles! Pega para usar.", "scale":0.9 },
 		"share_copy":			{ "text":"copiar" },
+		"share_paste":             { "text":"Pega tu código / link aquí" },
+		"share_paste_success":     { "text":"¡Hecho!" },
+		"share_paste_invalid":     { "text":"No es válido" },
 		"version":				{ "text":"Versión: {0}" },
 		"translated_by":		{ "text":"Traducido por: Chamelinct" },
 		

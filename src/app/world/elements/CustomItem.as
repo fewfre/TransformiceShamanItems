@@ -13,6 +13,7 @@ package app.world.elements
 		// Storage
 		public var outfit:MovieClip;
 		public var animatePose:Boolean;
+		public var isOutfit:Boolean;
 
 		private var _itemData:ItemData;
 
@@ -20,9 +21,10 @@ package app.world.elements
 		public function set scale(pVal:Number) : void { outfit.scaleX = outfit.scaleY = pVal; }
 
 		// Constructor
-		public function CustomItem(item:ItemData=null, pParams:String=null) {
+		public function CustomItem(item:ItemData=null, pShareCode:String=null, pIsOutfit:Boolean=false) {
 			super();
 			animatePose = false;
+			isOutfit = pIsOutfit;
 
 			this.buttonMode = true;
 			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
@@ -33,7 +35,7 @@ package app.world.elements
 			*****************************/
 			_itemData = item;
 			
-			/*if(pData.params) _parseParams(pData.params);*/
+			if(pShareCode) parseShareCode(pShareCode);
 
 			updateItem();
 		}
@@ -66,32 +68,87 @@ package app.world.elements
 			
 			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
-
-		private function _parseParams(pParams:URLVariables) : void {
-			/*trace(pParams.toString());
-
-			_setParamToType(pParams, ITEM.SKIN, "s", false);*/
+		
+		public function copy() : CustomItem {
+			return new CustomItem(null, getShareCodeFewfreSyntax(), true);
 		}
-		private function _setParamToType(pParams:URLVariables, pType:String, pParam:String, pAllowNull:Boolean=true) {
-			/*var tData:ItemData = null;
-			if(pParams[pParam] != null) {
-				if(pParams[pParam] == '') {
-					tData = null;
-				} else {
-					tData = GameAssets.getItemFromTypeID(pType, pParams[pParam]);
-				}
+
+		/****************************
+		* Share Code
+		*****************************/
+		public function parseShareCode(pCode:String) : Boolean {
+			if(pCode.indexOf("=") > -1) {
+				return _parseFewfreSyntax(pCode);
+			} else {
+				return false;
 			}
-			_itemDataMap[pType] = pAllowNull ? tData : ( tData == null ? _itemDataMap[pType] : tData );*/
+		}
+		
+		private function _itemDataToShareString(pData:ItemData) : String {
+			if(String(pData.colors) != String(pData.defaultColors)) { // Quick way to compare two arrays with primitive types
+				return pData.id+"_"+_intListToHexList(pData.colors).join("+");
+			}
+			return pData.id;
+		}
+		
+		private function _parseItemDataShareString(pItemType:ItemType, pShareString:String) : ItemData {
+			var tData:ItemData = null;
+			var tShareStringSplit = pShareString.split("_");
+			var id = tShareStringSplit[0], colors = (tShareStringSplit[1] || "").split("+");
+			
+			tData = GameAssets.getItemFromTypeID(pItemType, id);
+			if(isOutfit) tData = tData.copy();
+			
+			if(colors.length > 0) { tData.colors = _hexArrayToIntList(colors, tData.defaultColors); }
+			return tData;
+		}
+		
+		private function _intListToHexList(pColors:Vector.<uint>) : Vector.<String> {
+			var hexList = new Vector.<String>();
+			for(var i = 0; i < pColors.length; i++) {
+				hexList.push( _intToHex(pColors[i]) );
+			}
+			return hexList;
+		}
+		private function _intToHex(pVal:int) : String {
+			return pVal.toString(16).toUpperCase();
+		}
+		
+		private function _hexArrayToIntList(pColors:Array, pDefaults:Vector.<uint>) : Vector.<uint> {
+			var ints = new Vector.<uint>();
+			for(var i = 0; i < pDefaults.length; i++) {
+				ints.push( pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i] );
+			}
+			return ints;
+		}
+		private function _hexToInt(pVal:String) : int {
+			return parseInt(pVal, 16);
+		}
+		
+		/****************************
+		* Fewfre Share Code Syntax
+		*****************************/
+		private function _parseFewfreSyntax(pCode:String) : Boolean {
+			try {
+				var pParams = new URLVariables();
+				pParams.decode(pCode);
+				
+				for each(var tType:ItemType in ItemType.ALL) {
+					var tItemShareCode:String = pParams[tType.toString()];
+					if(tItemShareCode) {
+						_itemData = _parseItemDataShareString(tType, tItemShareCode);
+						break;
+					}
+				}
+			} catch (error:Error) { return false; };
+			return true;
 		}
 
-		public function getParams() : URLVariables {
-			/*var tParms = new URLVariables();
-
-			var tData:ItemData;
-			tParms.s = (tData = getItemData(ITEM.SKIN)) ? tData.id : '';
-
-			return tParms;*/
-			return null;
+		public function getShareCodeFewfreSyntax() : String {
+			var parts:Array = [
+				_itemData.type.toString()+"="+_itemDataToShareString(_itemData)
+			];
+			return parts.join("&");
 		}
 
 		/****************************

@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Eserini paylaş!" },
 		"share_link_copied":	{ "text":"Bağlantı panoya kopyalandı! Kullanmak için yapıştırın.", "scale":0.9 },
 		"share_copy":			{ "text":"kopyala" },
+		"share_paste":             { "text":"Paylaşım kodunun urlsini / buraya yapıştır" },
+		"share_paste_success":     { "text":"Başarılı!" },
+		"share_paste_invalid":     { "text":"Geçersiz" },
 		"version":				{ "text":"Sürüm: {0}" },
 		"translated_by":		{ "text":"Çeviri: Honorabilis" },
 		

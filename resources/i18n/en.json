@@ -28,6 +28,10 @@
 		"share_header":			{ "text":"Share your Creation!" },
 		"share_link_copied":	{ "text":"Link copied to clipboard! Paste to use." },
 		"share_copy":			{ "text":"copy" },
+    
+		"share_paste":             { "text":"Paste your share code / url here" },
+		"share_paste_success":     { "text":"Success!" },
+		"share_paste_invalid":     { "text":"Invalid" },
 		
 		"infobar_id":			{ "text":"ID: {0}" },
 		

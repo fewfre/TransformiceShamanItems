@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Compartilhe sua criação!" },
 		"share_link_copied":	{ "text":"Link copiado. Cole para usá-lo." },
 		"share_copy":			{ "text":"Copiar" },
+		"share_paste":             { "text":"Cole aqui o código do seu visual / url" },
+		"share_paste_success":     { "text":"Sucesso!" },
+		"share_paste_invalid":     { "text":"Inválido" },
 		"version":				{ "text":"Versão: {0}" },
 		"translated_by":		{ "text":"Traduzido por: Buwho" },
 		

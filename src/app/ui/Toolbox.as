@@ -57,9 +57,9 @@ package app.ui
 			// ### Left Side Buttons ###
 			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			/*btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }));
+			btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }));
 			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
-			tButtonsOnLeft++;*/
+			tButtonsOnLeft++;
 			
 			if(!Fewf.isExternallyLoaded) {
 				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
@@ -104,6 +104,11 @@ package app.ui
 				.setSliderParams(1, 4, _character.outfit.scaleX)
 				.appendTo(tTray);
 			scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
+			
+			/********************
+			* Share Code Input
+			*********************/
+			addChild(new PasteShareCodeInput({ x:18, y:33, onChange:pData.onShareCodeEntered }));
 			
 			/********************
 			* Events

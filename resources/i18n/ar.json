@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"شارك معنا ابداعك !" },
 		"share_link_copied":	{ "text":"تم نسخ الرابط إلى الحافظة! الصق للاستخدام." },
 		"share_copy":			{ "text":"نسخ" },
+		"share_paste":             { "text":"الصق كود المشاركة / الرابط هنا" },
+		"share_paste_success":     { "text":"تم بنجاح!" },
+		"share_paste_invalid":     { "text":"خاطئ" },
 		"version":				{ "text":"الإصدار: {0}" },
 		"translated_by":		{ "text":"الترجمة من طرف: Hmiida" },
 		

@@ -11,6 +11,9 @@
 		"share_header":			{ "text":"Podziel się swoją kreacją!" },
 		"share_link_copied":	{ "text":"Link skopiowany! Wklej by go użyć." },
 		"share_copy":			{ "text":"Kopiuj" },
+		"share_paste":             { "text":"Wklej tutaj swój kod/ url" },
+		"share_paste_success":     { "text":"Sukces!" },
+		"share_paste_invalid":     { "text":"Błąd" },
 		"version":				{ "text":"Wersja: {0}" },
 		"translated_by":		{ "text":"Przetłumaczone przez: Akanaria" },
 		

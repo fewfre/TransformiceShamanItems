@@ -1,6 +1,7 @@
 == V1.10 - 1 May 2023 ==
-- [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid.
-- Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag.
+- [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid
+- Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag
+- Share code support added
 
 == V1.9 - 25 February 2023 ==
 - Each category now has newest item selected by default
