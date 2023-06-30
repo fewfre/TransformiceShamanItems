@@ -6,7 +6,6 @@ package app.ui.panes.colorpicker
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import fl.containers.*;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.Dictionary;
@@ -137,6 +136,13 @@ package app.ui.panes.colorpicker
 				colors.push( _colorSwatches[i].color );
 			}
 			return colors;
+		}
+		
+		public function nextSwatch(pForward:Boolean=true) : void {
+			var newSwatchI:int = _selectedSwatch + (pForward ? 1 : -1);
+			// Force index to loop in both directions
+			newSwatchI = (newSwatchI + _colorSwatches.length) % _colorSwatches.length;
+			_selectSwatch(newSwatchI);
 		}
 		
 		/****************************

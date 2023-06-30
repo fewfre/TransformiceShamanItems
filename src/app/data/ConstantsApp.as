@@ -12,7 +12,7 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION					: String = "1.10";
+		public static const VERSION					: String = "1.10b";
 		public static const SOURCE_URL				: String = "https://github.com/fewfre/TransformiceShamanItems/blob/master/CHANGELOG";
 		
 		public static const DEFAULT_SKIN_ID			: int = 0;

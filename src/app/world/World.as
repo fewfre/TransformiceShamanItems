@@ -231,7 +231,10 @@ package app.world
 		}
 		
 		private function _traversePaneButtonGridVertically(pane:TabPane, pUp:Boolean):void {
-			if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
+			if(pane && pane is ColorPickerTabPane) {
+				(pane as ColorPickerTabPane).nextSwatch(!pUp);
+			}
+			else if(pane && pane.grid && pane.buttons && pane.buttons.length > 0 && pane.buttons[0] is PushButton) {
 				var buttons:Array = pane.buttons, grid:Grid = pane.grid;
 				
 				var activeButtonIndex:int = _findIndexActivePushButton(buttons);
@@ -325,15 +328,28 @@ package app.world
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
 		// This function is required when setting data via parseParams
 		private function _updateUIBasedOnCharacter() : void {
-			var tType:ItemType = character.getCurrentItemData().type;
-			var tPane:ShopCategoryPane = getTabByType(tType);
-			tPane.toggleGridButtonWithData( character.getItemData(tType) );
-			shopTabs.getTabButton(tType.toString()).toggleOn(true);
+			// var tType:ItemType = character.getCurrentItemData().type;
+			// var tPane:ShopCategoryPane = getTabByType(tType);
+			// tPane.toggleGridButtonWithData( character.getItemData(tType) );
+			// shopTabs.getTabButton(tType.toString()).toggleOn(true);
+			
+			_goToItem( character.getCurrentItemData() );
+			
 			// for each(var tType:ItemType in ItemType.ALL) {
 			// 	tPane = getTabByType(tType);
 			// 	// Based on what the character is wearing at start, toggle on the appropriate buttons.
 			// 	tPane.toggleGridButtonWithData( character.getItemData(tType) );
 			// }
+		}
+		
+		private function _goToItem(pItemData:ItemData) : void {
+			var itemType:ItemType = pItemData.type;
+			
+			shopTabs.UnpressAll();
+			shopTabs.getTabButton(itemType.toString()).toggleOn(true);
+			var tPane:ShopCategoryPane = getTabByType(itemType);
+			var itemBttn:PushButton = tPane.toggleGridButtonWithData( pItemData );
+			tPane.scrollItemIntoView(itemBttn);
 		}
 
 		private function _onItemToggled(pEvent:FewfEvent) : void {
