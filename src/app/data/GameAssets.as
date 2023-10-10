@@ -117,7 +117,7 @@ package app.data
 				if(name) {
 					if (name.indexOf("Couleur") == 0 && name.length > 7) {
 						colorI = int(name.charAt(7));
-						pList[colorI] = int("0x" + name.substr(name.indexOf("_") + 1, 6));
+						pList[colorI] = int("0x" + name.split("_")[1]);
 					}
 					else if(name.indexOf("slot_") == 0) {
 						_findDefaultColorsRecursive(child as MovieClip, pList);

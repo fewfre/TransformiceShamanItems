@@ -1,3 +1,7 @@
+== V.10c - 9 October 2023 ==
+- Changed default color detect to account for weird color values
+
+
 == V1.10b - 30 June 2023 ==
 - share code now scrolls item into view
 - Allow traversing color swatches using up/down arrow keys
