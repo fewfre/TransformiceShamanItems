@@ -1,3 +1,7 @@
+== V1.10d - 6 December 2023 ==
+- Fixed bug causing color history to stay in delete mode when it shouldn't.
+
+
 == V.10c - 9 October 2023 ==
 - Changed default color detect to account for weird color values
 
