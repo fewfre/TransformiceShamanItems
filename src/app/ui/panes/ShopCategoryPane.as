@@ -40,11 +40,9 @@ package app.ui.panes
 		}
 		
 		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
-			trace("hh", pData, pData && GameAssets.getItemIndexFromTypeID(_type, pData.id));
 			if(pData) {
 				var tIndex:int = GameAssets.getItemIndexFromTypeID(_type, pData.id);
 				buttons[ tIndex ].toggleOn();
-			trace("hh2", buttons[tIndex]);
 				return buttons[tIndex];
 			}
 			return null;

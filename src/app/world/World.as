@@ -82,6 +82,8 @@ package app.world
 				.appendTo(this).drawAsTray();
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
+			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).setXY(375, 10).appendTo(this);
+			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			var tabs:Vector.<Object> = new <Object>[
 				{ text:"tab_box_small", event:ItemType.BOX_SMALL.toString() },
 				{ text:"tab_box_large", event:ItemType.BOX_LARGE.toString() },
@@ -94,8 +96,7 @@ package app.world
 				{ text:"tab_balloon", event:ItemType.BALLOON.toString() },
 				{ text:"tab_cartouche", event:ItemType.CARTOUCHE.toString() },
 			];
-			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT, tabs).setXY(375, 10).appendTo(this);
-			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
+			this.shopTabs.populate(tabs);
 
 			// Toolbox
 			_toolbox = new Toolbox({
@@ -295,7 +296,7 @@ package app.world
 			};
 		}
 		
-		private function _useShareCode(pCode:String):void {
+		private function _useShareCode(pCode:String, pGoToItem:Boolean=true):void {
 			if(pCode.indexOf("?") > -1) {
 				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
 			}
@@ -307,8 +308,15 @@ package app.world
 			// for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
 			_refreshButtonCustomizationForItemData(character.getCurrentItemData());
 			
-			// // now update the infobars
-			_updateUIBasedOnCharacter();
+			if(pGoToItem) {
+				// now update the infobars
+				_updateUIBasedOnCharacter();
+			} else {
+				// Still select the tab, just so people know what type of box/plank it is
+				var itemType:ItemType = character.getCurrentItemData().type;
+				shopTabs.UnpressAll();
+				shopTabs.toggleTabOn(itemType.toString(), false);
+			}
 		}
 
 		private function _onPlayerAnimationToggle(pEvent:Event):void {
@@ -331,7 +339,7 @@ package app.world
 			// var tType:ItemType = character.getCurrentItemData().type;
 			// var tPane:ShopCategoryPane = getTabByType(tType);
 			// tPane.toggleGridButtonWithData( character.getItemData(tType) );
-			// shopTabs.getTabButton(tType.toString()).toggleOn(true);
+			// shopTabs.toggleTabOn(tType.toString());
 			
 			_goToItem( character.getCurrentItemData() );
 			
@@ -346,7 +354,7 @@ package app.world
 			var itemType:ItemType = pItemData.type;
 			
 			shopTabs.UnpressAll();
-			shopTabs.getTabButton(itemType.toString()).toggleOn(true);
+			shopTabs.toggleTabOn(itemType.toString());
 			var tPane:ShopCategoryPane = getTabByType(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( pItemData );
 			tPane.scrollItemIntoView(itemBttn);

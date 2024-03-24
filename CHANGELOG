@@ -1,5 +1,10 @@
+== V1.10e - 24 March 2024 ==
+- Selecting something in outfit manager no longer forces you to go to that item's category pane
+	- Added a new small button that can do the old behavior
+- Selecting an already "selected" shop tab when a different pane is open (ie outfit manager, color picker, etc) now properly switches to it.
+
 == V1.10d - 6 December 2023 ==
-- Fixed bug causing color history to stay in delete mode when it shouldn't.
+- Fixed bug causing color history to stay in delete mode when it shouldn't
 
 
 == V.10c - 9 October 2023 ==

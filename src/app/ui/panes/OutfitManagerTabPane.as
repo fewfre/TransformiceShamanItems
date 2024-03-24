@@ -127,24 +127,40 @@ package app.ui.panes
 			
 			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, id:i }) as PushButton;
 			btn.addEventListener(PushButton.STATE_CHANGED_AFTER, function(){
-				_onUserLookClicked(lookCode);
+				_onUserLookClicked(lookCode, false);
 				
 				_untoggleAll(buttons, btn);
 			});
 			buttons.push(btn);
 			grid.add(btn);
 			
+			var actionsHolder = new Sprite(); actionsHolder.alpha = 0;
+			
 			// Corresponding Delete Button
-			var deleteBtnHolder = new Sprite(); deleteBtnHolder.alpha = 0;
-			var deleteBtn = deleteBtnHolder.addChild(new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }));
+			var deleteBtn = actionsHolder.addChild(new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }));
 			deleteBtn.addEventListener(MouseEvent.CLICK, function(e){ deleteLookByIndex(i); });
-			_deleteBtnGrid.add(deleteBtnHolder);
+			_deleteBtnGrid.add(actionsHolder);
 			
-			deleteBtn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ deleteBtnHolder.alpha = 1; });
-			deleteBtn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ deleteBtnHolder.alpha = 0; });
+			// Corresponding GoTo Button
+			var gtcpIconHolder = new Sprite();
+			var gtcpIcon = new $BackArrow();
+			gtcpIcon.scaleX = -1;
+			gtcpIconHolder.addChild(gtcpIcon);
+			var goToCatPaneBtn = actionsHolder.addChild(new ScaleButton({ x:grid.cellSize-6, y:grid.cellSize-6, obj:gtcpIconHolder, obj_scale:0.5 }));
+			goToCatPaneBtn.addEventListener(MouseEvent.CLICK, function(e){
+				_onUserLookClicked(lookCode, true);
+				_untoggleAll(buttons, btn);
+			});
 			
-			btn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ deleteBtnHolder.alpha = 1; });
-			btn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ deleteBtnHolder.alpha = 0; });
+			// Sub-button alpha
+			deleteBtn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ actionsHolder.alpha = 1; });
+			deleteBtn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionsHolder.alpha = 0; });
+			
+			goToCatPaneBtn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ actionsHolder.alpha = 1; });
+			goToCatPaneBtn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionsHolder.alpha = 0; });
+			
+			btn.addEventListener(MouseEvent.MOUSE_OVER, function(e){ actionsHolder.alpha = 1; });
+			btn.addEventListener(MouseEvent.MOUSE_OUT, function(e){ actionsHolder.alpha = 0; });
 		}
 		
 		private function _addNewOutfitButton() : void {
