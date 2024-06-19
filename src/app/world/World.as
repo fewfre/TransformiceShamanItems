@@ -562,6 +562,7 @@ package app.world
 			
 			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
 				if(!data) { return; }
+				if(data.isBitmap()) { return; } // Bitmaps have no customization
 				
 				var pane:ShopCategoryPane = getTabByType(data.type);
 				var i:int = GameAssets.getItemIndexFromTypeID(data.type, data.id);

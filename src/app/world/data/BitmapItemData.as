@@ -25,6 +25,10 @@ package app.world.data
 			defaultColors = new Vector.<uint>();
 		}
 		
+		public override function copy() : ItemData {
+			return new BitmapItemData(type, url, urlSmall);
+		}
+		
 		public override function isBitmap() : Boolean { return true; }
 
 		public override function getPart(pID:String, pOptions:Object=null) : Class {

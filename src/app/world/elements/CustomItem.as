@@ -106,7 +106,7 @@ package app.world.elements
 			tData = GameAssets.getItemFromTypeID(pItemType, id);
 			if(isOutfit) tData = tData.copy();
 			
-			if(colors.length > 0) { tData.colors = _hexArrayToIntList(colors, tData.defaultColors); }
+			if(colors.length > 0 && !tData.isBitmap()) { tData.colors = _hexArrayToIntList(colors, tData.defaultColors); }
 			return tData;
 		}
 		
@@ -136,7 +136,7 @@ package app.world.elements
 		* Fewfre Share Code Syntax
 		*****************************/
 		private function _parseFewfreSyntax(pCode:String) : Boolean {
-			try {
+			// try {
 				var pParams = new URLVariables();
 				pParams.decode(pCode);
 				
@@ -147,7 +147,7 @@ package app.world.elements
 						break;
 					}
 				}
-			} catch (error:Error) { return false; };
+			// } catch (error:Error) { return false; };
 			return true;
 		}
 
