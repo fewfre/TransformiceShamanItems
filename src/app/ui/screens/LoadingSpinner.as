@@ -13,8 +13,9 @@ package app.ui.screens
 	public class LoadingSpinner extends MovieClip
 	{
 		private var _loadingSpinner	: MovieClip;
+		private var _speedScale	: Number;
 		
-		// pData = { x, y, scale }
+		// pData = { x, y, scale, speedScale }
 		public function LoadingSpinner(pData:Object) {
 			if(pData.x) { this.x = pData.x; }
 			if(pData.y) { this.y = pData.y; }
@@ -23,6 +24,8 @@ package app.ui.screens
 			_loadingSpinner = addChild( new $Loader() ) as MovieClip;
 			_loadingSpinner.scaleX = scale;
 			_loadingSpinner.scaleY = scale;
+			
+			_speedScale = pData.speedScale || 1;
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
@@ -35,7 +38,7 @@ package app.ui.screens
 		public function update(pEvent:Event):void {
 			var dt:Number = 0.1;
 			if(_loadingSpinner != null) {
-				_loadingSpinner.rotation += 360 * dt;
+				_loadingSpinner.rotation += 360 * _speedScale * dt;
 			}
 		}
 	}

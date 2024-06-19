@@ -45,7 +45,10 @@ package app.world.elements
 		public function updateItem() {
 			var tScale = 1.75;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
-			outfit = addChild(new (_itemData.itemClass)()) as MovieClip;
+			
+			if(!_itemData.isBitmap()) { outfit = new (_itemData.itemClass)(); }
+			else { outfit = (_itemData as BitmapItemData).getLargeOutfitImageAsMovieClip(); }
+			addChild(outfit);
 			outfit.scaleX = outfit.scaleY = tScale;
 			// Don't let the pose eat mouse input
 			outfit.mouseChildren = false;
@@ -72,6 +75,10 @@ package app.world.elements
 		public function copy() : CustomItem {
 			return new CustomItem(null, getShareCodeFewfreSyntax(), true);
 		}
+		
+		public function getSaveImageDisplayObject() : DisplayObject {
+			return _itemData.isBitmap() ? (_itemData as BitmapItemData).getFullImage() : this;
+		}
 
 		/****************************
 		* Share Code
@@ -85,7 +92,7 @@ package app.world.elements
 		}
 		
 		private function _itemDataToShareString(pData:ItemData) : String {
-			if(String(pData.colors) != String(pData.defaultColors)) { // Quick way to compare two arrays with primitive types
+			if(!pData.isBitmap() && String(pData.colors) != String(pData.defaultColors)) { // Quick way to compare two arrays with primitive types
 				return pData.id+"_"+_intListToHexList(pData.colors).join("+");
 			}
 			return pData.id;

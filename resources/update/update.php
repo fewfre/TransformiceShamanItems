@@ -1,11 +1,14 @@
 <?php
-set_time_limit(3*60);
+set_time_limit(5*60);
 
 $resources = array();
 $external = array();
 
 setProgress('starting');
 
+//
+// Multi-item pack Loading
+//
 $resources_base = array("x_items_chaman", "x_macarons");
 foreach ($resources_base as $filebase) {
 	// for ($i = 1; $i <= 5; $i++) {
@@ -20,6 +23,10 @@ foreach ($resources_base as $filebase) {
 		}
 	// }
 }
+
+//
+// Single item swf Loading
+//
 
 // type/start number (since only new ones use this system)
 $types = array(
@@ -56,12 +63,47 @@ foreach ($types as $typedata) {
 	}
 }
 
+//
+// Badge Loading
+//
+$badges = array();
+$start = 352;
+$max = ($start+1000);
+$breakCount = 0; // quit early if enough 404s in a row
+for ($i = $start; $i <= $max; $i++) {
+	setProgress('updating', [ 'message'=>"Badge: $i", 'value'=>$i-$start+1, 'max'=>$max-$start ]);
+	$filename = "x_{$i}L.png";
+	$filenameSmall = "x_{$i}.png";
+	$url = "https://www.transformice.com/images/x_transformice/x_badges/$filename";
+	$urlSmall = "https://www.transformice.com/images/x_transformice/x_badges/$filenameSmall";
+	$localFile = "../badges/$filename";
+	$localFileSmall = "../badges/$filenameSmall";
+	// Don't re-download local one if it exists
+	if(file_exists($localFile) && file_exists($localFileSmall)) {
+		$badges[] = $filename;
+		$breakCount = 0;
+	} else {
+		if(checkExternalFileExists($url) && checkExternalFileExists($urlSmall)) {
+			file_put_contents($localFile, fopen($url, 'r'));
+			file_put_contents($localFileSmall, fopen($urlSmall, 'r'));
+			$badges[] = $filename;
+			$breakCount = 0;
+		} else {
+			$breakCount++;
+			if($breakCount > 5) {
+				break;
+			}
+		}
+	}
+}
+
 setProgress('updating');
 
 $json_path = "../config.json";
 $json = json_decode(file_get_contents($json_path), true);
 $json["packs"]["items"] = $resources;
 $json["packs_external"] = $external;
+$json["badges"] = $badges;
 $json["cachebreaker"] = time();//md5(time(), true);
 file_put_contents($json_path, json_encode($json));//, JSON_PRETTY_PRINT
 

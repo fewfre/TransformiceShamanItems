@@ -24,6 +24,7 @@ package app.data
 		public static var cannonballs: Vector.<ItemData>;
 		public static var balloons: Vector.<ItemData>;
 		public static var cartouches: Vector.<ItemData>;
+		public static var badges: Vector.<ItemData>; // BitmapItemData
 		
 		// { type:ITEM, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
@@ -39,6 +40,20 @@ package app.data
 			cannonballs = _setupCostumeList(ItemType.CANNONBALL, "$Objet_17", { pad:2 });
 			balloons = _setupCostumeList(ItemType.BALLOON, "$Objet_28", { pad:2 });
 			cartouches = _setupCostumeList(ItemType.CARTOUCHE, "$Macaron_", {});
+			badges = new Vector.<ItemData>();
+			if(Fewf.assets.getData("config").badges) {
+				var url:String, urlSmall:String;
+				for each(var badgeFile:String in Fewf.assets.getData("config").badges) {
+					// url = (Fewf.swfUrlBase ? Fewf.swfUrlBase+"resources/badges/" : "badges/")+badgeFile;
+					url = Fewf.swfUrlBase+"resources/badges/"+badgeFile;
+					urlSmall = Fewf.swfUrlBase+"resources/badges/"+badgeFile.replace('L', '');
+					badges.push(new BitmapItemData(ItemType.BADGE, url, urlSmall));
+				}
+				// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on badges tab
+				for(var i:int = badges.length-1; i >= 0; i--) {
+					(badges[i] as BitmapItemData).getSmallImage();
+				}
+			}
 		}
 
 		// pData = { after:String, pad:int }
@@ -85,6 +100,7 @@ package app.data
 				case ItemType.CANNONBALL:	return cannonballs;
 				case ItemType.BALLOON:		return balloons;
 				case ItemType.CARTOUCHE:	return cartouches;
+				case ItemType.BADGE:		return badges;
 				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
 			}
 			return null;
@@ -229,6 +245,11 @@ package app.data
 		* Asset Creation
 		*****************************/
 		public static function getItemImage(pData:ItemData) : MovieClip {
+			if(pData.isBitmap()) {
+				var mc = new MovieClip();
+				mc.addChild((pData as BitmapItemData).getSmallImage());
+				return mc;
+			}
 			var tItem:MovieClip = new pData.itemClass();
 			colorDefault(tItem);
 			return tItem;

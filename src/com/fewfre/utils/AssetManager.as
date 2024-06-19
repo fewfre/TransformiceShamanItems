@@ -1,6 +1,7 @@
 package com.fewfre.utils
 {
 	import com.fewfre.events.FewfEvent;
+	import com.fewfre.loaders.*;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -14,6 +15,7 @@ package com.fewfre.utils
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 	import flash.net.URLLoader;
+	import flash.display.Bitmap;
 	
 	public class AssetManager extends Sprite
 	{
@@ -168,18 +170,27 @@ package com.fewfre.utils
 		/****************************
 		* Access Assets
 		*****************************/
-			public function getData(pKey:String) : * {
-				return _loadedData[pKey];
-			}
-			
-			public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
-				for(var i:int = 0; i < _applicationDomains.length; i++) {
-					if(_applicationDomains[i].hasDefinition(pName)) {
-						return _applicationDomains[i].getDefinition( pName ) as Class;
-					}
+		public function getData(pKey:String) : * {
+			return _loadedData[pKey];
+		}
+		
+		public function getLoadedClass(pName:String, pTrace:Boolean=false) : Class {
+			for(var i:int = 0; i < _applicationDomains.length; i++) {
+				if(_applicationDomains[i].hasDefinition(pName)) {
+					return _applicationDomains[i].getDefinition( pName ) as Class;
 				}
-				if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }
-				return null;
 			}
+			if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }
+			return null;
+		}
+		
+		/****************************
+		* Bitmap Loader
+		*****************************/
+		private const _bitmapLoaderManager:BitmapLoaderManager = new BitmapLoaderManager();
+		
+		public function lazyLoadImageUrlAsBitmap(pFilePath:String) : Bitmap {
+			return _bitmapLoaderManager.lazyLoad(pFilePath);
+		}
 	}
 }

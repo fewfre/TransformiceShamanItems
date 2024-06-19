@@ -26,6 +26,7 @@
 		"tab_anvil":			{ "text":"Lakta" },
 		"tab_cannonball":		{ "text":"Lode" },
 		"tab_balloon":			{ "text":"Balons" },
-		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
+		"tab_badge":			{ "text":"Badge" }
 	}
 }

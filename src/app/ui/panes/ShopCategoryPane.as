@@ -12,6 +12,11 @@ package app.ui.panes
 	import flash.events.Event;
 	import app.world.data.ItemData;
 	import com.fewfre.display.Grid;
+	import app.world.data.BitmapItemData;
+	import com.fewfre.utils.Fewf;
+	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
+	import app.ui.screens.LoadingSpinner;
 
 	public class ShopCategoryPane extends TabPane
 	{
@@ -62,25 +67,51 @@ package app.ui.panes
 					buttonPerRow = 4;
 					scale = 1;
 			}
+			else if(_type == ItemType.BADGE) {
+					buttonPerRow = 6;
+					scale = 1;
+			}
 
 			var grid:Grid = this.grid;
 			if(!grid) { grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5); }
 			grid.reset();
 
-			var shopItem : MovieClip;
 			var shopItemButton : PushButton;
-			var i:int = -1;
-			while (i < pItemList.length-1) { i++;
-				shopItem = GameAssets.getItemImage(pItemList[i]);
-				shopItem.scaleX = shopItem.scaleY = scale;
-
-				shopItemButton = new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i } });
+			for(var i:int = 0; i < pItemList.length; i++) {
+				shopItemButton = !pItemList[i].isBitmap()
+					? newButtonFromItemData(pItemList[i], i)
+					: newButtonFromBitmapItemData(pItemList[i] as BitmapItemData, i);
 				grid.add(shopItemButton);
 				this.buttons.push(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
 			grid.reverse();
 			this.UpdatePane();
+		}
+		
+		private function newButtonFromItemData(pItemData:ItemData, i:int) : PushButton {
+			var shopItem : MovieClip = GameAssets.getItemImage(pItemData);
+			shopItem.scaleX = shopItem.scaleY = 1;
+			return new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemData:pItemData } });
+		}
+		
+		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : PushButton {
+			var shopItemButton : PushButton = new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, id:i, data:{ type:_type, id:i, itemData:pItemData } });
+			
+			var shopItem : Bitmap = pItemData.getSmallImage();
+			shopItemButton.ChangeImage(shopItem);
+			if(shopItem.width == 0) {
+				shopItemButton.ChangeImage(new LoadingSpinner({ speedScale:0.5 }), 0.75);
+			}
+			
+			shopItem.addEventListener(Event.COMPLETE, function(e:Event){
+				// Bitmap image from before has loaded, but now needs to be resized/fitted, so just pass it back in.
+				shopItemButton.ChangeImage(e.currentTarget as Bitmap);
+			});
+
+			
+			shopItem.scaleX = shopItem.scaleY = 1; // This scale needed since it's otherwise set to 0 by autosizer if bitmap isn't loaded yet
+			return shopItemButton;
 		}
 		
 		/****************************

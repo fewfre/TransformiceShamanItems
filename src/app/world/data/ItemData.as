@@ -37,6 +37,8 @@ package app.world.data
 		public function copy() : ItemData {
 			return new ItemData(type, id, { itemClass:itemClass, classMap:classMap });
 		}
+		
+		public function isBitmap() : Boolean { return false; }
 
 		public function getPart(pID:String, pOptions:Object=null) : Class {
 			return !classMap ? null : (classMap[pID] ? classMap[pID] : null);

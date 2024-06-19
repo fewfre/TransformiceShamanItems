@@ -29,5 +29,17 @@
 	"packs_external": [
 		"https://www.transformice.com/images/x_bibliotheques/x_items_chaman.swf",
 		"https://www.transformice.com/images/x_bibliotheques/x_macarons.swf"
+	],
+	
+	"badges": [
+		"x_352L.png",
+		"x_353L.png",
+		"x_354L.png",
+		"x_355L.png",
+		"x_460L.png",
+		"x_461L.png",
+		"x_462L.png",
+		"x_463L.png",
+		"x_464L.png"
 	]
 }

@@ -12,9 +12,10 @@ package app.data
 		public static const CANNONBALL			: ItemType = new ItemType("cannonball");
 		public static const BALLOON				: ItemType = new ItemType("balloon");
 		public static const CARTOUCHE			: ItemType = new ItemType("cartouche");
+		public static const BADGE				: ItemType = new ItemType("badge");
 		
 		public static const ALL : Vector.<ItemType> = new <ItemType>[
-			BOX_SMALL, BOX_LARGE, PLANK_SMALL, PLANK_LARGE, BALL, TRAMPOLINE, ANVIL, CANNONBALL, BALLOON, CARTOUCHE ];
+			BOX_SMALL, BOX_LARGE, PLANK_SMALL, PLANK_LARGE, BALL, TRAMPOLINE, ANVIL, CANNONBALL, BALLOON, CARTOUCHE, BADGE ];
 		
 		// Enum Storage + Constructor
 		private var _value: String;

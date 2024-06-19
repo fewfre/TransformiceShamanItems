@@ -73,7 +73,7 @@ package app.world
 				} catch (error:Error) { };
 			}
 
-			this.character = new CustomItem(GameAssets.boxes_small[0], parms).setXY(180, 275).appendTo(this);
+			this.character = new CustomItem(GameAssets.boxes_small[0], parms).setXY(185, 275).appendTo(this);
 
 			/****************************
 			* Setup UI
@@ -94,8 +94,11 @@ package app.world
 				{ text:"tab_anvil", event:ItemType.ANVIL.toString() },
 				{ text:"tab_cannonball", event:ItemType.CANNONBALL.toString() },
 				{ text:"tab_balloon", event:ItemType.BALLOON.toString() },
-				{ text:"tab_cartouche", event:ItemType.CARTOUCHE.toString() },
+				{ text:"tab_cartouche", event:ItemType.CARTOUCHE.toString() }
 			];
+			if(Fewf.assets.getData("config").badges) {
+				tabs.push({ text:"tab_badge", event:ItemType.BADGE.toString() });
+			}
 			this.shopTabs.populate(tabs);
 
 			// Toolbox
@@ -330,7 +333,7 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			FewfDisplayUtils.saveAsPNG(this.character, "shamanitem");
+			FewfDisplayUtils.saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem");
 		}
 
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
@@ -393,7 +396,17 @@ package app.world
 				setCurItemID(tType, tButton.id);
 				this.character.setItemData(tData);
 
-				tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
+				if(!tData.isBitmap()) {
+					tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
+				} else {
+					var img:MovieClip = GameAssets.getColoredItemImage(tData);
+					var bitmap:Bitmap = img.getChildAt(0) as Bitmap;
+					tInfoBar.addInfo(tData, img);
+					// If bitmap loaded after, re-add so it can be resized
+					bitmap.addEventListener(Event.COMPLETE, function(e):void{
+						tInfoBar.addInfo(tData, GameAssets.getColoredItemImage(tData));
+					})
+				}
 				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0);
 			} else {
 				_removeItem(tType);
@@ -577,7 +590,7 @@ package app.world
 
 				var tData:ItemData = getInfoBarByType(pType).data;
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
-				var tItem2:MovieClip = GameAssets.getColoredItemImage(tData);
+				var tItem2:MovieClip = !tData.isBitmap() ? GameAssets.getColoredItemImage(tData) : (tData as BitmapItemData).getLargeOutfitImageAsMovieClip();
 				_paneManager.getPane(COLOR_FINDER_PANE_ID).infoBar.addInfo( tData, tItem );
 				this.currentlyColoringType = pType;
 				(_paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane).setItem(tItem2);

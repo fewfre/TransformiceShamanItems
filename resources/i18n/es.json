@@ -26,6 +26,7 @@
 		"tab_anvil":			{ "text":"Yunque" },
 		"tab_cannonball":		{ "text":"Cañón" },
 		"tab_balloon":			{ "text":"Globo" },
-		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
+		"tab_badge":			{ "text":"Badge" }
 	}
 }

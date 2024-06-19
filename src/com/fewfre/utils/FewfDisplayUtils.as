@@ -92,7 +92,7 @@ package com.fewfre.utils
 			// if(tBitmap.drawWithQuality) {
 			// 	tBitmap.drawWithQuality(pObj, tMatrix, null, null, null, true, StageQuality.BEST);
 			// } else {
-				trace(Fewf.stage.quality);
+				// trace(Fewf.stage.quality);
 				var defaultQuality = Fewf.stage.quality;
 				Fewf.stage.quality = StageQuality.BEST;
 				tBitmap.draw(pObj, tMatrix);

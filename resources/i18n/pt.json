@@ -26,6 +26,7 @@
 		"tab_anvil":			{ "text":"Bigorna" },
 		"tab_cannonball":		{ "text":"Canhão" },
 		"tab_balloon":			{ "text":"Balão" },
-		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 }
+		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
+		"tab_badge":			{ "text":"Badge" }
 	}
 }
