@@ -38,6 +38,14 @@ package app.world.data
 			return new ItemData(type, id, { itemClass:itemClass, classMap:classMap });
 		}
 		
+		public function matches(compare:ItemData) : Boolean {
+			return type == compare.type && id == compare.id;
+		}
+		
+		public function uniqId() : String {
+			return this.type + '--' + this.id;
+		}
+		
 		public function isBitmap() : Boolean { return false; }
 
 		public function getPart(pID:String, pOptions:Object=null) : Class {

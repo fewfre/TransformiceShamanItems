@@ -34,6 +34,9 @@ package app.ui.panes.colorpicker
 		
 		private var _colorHistory              : ColorHistoryOverlay;
 		
+		private static const _lockHistory       : LockHistoryMap = new LockHistoryMap();
+		public function get currentLockListId() : String { return _lockHistory.currentLockListId; }
+		
 		// Properties
 		public function get selectedSwatch():int { return _selectedSwatch; }
 		
@@ -101,30 +104,10 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Public
 		*****************************/
-		public function setupSwatches(pSwatches:Vector.<uint>) : void {
-			for each(var btn:ColorSwatch in _colorSwatches) {
-				this.removeItem(btn);
-			}
-			_colorSwatches = new Vector.<ColorSwatch>;
+		public function init(pId:String, pColors:Vector.<uint>) : void {
+			_lockHistory.init(pId, pColors.length);
 			
-			var swatch:ColorSwatch;
-			for(var i:int = 0; i < pSwatches.length; i++) {
-				swatch = _createColorSwatch(i, 5, 45 + (i * 27));
-				swatch.color = pSwatches[i];
-				_colorSwatches.push(swatch);
-				if(_getHistoryColors(i).length == 0) {
-					_addHistory(pSwatches[i], i);
-				}
-				_showHistoryButtonIfValid(i);
-				this.addItem(swatch);
-				
-				if (_selectedSwatch == i) {
-					_psColorPick.setCursor(swatch.color);
-				}
-			}
-			
-			_selectSwatch(0);
-			renderRecents();
+			_setupSwatches(pColors);
 		}
 		
 		public function renderRecents() : void {
@@ -149,7 +132,33 @@ package app.ui.panes.colorpicker
 		/****************************
 		* Private
 		*****************************/
-		private function _createColorSwatch(pNum:int, pX:int, pY:int) : ColorSwatch {
+		public function _setupSwatches(pSwatches:Vector.<uint>) : void {
+			for each(var btn:ColorSwatch in _colorSwatches) {
+				this.removeItem(btn);
+			}
+			_colorSwatches = new Vector.<ColorSwatch>;
+			
+			var swatch:ColorSwatch;
+			for(var i:int = 0; i < pSwatches.length; i++) {
+				swatch = _createColorSwatch(i, 5, 45 + (i * 27), _lockHistory.getLockHistory(i));
+				swatch.color = pSwatches[i];
+				_colorSwatches.push(swatch);
+				if(_getHistoryColors(i).length == 0) {
+					_addHistory(pSwatches[i], i);
+				}
+				_showHistoryButtonIfValid(i);
+				this.addItem(swatch);
+				
+				if (_selectedSwatch == i) {
+					_psColorPick.setCursor(swatch.color);
+				}
+			}
+			
+			_selectSwatch(0);
+			renderRecents();
+		}
+		
+		private function _createColorSwatch(pNum:int, pX:int, pY:int, pLocked:Boolean=false) : ColorSwatch {
 			var swatch:ColorSwatch = new ColorSwatch();
 			swatch.addEventListener(ColorSwatch.USER_MODIFIED_TEXT, function(){
 				_selectSwatch(pNum);
@@ -187,7 +196,11 @@ package app.ui.panes.colorpicker
 			swatch.historyButton.addEventListener(MouseEvent.CLICK, function(){ _showHistory(pNum); });
 			swatch.lockIcon.addEventListener(MouseEvent.CLICK, function(){
 				swatch.locked ? swatch.unlock() : swatch.lock();
+				_updateLockHistoryFromCurrentState();
 			});
+			if(pLocked) {
+				swatch.lock();
+			}
 			
 			return swatch;
 		}
@@ -293,6 +306,23 @@ package app.ui.panes.colorpicker
 		}
 		
 		/****************************
+		* Lock History
+		*****************************/
+		private function _updateLockHistoryFromCurrentState() : void {
+			_lockHistory.clearLockHistory();
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
+				_lockHistory.setLockHistory(i, _colorSwatches[i].locked);
+			}
+		}
+		private function _updateLocksToMatchHistory() : void {
+			for(var i:int = 0; i < _colorSwatches.length; i++) {
+				var locked:Boolean = _lockHistory.getLockHistory(i);
+				if(locked && !_colorSwatches[i].locked) _colorSwatches[i].lock();
+				else if(!locked && _colorSwatches[i].locked) _colorSwatches[i].unlock();
+			}
+		}
+		
+		/****************************
 		* Events
 		*****************************/
 		private function _onColorPickChanged(pEvent:DataEvent) : void {
@@ -314,6 +344,8 @@ package app.ui.panes.colorpicker
 		}
 		
 		private function _onDefaultButtonClicked(pEvent:Event) : void {
+			_lockHistory.clearLockHistory();
+			_updateLocksToMatchHistory();
 			_untrackRecentColor();
 			_dontTrackNextRecentChange = true;
 			dispatchEvent(new Event(EVENT_DEFAULT_CLICKED));

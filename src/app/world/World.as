@@ -529,8 +529,8 @@ package app.world
 			{
 				this.character.getItemData(this.currentlyColoringType).setColorsToDefault();
 				_refreshSelectedItemColor();
-				var pane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-				pane.setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				var pane:ColorPickerTabPane = _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
+				pane.init( pane.currentLockListId, this.character.getColors(this.currentlyColoringType) );
 			}
 
 			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
@@ -577,7 +577,7 @@ package app.world
 				var tData:ItemData = getInfoBarByType(pType).data;
 				_paneManager.getPane(COLOR_PANE_ID).infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
-				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).setupSwatches( this.character.getColors(this.currentlyColoringType) );
+				(_paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane).init( tData.uniqId(), this.character.getColors(this.currentlyColoringType) );
 				_paneManager.openPane(COLOR_PANE_ID);
 				_refreshSelectedItemColor();
 			}
