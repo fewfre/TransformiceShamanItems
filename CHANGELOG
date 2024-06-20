@@ -1,7 +1,7 @@
 == V1.11 - 19 June 2024 ==
 - Added badges as a new "item" type.
 - Color locks are now remembered on a per-item basis until you close the app or hit "Defaults" button on color picker
-- [Code] App can now load PNGs.
+- [Code] App can now load PNGs
 
 
 == V1.10e - 24 March 2024 ==
