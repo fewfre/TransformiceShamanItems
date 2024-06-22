@@ -183,6 +183,10 @@ package com.fewfre.utils
 			if(pTrace) { trace("[AssetManager](getLoadedClass) ERROR: No Linkage by name: "+pName); }
 			return null;
 		}
+		public function getLoadedMovieClip(pName:String, pDontReturnNull:Boolean=false, pTrace:Boolean=false) : MovieClip {
+			var tClass:Class = getLoadedClass(pName, pTrace);
+			return tClass ? new tClass() : (pDontReturnNull ? new MovieClip() : null);
+		}
 		
 		/****************************
 		* Bitmap Loader

@@ -28,20 +28,23 @@ package app.world
 	import app.ui.panes.ColorFinderPane;
 	import flash.ui.Keyboard;
 	import app.ui.panes.colorpicker.ColorPickerTabPane;
+	import ext.ParentApp;
 	
 	public class World extends MovieClip
 	{
 		// Storage
-		internal var character		: CustomItem;
-		internal var _paneManager	: PaneManager;
+		private var character      : CustomItem;
+		private var _paneManager   : PaneManager;
 
-		internal var shopTabs		: ShopTabList;
-		internal var _toolbox		: Toolbox;
-		internal var linkTray		: LinkTray;
-		internal var _langScreen	: LangScreen;
+		private var shopTabs       : ShopTabList;
+		private var _toolbox       : Toolbox;
+		
+		private var _shareScreen   : LinkTray;
+		private var _langScreen    : LangScreen;
+		private var _aboutScreen   : AboutScreen;
 
-		internal var currentlyColoringType:ItemType=null;
-		internal var configCurrentlyColoringType:String;
+		private var currentlyColoringType:ItemType=null;
+		private var configCurrentlyColoringType:String;
 		
 		// Constants
 		public static const TAB_OUTFITS:String = "outfits";
@@ -101,7 +104,9 @@ package app.world
 			}
 			this.shopTabs.populate(tabs);
 
-			// Toolbox
+			/////////////////////////////
+			// Top Area
+			/////////////////////////////
 			_toolbox = new Toolbox({
 				character:character,
 				onSave:_onSaveClicked, /*onAnimate:_onPlayerAnimationToggle,*/ /*onRandomize:_onRandomizeDesignClicked,*/
@@ -111,19 +116,37 @@ package app.world
 			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
 			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			
+			/////////////////////////////
+			// Bottom Left Area
+			/////////////////////////////
 			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
 			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
 			
-			new AppInfoBox().setXY(tLangButton.x+(tLangButton.Width*0.5)+(25*0.5)+2, pStage.stageHeight-17).appendTo(this);
+			// About Screen Button
+			var qMark:TextField = new TextField(); qMark.text = '?'; qMark.autoSize = TextFieldAutoSize.CENTER;
+			qMark.setTextFormat(new TextFormat('Arial', 22, 0xFFFFFF, 'bold'));
+			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5, obj:qMark }).appendTo(this)
+				.setXY(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
+				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
+			qMark.x -= 9; qMark.y -= 15;
+			
+			if(!!(ParentApp.reopenSelectionLauncher())) {
+				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
+				.setXY(22, pStage.stageHeight-17-28)
+					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
+			}
 			
 			/****************************
 			* Screens
 			*****************************/
-			linkTray = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
-			linkTray.addEventListener(LinkTray.CLOSE, _onShareTrayClosed);
+			_shareScreen = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
+			_shareScreen.addEventListener(LinkTray.CLOSE, _onShareScreenClosed);
 			
 			_langScreen = new LangScreen({  });
-			_langScreen.addEventListener(LangScreen.CLOSE, _onLangScreenClosed);
+			_langScreen.addEventListener(Event.CLOSE, _onLangScreenClosed);
+
+			_aboutScreen = new AboutScreen();
+			_aboutScreen.addEventListener(Event.CLOSE, _onAboutScreenClosed);
 
 			/****************************
 			* Create item panes
@@ -472,12 +495,12 @@ package app.world
 				tURL = "<error creating link>";
 			};
 
-			linkTray.open(tURL);
-			addChild(linkTray);
+			_shareScreen.open(tURL);
+			addChild(_shareScreen);
 		}
 
-		private function _onShareTrayClosed(pEvent:Event) : void {
-			removeChild(linkTray);
+		private function _onShareScreenClosed(pEvent:Event) : void {
+			removeChild(_shareScreen);
 		}
 
 		private function _onLangButtonClicked(pEvent:Event) : void {
@@ -487,6 +510,15 @@ package app.world
 
 		private function _onLangScreenClosed(pEvent:Event) : void {
 			removeChild(_langScreen);
+		}
+
+		private function _onAboutButtonClicked(e:Event) : void {
+			_aboutScreen.open();
+			addChild(_aboutScreen);
+		}
+
+		private function _onAboutScreenClosed(e:Event) : void {
+			removeChild(_aboutScreen);
 		}
 
 		//{REGION Get TabPane data

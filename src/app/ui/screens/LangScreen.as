@@ -13,9 +13,6 @@ package app.ui.screens
 	
 	public class LangScreen extends MovieClip
 	{
-		// Constants
-		public static const CLOSE : String= "close_lang_screen";
-		
 		// Storage
 		private var _tray			: RoundedRectangle;
 		
@@ -65,39 +62,41 @@ package app.ui.screens
 			/****************************
 			* Close Button
 			*****************************/
-			var tCloseIcon = new MovieClip();
-			var tSize:Number = 10;
-			tCloseIcon.graphics.beginFill(0x000000, 0);
-			tCloseIcon.graphics.drawRect(-tSize*2, -tSize*2, tSize*4, tSize*4);
-			tCloseIcon.graphics.endFill();
-			tCloseIcon.graphics.lineStyle(8, 0xFFFFFF, 1, true);
-			tCloseIcon.graphics.moveTo(-tSize, -tSize);
-			tCloseIcon.graphics.lineTo(tSize, tSize);
-			tCloseIcon.graphics.moveTo(tSize, -tSize);
-			tCloseIcon.graphics.lineTo(-tSize, tSize);
-			
-			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:tCloseIcon })) as ScaleButton;
+			var tCloseButton:ScaleButton = addChild(new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new $WhiteX() })) as ScaleButton;
 			tCloseButton.addEventListener(ButtonBase.CLICK, _onCloseClicked);
 		}
 		
-		private function _getFlagImage(pLangData:Object) : MovieClip {
-			var tImage = new MovieClip();
-			var tFlag = tImage.addChild(new (Fewf.assets.getLoadedClass(pLangData.flags_swf_linkage))());
-			tFlag.x -= tFlag.width*0.5;
-			tFlag.y -= tFlag.height*0.5;
-			return tImage;
+		private function _newScreenBacking() : Sprite {
+			var backing:Sprite = new Sprite(), size:Number = 10000;
+			backing.x = -size/2;
+			backing.y = -size/2;
+			backing.graphics.beginFill(0x000000, 0.2);
+			backing.graphics.drawRect(0, 0, size, size);
+			backing.graphics.endFill();
+			return backing;
 		}
 		
+		///////////////////////
+		// Public
+		///////////////////////
 		public function open() : void {
 			
 		}
 		
-		private function _onCloseClicked(pEvent:Event) : void {
-			_close();
-		}
-		
+		///////////////////////
+		// Private
+		///////////////////////
 		private function _close() : void {
-			dispatchEvent(new Event(CLOSE));
+			dispatchEvent(new Event(Event.CLOSE));
+		}
+		private function _onCloseClicked(pEvent:Event) : void { _close(); }
+		
+		private function _getFlagImage(pLangData:Object) : MovieClip {
+			var tImage = new MovieClip();
+			var tFlag = tImage.addChild(Fewf.assets.getLoadedMovieClip(pLangData.flags_swf_linkage));
+			tFlag.x -= tFlag.width*0.5;
+			tFlag.y -= tFlag.height*0.5;
+			return tImage;
 		}
 		
 		private function _onLanguageClicked(pEvent:FewfEvent) : void {
