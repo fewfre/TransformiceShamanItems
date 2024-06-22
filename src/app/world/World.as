@@ -107,11 +107,12 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox({
-				character:character,
-				onSave:_onSaveClicked, /*onAnimate:_onPlayerAnimationToggle,*/ /*onRandomize:_onRandomizeDesignClicked,*/
-				onShare:_onShareButtonClicked, onScale:_onScaleSliderChange, onShareCodeEntered:_onShareCodeEntered
-			}).setXY(188, 28).appendTo(this);
+			_toolbox = new Toolbox(character, _onShareCodeEntered).setXY(188, 28).appendTo(this)
+				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
+				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
+				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked).on(Toolbox.IMGUR_CLICKED, _onImgurButtonClicked)
+				
+				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange);
 			
 			var tOutfitButton:ScaleButton = addChild(new ScaleButton({ x:_toolbox.x+167, y:_toolbox.y+12.5+21, width:25, height:25, origin:0.5, obj:new $Outfit(), obj_scale:0.4 })) as ScaleButton;
 			tOutfitButton.addEventListener(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
@@ -344,18 +345,28 @@ package app.world
 			}
 		}
 
-		private function _onPlayerAnimationToggle(pEvent:Event):void {
-			character.animatePose = !character.animatePose;
-			if(character.animatePose) {
-				character.outfit.play();
-			} else {
-				character.outfit.stop();
-			}
-			_toolbox.toggleAnimateButtonAsset(character.animatePose);
-		}
-
 		private function _onSaveClicked(pEvent:Event) : void {
 			FewfDisplayUtils.saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem");
+		}
+
+		private function _onClipboardButtonClicked(e:Event) : void {
+			try {
+				FewfDisplayUtils.copyToClipboard(character);
+				_toolbox.updateClipboardButton(false, true);
+			} catch(e) {
+				_toolbox.updateClipboardButton(false, false);
+			}
+			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
+		}
+
+		private function _onImgurButtonClicked(e:Event) : void {
+			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
+			ImgurApi.uploadImage(character);
+			_toolbox.imgurButtonEnable(false);
+		}
+		private function _onImgurDone(e:*) : void {
+			Fewf.dispatcher.removeEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
+			_toolbox.imgurButtonEnable(true);
 		}
 
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this

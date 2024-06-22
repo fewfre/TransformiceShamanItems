@@ -13,36 +13,43 @@ package app.ui
 	import com.fewfre.utils.FewfDisplayUtils;
 	import app.world.elements.CustomItem;
 	import flash.utils.setTimeout;
+	import flash.events.Event;
 	
 	public class Toolbox extends MovieClip
 	{
-		// Storage
-		private var _downloadTray	: FrameBase;
-		private var _bg				: RoundedRectangle;
-		private var _character		: CustomItem;
+		// Constants
+		public static const SAVE_CLICKED         = "save_clicked";
 		
-		public var scaleSlider		: FancySlider;
-		public var animateButton	: SpriteButton;
-		public var imgurButton		: SpriteButton;
+		public static const SHARE_CLICKED        = "share_clicked";
+		public static const CLIPBOARD_CLICKED    = "clipboard_clicked";
+		public static const IMGUR_CLICKED        = "imgur_clicked";
+		
+		public static const SCALE_SLIDER_CHANGE  = "scale_slider_change";
+		
+		public static const RANDOM_CLICKED       = "random_clicked";
+		
+		// Storage
+		private var _downloadTray   : FrameBase;
+		private var _bg             : RoundedRectangle;
+		
+		public var scaleSlider       : FancySlider;
+		private var _downloadButton  : ButtonBase;
+		private var _imgurButton     : SpriteButton;
+		private var _clipboardButton : SpriteButton;
 		
 		// Constructor
-		// pData = { character:Character, onSave:Function, onAnimate:Function, onRandomize:Function, onShare:Function, onScale:Function }
-		public function Toolbox(pData:Object) {
-			_character = pData.character;
-			
-			var btn:ButtonBase;
-			
-			_bg = addChild(new RoundedRectangle({ width:365, height:35, origin:0.5 })) as RoundedRectangle;
-			_bg.drawAsTray();
+		// onShareCodeEntered: (code, (state:String)=>void)=>void
+		public function Toolbox(pCharacter:CustomItem, onShareCodeEntered:Function) {
+			_bg = new RoundedRectangle({ width:365, height:35, origin:0.5 }).drawAsTray().appendTo(this);
 			
 			/********************
 			* Download Button
 			*********************/
 			_downloadTray = addChild(new FrameBase({ x:-_bg.Width*0.5 + 33, y:9, width:66, height:66, origin:0.5 })) as FrameBase;
-			/*_downloadTray.drawSimpleGradient(ConstantsApp.COLOR_TRAY_GRADIENT, 15, ConstantsApp.COLOR_TRAY_B_1, ConstantsApp.COLOR_TRAY_B_2, ConstantsApp.COLOR_TRAY_B_3);*/
 			
-			btn = _downloadTray.addChild(new SpriteButton({ width:46, height:46, obj:new $LargeDownload(), origin:0.5 })) as SpriteButton;
-			btn.addEventListener(ButtonBase.CLICK, pData.onSave);
+			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
+				.on(ButtonBase.CLICK, dispatchEventHandler(SAVE_CLICKED))
+				.appendTo(_downloadTray);
 			
 			/********************
 			* Toolbar Buttons
@@ -52,47 +59,37 @@ package app.ui
 			tTray.x = -(_bg.Width*0.5) + (tTrayWidth*0.5) + (_bg.Width - tTrayWidth);
 			
 			var tButtonSize = 28, tButtonSizeSpace=5, tButtonXInc=tButtonSize+tButtonSizeSpace;
-			var tX = 0, tY = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
+			var tX = 0, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
 			// ### Left Side Buttons ###
 			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			btn = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }));
-			btn.addEventListener(ButtonBase.CLICK, pData.onShare);
+			new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }).appendTo(tTray)
+				.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+				.on(ButtonBase.CLICK, dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
 			if(!Fewf.isExternallyLoaded) {
-				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })) as SpriteButton;
-				btn.addEventListener(ButtonBase.CLICK, function(e:*){
-					ImgurApi.uploadImage(_character);
-					imgurButton.disable();
-				});
+				_imgurButton = new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })
+					.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+					.on(ButtonBase.CLICK, dispatchEventHandler(IMGUR_CLICKED))
+					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			} else {
-				btn = imgurButton = tTray.addChild(new SpriteButton({ x:tX+tButtonXInc*tButtonsOnLeft, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })) as SpriteButton;
-				btn.addEventListener(ButtonBase.CLICK, function(e:*){
-					try {
-						FewfDisplayUtils.copyToClipboard(_character);
-						imgurButton.ChangeImage(new $Yes());
-					} catch(e) {
-						imgurButton.ChangeImage(new $No());
-					}
-					setTimeout(function(){ imgurButton.ChangeImage(new $CopyIcon()); }, 750)
-				});
+				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
+					.setXY(tX+tButtonXInc*tButtonsOnLeft, yy)
+					.on(ButtonBase.CLICK, dispatchEventHandler(CLIPBOARD_CLICKED))
+					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			}
 			
 			// ### Right Side Buttons ###
 			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
-			/*btn = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new $Refresh(), origin:0.5 }));
-			btn.addEventListener(ButtonBase.CLICK, pData.onRandomize);
-			tButtonOnRight++;
-			
-			animateButton = tTray.addChild(new SpriteButton({ x:tX-tButtonXInc*tButtonOnRight, y:tY, width:tButtonSize, height:tButtonSize, obj_scale:0.5, obj:new MovieClip(), origin:0.5 }));
-			animateButton.addEventListener(ButtonBase.CLICK, pData.onAnimate);
-			toggleAnimateButtonAsset(_character.animatePose);
-			tButtonOnRight++;*/
+			// // Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
+			// new SpriteButton({ size:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }).appendTo(tTray)
+			// 	.setXY(tX-tButtonXInc*tButtonOnRight, yy)
+			// 	.on(ButtonBase.CLICK, dispatchEventHandler(RANDOM_CLICKED));
 			
 			/********************
 			* Scale slider
@@ -100,32 +97,42 @@ package app.ui
 			var tTotalButtons:Number = tButtonsOnLeft+tButtonOnRight;
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			tX = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
-			scaleSlider = new FancySlider(tSliderWidth).setXY(tX, tY)
-				.setSliderParams(1, 4, _character.outfit.scaleX)
+			scaleSlider = new FancySlider(tSliderWidth).setXY(tX, yy)
+				.setSliderParams(1, 4, pCharacter.outfit.scaleX)
 				.appendTo(tTray);
-			scaleSlider.addEventListener(FancySlider.CHANGE, pData.onScale);
+			scaleSlider.addEventListener(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			
 			/********************
-			* Share Code Input
+			* Under Toolbox
 			*********************/
-			addChild(new PasteShareCodeInput({ x:18, y:33, onChange:pData.onShareCodeEntered }));
-			
-			/********************
-			* Events
-			*********************/
-			Fewf.dispatcher.addEventListener(ImgurApi.EVENT_DONE, _onImgurDone);
-			
-			pData = null;
+			addChild(new PasteShareCodeInput({ x:18, y:33, onChange:onShareCodeEntered }));
 		}
 		public function setXY(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
+		public function on(type:String, listener:Function): Toolbox { this.addEventListener(type, listener); return this; }
+		public function off(type:String, listener:Function): Toolbox { this.removeEventListener(type, listener); return this; }
 		
-		public function toggleAnimateButtonAsset(pOn:Boolean) : void {
-			animateButton.ChangeImage(pOn ? new $PauseButton() : new $PlayButton());
+		///////////////////////
+		// Public
+		///////////////////////
+		public function downloadButtonEnable(pOn:Boolean) : void {
+			if(pOn) _downloadButton.enable(); else _downloadButton.disable();
 		}
 		
-		private function _onImgurDone(e:*) : void {
-			imgurButton.enable();
+		public function imgurButtonEnable(pOn:Boolean) : void {
+			if(pOn) _imgurButton.enable(); else _imgurButton.disable();
+		}
+		
+		public function updateClipboardButton(normal:Boolean, elseYes:Boolean=true) : void {
+			if(!_clipboardButton) return;
+			_clipboardButton.ChangeImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
+		}
+		
+		///////////////////////
+		// Private
+		///////////////////////
+		private function dispatchEventHandler(pEventName:String) : Function {
+			return function(e):void{ dispatchEvent(new Event(pEventName)); };
 		}
 	}
 }

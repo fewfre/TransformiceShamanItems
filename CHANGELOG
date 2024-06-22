@@ -4,6 +4,7 @@
 - [Code] App can now load PNGs
 - (22 Jun) Replaced bottom left github button/version text with a new button to a new "About" screen (where aforementioned content has been moved)
 	- Added a discord link button on new About screen
+- [Code] Cleaned up `Toolbox` and made it `Event` driven
 
 
 == V1.10e - 24 March 2024 ==
