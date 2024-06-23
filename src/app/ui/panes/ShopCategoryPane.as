@@ -17,11 +17,13 @@ package app.ui.panes
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import app.ui.screens.LoadingSpinner;
+	import app.ui.panes.base.ButtonGridSidePane;
 
-	public class ShopCategoryPane extends TabPane
+	public class ShopCategoryPane extends ButtonGridSidePane
 	{
 		private var _type: ItemType;
 		private var _defaultSkinColorButton: ScaleButton;
+		public var selectedButtonIndex : int;
 		
 		public function get type():ItemType { return _type; }
 		
@@ -29,8 +31,16 @@ package app.ui.panes
 		
 		// Constructor
 		public function ShopCategoryPane(pType:ItemType) {
-			super();
 			this._type = pType;
+			var buttonPerRow:int = 6;
+			if(_type == ItemType.PLANK_LARGE) { buttonPerRow = 4; }
+			if(_type == ItemType.BOX_LARGE || _type == ItemType.TRAMPOLINE) { buttonPerRow = 5; }
+			super(buttonPerRow);
+			
+			// Start reversed by default
+			grid.reverse();
+			
+			selectedButtonIndex = -1;
 			this.addInfoBar( new ShopInfoBar({ showEyeDropButton:true, showGridManagementButtons:true }) );
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
@@ -53,40 +63,29 @@ package app.ui.panes
 			return null;
 		}
 		
+		// Toggle active button to retrigger it's effects 
+		public function retoggleActiveButton() : void {
+			var i:int = _findIndexActivePushButton(buttons);
+			if(i > -1) {
+				buttons[i].toggleOff();
+				buttons[i].toggleOn();
+			}
+		}
+		
 		/****************************
 		* Private
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
-			var buttonPerRow:int = 6;
-			var scale:Number = 1;
-			if(_type == ItemType.BOX_LARGE || _type == ItemType.TRAMPOLINE) {
-					buttonPerRow = 5;
-					scale = 1;
-			}
-			else if(_type == ItemType.PLANK_LARGE) {
-					buttonPerRow = 4;
-					scale = 1;
-			}
-			else if(_type == ItemType.BADGE) {
-					buttonPerRow = 6;
-					scale = 1;
-			}
-
-			var grid:Grid = this.grid;
-			if(!grid) { grid = this.addGrid( new Grid(385, buttonPerRow) ).setXY(15, 5); }
-			grid.reset();
+			clearButtons();
 
 			var shopItemButton : PushButton;
 			for(var i:int = 0; i < pItemList.length; i++) {
 				shopItemButton = !pItemList[i].isBitmap()
 					? newButtonFromItemData(pItemList[i], i)
 					: newButtonFromBitmapItemData(pItemList[i] as BitmapItemData, i);
-				grid.add(shopItemButton);
-				this.buttons.push(shopItemButton);
+				addButton(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
-			grid.reverse();
-			this.UpdatePane();
 		}
 		
 		private function newButtonFromItemData(pItemData:ItemData, i:int) : PushButton {

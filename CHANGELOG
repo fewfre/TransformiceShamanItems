@@ -2,9 +2,14 @@
 - Added badges as a new "item" type.
 - Color locks are now remembered on a per-item basis until you close the app or hit "Defaults" button on color picker
 - [Code] App can now load PNGs
-- (22 Jun) Replaced bottom left github button/version text with a new button to a new "About" screen (where aforementioned content has been moved)
+- Replaced bottom left github button/version text with a new button to a new "About" screen (where aforementioned content has been moved)
 	- Added a discord link button on new About screen
 - [Code] Cleaned up `Toolbox` and made it `Event` driven
+- Mouse & color finder drag code tweaked
+	- Letting go of mouse outside of drag area no longer keeps it in drag mode
+	- The spot you grabbed can no longer leave the "safe area" / drag zone
+	- Changing the scale when the center of the mouse / item is outside the safe zone will clamp the center into the safe area to prevent it being scaled down to where it can no longer be clicked.
+- [Code] Rewrote the `TabPane` (now `SidePane`) and scrollbox logic
 
 
 == V1.10e - 24 March 2024 ==

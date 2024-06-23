@@ -1,8 +1,9 @@
 package com.fewfre.display
 {
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.events.Event;
 	import com.fewfre.events.FewfEvent;
-	import flash.display.*;
-	import flash.events.*;
 	
 	public class ButtonBase extends Sprite
 	{
