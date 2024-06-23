@@ -86,6 +86,7 @@ package app.ui.panes
 				addButton(shopItemButton);
 				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
 			}
+			refreshScrollbox();
 		}
 		
 		private function newButtonFromItemData(pItemData:ItemData, i:int) : PushButton {
