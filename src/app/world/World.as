@@ -32,6 +32,8 @@ package app.world
 	import app.ui.panes.base.PaneManager;
 	import app.ui.panes.base.SidePane;
 	import app.ui.panes.base.ButtonGridSidePane;
+	import app.ui.panes.infobar.Infobar;
+	import app.ui.panes.infobar.GridManagementWidget;
 	
 	public class World extends MovieClip
 	{
@@ -164,6 +166,8 @@ package app.world
 				getButtonArrayByType(tType)[ getButtonArrayByType(tType).length-1 ].toggleOn();
 			}
 			
+			Fewf.dispatcher.addEventListener(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _onSaveItemDataAsImage);
+			
 			/****************************
 			* Other panes
 			*****************************/
@@ -182,7 +186,7 @@ package app.world
 			tPane.addEventListener(Event.CLOSE, _onColorPickerBackClicked);
 			tPane.addEventListener(ColorPickerTabPane.EVENT_ITEM_ICON_CLICKED, function(e){
 				_onColorPickerBackClicked(e);
-				_removeItem(getColorPickerPane().infoBar.data.type);
+				_removeItem(getColorPickerPane().infoBar.itemData.type);
 			});
 			
 			// Color Finder Pane
@@ -190,7 +194,7 @@ package app.world
 			tPane.addEventListener(Event.CLOSE, _onColorFinderBackClicked);
 			tPane.addEventListener(ColorFinderPane.EVENT_ITEM_ICON_CLICKED, function(e){
 				_onColorFinderBackClicked(e);
-				_removeItem(getColorFinderPane().infoBar.data.type);
+				_removeItem(getColorFinderPane().infoBar.itemData.type);
 			});
 			
 			// Select First Pane
@@ -203,14 +207,10 @@ package app.world
 			var tPane:ShopCategoryPane = new ShopCategoryPane(pType);
 			tPane.addEventListener(ShopCategoryPane.ITEM_TOGGLED, _onItemToggled);
 			
-			tPane.infoBar.colorWheel.addEventListener(ButtonBase.CLICK, function(){ _colorButtonClicked(pType); });
-			tPane.infoBar.removeItemOverlay.addEventListener(MouseEvent.CLICK, function(){ _removeItem(pType); });
-			// Grid Management Events
-			tPane.infoBar.randomizeButton.addEventListener(ButtonBase.CLICK, function(){ _randomItemOfType(pType); });
-			// Misc
-			if(tPane.infoBar.eyeDropButton) {
-				tPane.infoBar.eyeDropButton.addEventListener(ButtonBase.CLICK, function(){ _eyeDropButtonClicked(pType); });
-			}
+			tPane.infoBar.on(Infobar.COLOR_WHEEL_CLICKED, function(){ _colorButtonClicked(pType); });
+			tPane.infoBar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
+			tPane.infoBar.on(Infobar.EYE_DROPPER_CLICKED, function(){ _eyeDropButtonClicked(pType); });
+			tPane.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
 			return tPane;
 		}
 
@@ -279,6 +279,20 @@ package app.world
 		private function _onSaveClicked(pEvent:Event) : void {
 			FewfDisplayUtils.saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem");
 		}
+		
+		private function _onSaveItemDataAsImage(pEvent:FewfEvent) : void {
+			if(!pEvent.data) { return; }
+			var itemData:ItemData = pEvent.data as ItemData;
+			var tName = "shop-"+itemData.type+itemData.id;
+			if(itemData.type == ItemType.CARTOUCHE) {
+				tName = "Macaron "+itemData.id;
+			}
+			if(!itemData.isBitmap()) {
+				FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(itemData), tName, ConstantsApp.ITEM_SAVE_SCALE);
+			} else {
+				FewfDisplayUtils.saveAsPNG((itemData as BitmapItemData).getFullImage(), tName, 1);
+			}
+		}
 
 		private function _onClipboardButtonClicked(e:Event) : void {
 			try {
@@ -322,7 +336,7 @@ package app.world
 			
 			shopTabs.UnpressAll();
 			shopTabs.toggleTabOn(itemType.toString());
-			var tPane:ShopCategoryPane = getTabByType(itemType);
+			var tPane:ShopCategoryPane = getShopPane(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( pItemData );
 			tPane.scrollItemIntoView(itemBttn);
 		}
@@ -330,7 +344,7 @@ package app.world
 		private function _onItemToggled(pEvent:FewfEvent) : void {
 			var tType:ItemType = pEvent.data.type;
 			var tItemList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
-			var tInfoBar:ShopInfoBar = getInfoBarByType(tType);
+			var tInfoBar:Infobar = getInfobarByType(tType);
 
 			// De-select all buttons that aren't the clicked one.
 			var tButtons:Vector.<PushButton> = getButtonArrayByType(tType);
@@ -380,7 +394,7 @@ package app.world
 		private function _removeItem(pType:ItemType) : void {
 			return; // No reason to ever remove something currently
 			
-			var tTabPane = getTabByType(pType);
+			var tTabPane:ShopCategoryPane = getShopPane(pType);
 			if(!tTabPane || tTabPane.infoBar.hasData == false) { return; }
 
 			// If item has a default value, toggle it on. otherwise remove item.
@@ -421,7 +435,7 @@ package app.world
 		// }
 
 		private function _randomItemOfType(pType:ItemType) : void {
-			var pane:ShopCategoryPane = getTabByType(pType);
+			var pane:ShopCategoryPane = getShopPane(pType);
 			// if(pane.infoBar.isRefreshLocked) { return; }
 			var tLength = pane.buttons.length;
 			var btn:PushButton = pane.buttons[ Math.floor(Math.random() * tLength) ];
@@ -469,24 +483,24 @@ package app.world
 		}
 
 		//{REGION Get TabPane data
-			private function getTabByType(pType:ItemType) : ShopCategoryPane {
+			private function getShopPane(pType:ItemType) : ShopCategoryPane {
 				return _paneManager.getPane(pType.toString()) as ShopCategoryPane;
 			}
 
-			private function getInfoBarByType(pType:ItemType) : ShopInfoBar {
-				return getTabByType(pType).infoBar;
+			private function getInfobarByType(pType:ItemType) : Infobar {
+				return getShopPane(pType).infoBar;
 			}
 
 			private function getButtonArrayByType(pType:ItemType) : Vector.<PushButton> {
-				return getTabByType(pType).buttons;
+				return getShopPane(pType).buttons;
 			}
 
 			private function getCurItemID(pType:ItemType) : int {
-				return getTabByType(pType).selectedButtonIndex;
+				return getShopPane(pType).selectedButtonIndex;
 			}
 
 			private function setCurItemID(pType:ItemType, pID:int) : void {
-				getTabByType(pType).selectedButtonIndex = pID;
+				getShopPane(pType).selectedButtonIndex = pID;
 			}
 			
 			private function getColorPickerPane() : ColorPickerTabPane {
@@ -521,14 +535,14 @@ package app.world
 				var tItemData = this.character.getItemData(pType);
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
 				GameAssets.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image as MovieClip );
-				GameAssets.copyColor(tItem, getInfoBarByType( pType ).Image );
+				GameAssets.copyColor(tItem, getInfobarByType( pType ).Image );
 				GameAssets.copyColor(tItem, getColorPickerPane().infoBar.Image);
 				/*var tMC:MovieClip = this.character.getItemFromIndex(this.currentlyColoringType);
 				if (tMC != null)
 				{
 					GameAssets.colorDefault(tMC);
 					GameAssets.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
-					GameAssets.copyColor(tMC, getInfoBarByType(pType).Image);
+					GameAssets.copyColor(tMC, getInfobarByType(pType).Image);
 					GameAssets.copyColor(tMC, getColorPickerPane().infoBar.Image);
 					
 				}*/
@@ -538,7 +552,7 @@ package app.world
 				if(!data) { return; }
 				if(data.isBitmap()) { return; } // Bitmaps have no customization
 				
-				var pane:ShopCategoryPane = getTabByType(data.type);
+				var pane:ShopCategoryPane = getShopPane(data.type);
 				var i:int = GameAssets.getItemIndexFromTypeID(data.type, data.id);
 				
 				var tItem:MovieClip = GameAssets.getColoredItemImage(data);
@@ -548,7 +562,7 @@ package app.world
 			private function _colorButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(this.currentlyColoringType) == null) { return; }
 
-				var tData:ItemData = getInfoBarByType(pType).data;
+				var tData:ItemData = getInfobarByType(pType).itemData;
 				getColorPickerPane().infoBar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
 				getColorPickerPane().init( tData.uniqId(), tData.colors, tData.defaultColors );
@@ -557,13 +571,13 @@ package app.world
 			}
 
 			private function _onColorPickerBackClicked(pEvent:Event):void {
-				_paneManager.openPane(getColorPickerPane().infoBar.data.type.toString());
+				_paneManager.openPane(getColorPickerPane().infoBar.itemData.type.toString());
 			}
 
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
 
-				var tData:ItemData = getInfoBarByType(pType).data;
+				var tData:ItemData = getInfobarByType(pType).itemData;
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
 				var tItem2:MovieClip = !tData.isBitmap() ? GameAssets.getColoredItemImage(tData) : (tData as BitmapItemData).getLargeOutfitImageAsMovieClip();
 				getColorFinderPane().infoBar.addInfo( tData, tItem );
@@ -573,7 +587,7 @@ package app.world
 			}
 
 			private function _onColorFinderBackClicked(pEvent:Event):void {
-				_paneManager.openPane(getColorFinderPane().infoBar.data.type.toString());
+				_paneManager.openPane(getColorFinderPane().infoBar.itemData.type.toString());
 			}
 		//}END Color Tab
 	}

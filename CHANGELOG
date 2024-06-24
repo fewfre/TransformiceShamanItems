@@ -12,6 +12,11 @@
 - [Code] Rewrote the `TabPane` (now `SidePane`) and scrollbox logic
 - [Bug] Fixed lag caused by a recent update
 - Optimized Outfit Manager pane so list isn't fully re-rendered on outfit adding, deleting, or list reversing.
+- [Code] `ShopInfobar` rewrite (and renamed to `Infobar`)
+	- Moved grid management logic to it's own component
+	- Grid management button groups can now be hidden individually, instead of all or nothing
+	- Hovering over item preview on infobar now properly shows a pointer cursor (to make it more obvious it's clickable)
+- Updated back button arrow to have a larger hit area
 
 
 == V1.10e - 24 March 2024 ==
