@@ -17,6 +17,8 @@
 	- Grid management button groups can now be hidden individually, instead of all or nothing
 	- Hovering over item preview on infobar now properly shows a pointer cursor (to make it more obvious it's clickable)
 - Updated back button arrow to have a larger hit area
+- [Code] Rewrote `RoundedRectangle` to have width/height as normal params
+- [Code] Renamed `TextBase` to `TextTranslated`, and then (next commit)
 
 
 == V1.10e - 24 March 2024 ==

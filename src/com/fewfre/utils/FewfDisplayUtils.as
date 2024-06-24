@@ -12,6 +12,7 @@ package com.fewfre.utils
 	import ext.ParentAppSystem;
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
+	import com.fewfre.display.TextTranslated;
 	// import flash.media.CameraRoll;
 	// import flash.events.PermissionEvent;
 	// import flash.permissions.PermissionStatus;
@@ -83,7 +84,7 @@ package com.fewfre.utils
 		}
 		
 		public static function handleErrorMessage(e:Error) : void {
-			var text:TextBase = new TextBase({ color:0xFF0000, x:Fewf.stage.stageWidth*0.25, y:Fewf.stage.stageHeight-25 });
+			var text:TextTranslated = new TextTranslated({ color:0xFF0000, x:Fewf.stage.stageWidth*0.25, y:Fewf.stage.stageHeight-25 });
 			text.setUntranslatedText("["+e.name+":"+e.errorID+"] "+e.message);
 			Fewf.stage.addChild(text);
 		}

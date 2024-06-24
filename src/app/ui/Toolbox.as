@@ -40,7 +40,7 @@ package app.ui
 		// Constructor
 		// onShareCodeEntered: (code, (state:String)=>void)=>void
 		public function Toolbox(pCharacter:CustomItem, onShareCodeEntered:Function) {
-			_bg = new RoundedRectangle({ width:365, height:35, origin:0.5 }).drawAsTray().appendTo(this);
+			_bg = new RoundedRectangle(365, 35, { origin:0.5 }).drawAsTray().appendTo(this);
 			
 			/********************
 			* Download Button

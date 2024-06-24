@@ -1,6 +1,7 @@
 package app.ui.screens
 {
-	import com.fewfre.display.*;
+	import com.fewfre.display.TextTranslated;
+	import com.fewfre.display.ButtonBase;
 	import com.adobe.images.*;
 	import app.data.*;
 	import app.ui.*;
@@ -21,7 +22,7 @@ package app.ui.screens
 		// Storage
 		private var _bg				: RoundedRectangle;
 		public var _text			: TextField;
-		public var _textCopiedMessage: TextBase;
+		public var _textCopiedMessage: TextTranslated;
 		public var _textCopyTween	: Tween;
 		
 		// Constructor
@@ -45,12 +46,12 @@ package app.ui.screens
 			* Background
 			*****************************/
 			var tWidth:Number = 500, tHeight:Number = 200;
-			_bg = new RoundedRectangle({ width:tWidth, height:tHeight, origin:0.5 }).appendTo(this).drawAsTray();
+			_bg = new RoundedRectangle(tWidth, tHeight, { origin:0.5 }).appendTo(this).drawAsTray();
 			
 			/****************************
 			* Header
 			*****************************/
-			addChild(new TextBase({ text:"share_header", size:25, y:-63 }));
+			addChild(new TextTranslated({ text:"share_header", size:25, y:-110 }));
 			
 			/****************************
 			* #1 - Selectable text field + Copy Button and message
@@ -60,7 +61,7 @@ package app.ui.screens
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
-			_textCopiedMessage = addChild(new TextBase({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - 40, y:tCopyButton.y, alpha:0 })) as TextBase;
+			_textCopiedMessage = new TextTranslated({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendTo(this);
 			
 			/****************************
 			* Close Button
@@ -105,7 +106,7 @@ package app.ui.screens
 		
 		private function _newCopyInput(pData:Object, pParent:Sprite) : TextField {
 			var tTFWidth:Number = _bg.width-50, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
-			var tTextBackground:RoundedRectangle = new RoundedRectangle({ x:pData.x, y:pData.y, width:tTFWidth+tTFPaddingX*2, height:tTFHeight+tTFPaddingY*2, origin:0.5 })
+			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 }).setXY(pData.x, pData.y)
 				.appendTo(pParent).draw(0xFFFFFF, 7, 0x444444);
 			
 			var tTextField:TextField = tTextBackground.addChild(new TextField()) as TextField;
