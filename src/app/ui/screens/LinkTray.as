@@ -51,7 +51,7 @@ package app.ui.screens
 			/****************************
 			* Header
 			*****************************/
-			addChild(new TextTranslated({ text:"share_header", size:25, y:-110 }));
+			new TextTranslated("share_header", { size:25, y:-110 }).appendToT(this);
 			
 			/****************************
 			* #1 - Selectable text field + Copy Button and message
@@ -61,7 +61,7 @@ package app.ui.screens
 			var tCopyButton:SpriteButton = addChild(new SpriteButton({ x:tWidth*0.5-75+25, y:52, text:"share_copy", width:50, height:25, origin:0.5 })) as SpriteButton;
 			tCopyButton.addEventListener(ButtonBase.CLICK, function(){ _copyToClipboard(); });
 			
-			_textCopiedMessage = new TextTranslated({ text:"share_link_copied", size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendTo(this);
+			_textCopiedMessage = new TextTranslated("share_link_copied", { size:17, originX:1, x:tCopyButton.x - tCopyButton.Width/2 - 10, y:tCopyButton.y, alpha:0 }).appendToT(this);
 			
 			/****************************
 			* Close Button

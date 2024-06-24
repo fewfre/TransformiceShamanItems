@@ -84,8 +84,8 @@ package com.fewfre.utils
 		}
 		
 		public static function handleErrorMessage(e:Error) : void {
-			var text:TextTranslated = new TextTranslated({ color:0xFF0000, x:Fewf.stage.stageWidth*0.25, y:Fewf.stage.stageHeight-25 });
-			text.setUntranslatedText("["+e.name+":"+e.errorID+"] "+e.message);
+			var msg:String = "["+e.name+":"+e.errorID+"] "+e.message;
+			var text:TextBase = new TextBase(msg, { color:0xFF0000, x:Fewf.stage.stageWidth*0.25, y:Fewf.stage.stageHeight-25 });
 			Fewf.stage.addChild(text);
 		}
 		

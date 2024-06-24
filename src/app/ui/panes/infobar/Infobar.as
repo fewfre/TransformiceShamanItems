@@ -125,7 +125,7 @@ package app.ui.panes.infobar
 			/********************
 			* Text
 			*********************/
-			_idText = new TextTranslated({ text:"infobar_id", x:0, y:0, size:18, origin:0, alpha:0 }).appendTo(_leftButtonsTray);
+			_idText = new TextTranslated("infobar_id", { x:0, y:0, size:18, origin:0, alpha:0 }).appendToT(_leftButtonsTray);
 			if(pData.showBackButton) {
 				_idText.y = 13;
 			}

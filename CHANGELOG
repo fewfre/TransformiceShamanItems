@@ -18,7 +18,7 @@
 	- Hovering over item preview on infobar now properly shows a pointer cursor (to make it more obvious it's clickable)
 - Updated back button arrow to have a larger hit area
 - [Code] Rewrote `RoundedRectangle` to have width/height as normal params
-- [Code] Renamed `TextBase` to `TextTranslated`, and then (next commit)
+- [Code] Renamed `TextBase` to `TextTranslated`, and then a new `TextBase` made (which `TextTranslated` inherits from)
 
 
 == V1.10e - 24 March 2024 ==
