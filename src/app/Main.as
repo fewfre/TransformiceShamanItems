@@ -77,13 +77,15 @@ package app
 				Fewf.swfUrlBase+"resources/flags.swf"
 			];
 			
+			var tPack:Array, prefix:String;
 			if(Fewf.isExternallyLoaded) {
-				var tPack = _config.packs_external;
-				for(var i:int = 0; i < tPack.length; i++) { tPacks.push(tPack[i]); }
+				tPack = _config.packs_external;
+				prefix = "";
 			} else {
-				var tPack = _config.packs.items;
-				for(var i:int = 0; i < tPack.length; i++) { tPacks.push(Fewf.swfUrlBase+"resources/"+tPack[i]); }
+				tPack = _config.packs.items;
+				prefix = Fewf.swfUrlBase+"resources/";
 			}
+			for(var i:int = 0; i < tPack.length; i++) { tPacks.push(prefix+tPack[i]); }
 			
 			_load(tPacks, Fewf.assets.getData("config").cachebreaker, _onLoadComplete);
 		}
