@@ -17,6 +17,7 @@ package app.ui.panes
 	import app.ui.screens.LoadingSpinner;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
+	import com.fewfre.utils.FewfUtils;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -51,6 +52,14 @@ package app.ui.panes
 			super.open();
 		}
 		
+		public function getCellWithItemData(itemData:ItemData) : DisplayObject {
+			return !itemData ? null : FewfUtils.vectorFind(grid.cells, function(c:DisplayObject){ return itemData.matches(_findPushButtonInCell(c).data.itemData) });
+		}
+		
+		public function getButtonWithItemData(itemData:ItemData) : PushButton {
+			return _findPushButtonInCell(getCellWithItemData(itemData));
+		}
+		
 		public function toggleGridButtonWithData(pData:ItemData) : PushButton {
 			if(pData) {
 				var tIndex:int = GameAssets.getItemIndexFromTypeID(_type, pData.id);
@@ -69,19 +78,27 @@ package app.ui.panes
 			}
 		}
 		
+		public function chooseRandomItem() : void {
+			var tLength = grid.cells.length;
+			var cell:DisplayObject = grid.cells[ Math.floor(Math.random() * tLength) ];
+			var btn:PushButton = _findPushButtonInCell(cell);
+			btn.toggleOn();
+			if(_flagOpen) scrollItemIntoView(cell);
+		}
+		
 		/****************************
 		* Private
 		*****************************/
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
-			clearButtons();
+			resetGrid();
 
 			var shopItemButton : PushButton;
 			for(var i:int = 0; i < pItemList.length; i++) {
 				shopItemButton = !pItemList[i].isBitmap()
 					? newButtonFromItemData(pItemList[i], i)
 					: newButtonFromBitmapItemData(pItemList[i] as BitmapItemData, i);
-				addButton(shopItemButton);
-				shopItemButton.addEventListener(PushButton.STATE_CHANGED_AFTER, _onItemToggled);
+				// Finally add to grid (do it at end so auto event handlers can be hooked up properly)
+				addToGrid(shopItemButton);
 			}
 			refreshScrollbox();
 		}
@@ -114,7 +131,8 @@ package app.ui.panes
 		/****************************
 		* Events
 		*****************************/
-		private function _onItemToggled(e:FewfEvent) : void {
+		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
+			super._onCellPushButtonToggled(e);
 			dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
 		}
 	}

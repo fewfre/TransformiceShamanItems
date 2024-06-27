@@ -1,3 +1,7 @@
+== V1.11b - 27 June 2024 ==
+- [Code] Rewrote grid button logic such that only 1 grid is needed for additional buttons in same cell (such as delete button)
+
+
 == V1.11 - 19 June 2024 ==
 - Added badges as a new "item" type.
 - Color locks are now remembered on a per-item basis until you close the app or hit "Defaults" button on color picker

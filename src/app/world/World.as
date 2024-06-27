@@ -173,7 +173,7 @@ package app.world
 			var tPane:SidePane = null;
 			
 			// Outfit Pane
-			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode));
+			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode, function(){ return character.getShareCodeFewfreSyntax(); }));
 			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){
 				_paneManager.openPane(character.getCurrentItemData().type.toString());
 			});
@@ -343,15 +343,6 @@ package app.world
 		private function _onItemToggled(pEvent:FewfEvent) : void {
 			var tType:ItemType = pEvent.data.type;
 			var tItemList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
-			var tInfoBar:Infobar = getInfobarByType(tType);
-
-			// De-select all buttons that aren't the clicked one.
-			var tButtons:Vector.<PushButton> = getButtonArrayByType(tType);
-			for(var i:int = 0; i < tButtons.length; i++) {
-				if(tButtons[i].data.id != pEvent.data.id) {
-					if (tButtons[i].pushed) { tButtons[i].toggleOff(); }
-				}
-			}
 			
 			// // Select buttons on other tabs
 			// var tButtons2:Array = null;
@@ -365,7 +356,9 @@ package app.world
 			// }
 			// tButtons2 = null;
 
-			var tButton:PushButton = tButtons[pEvent.data.id];
+			var tPane:ShopCategoryPane = getShopPane(tType);
+			var tInfoBar:Infobar = tPane.infoBar;
+			var tButton:PushButton = tPane.getButtonWithItemData(pEvent.data.itemData);
 			var tData:ItemData;
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
@@ -435,11 +428,7 @@ package app.world
 
 		private function _randomItemOfType(pType:ItemType) : void {
 			var pane:ShopCategoryPane = getShopPane(pType);
-			// if(pane.infoBar.isRefreshLocked) { return; }
-			var tLength = pane.buttons.length;
-			var btn:PushButton = pane.buttons[ Math.floor(Math.random() * tLength) ];
-			btn.toggleOn();
-			if(pane.flagOpen) pane.scrollItemIntoView(btn);
+			pane.chooseRandomItem();
 		}
 
 		private function _onShareButtonClicked(pEvent:Event) : void {
