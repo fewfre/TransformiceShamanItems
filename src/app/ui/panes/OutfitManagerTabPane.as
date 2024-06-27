@@ -152,7 +152,7 @@ package app.ui.panes
 			var actionsHolder = new Sprite(); actionsHolder.alpha = 0;
 			
 			// Corresponding Delete Button
-			var deleteBtn:ScaleButton = actionsHolder.addChild(new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4 }));
+			var deleteBtn:ScaleButton = actionsHolder.addChild(new ScaleButton({ x:grid.cellSize-5, y:5, obj:new $Trash(), obj_scale:0.4, data:{ lookIndex:i } }));
 			// We have to delete by the index (instead of a code) since if someone added the same look twice but in different spots, this could delete the one in the wrong spot
 			deleteBtn.addEventListener(MouseEvent.CLICK, function(e){ deleteLookByIndex(deleteBtn.data.lookIndex); });
 			_deleteBtnGrid.add(actionsHolder);
