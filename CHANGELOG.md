@@ -3,6 +3,7 @@
 - [Code] Color Finder cropping code made a tiny bit clearer
 - Added ability to favorite items and have them appear above the items grid
 - [Misc] (6 Jul) Converted changelog into markdown
+- [Misc] (7 Jul) Added some analytics (via tracking pixel) for user language + whether using app or browser
 
 
 ## V1.11 - 19 June 2024
