@@ -1,10 +1,11 @@
-== V1.11b - 27 June 2024 ==
+## V1.11b - 27 June 2024
 - [Code] Rewrote grid button logic such that only 1 grid is needed for additional buttons in same cell (such as delete button)
 - [Code] Color Finder cropping code made a tiny bit clearer
 - Added ability to favorite items and have them appear above the items grid
+- [Misc] (6 Jul) Converted changelog into markdown
 
 
-== V1.11 - 19 June 2024 ==
+## V1.11 - 19 June 2024
 - Added badges as a new "item" type.
 - Color locks are now remembered on a per-item basis until you close the app or hit "Defaults" button on color picker
 - [Code] App can now load PNGs
@@ -28,33 +29,33 @@
 - [Bug] Fixed outfit manager delete button bug
 
 
-== V1.10e - 24 March 2024 ==
+## V1.10e - 24 March 2024
 - Selecting something in outfit manager no longer forces you to go to that item's category pane
 	- Added a new small button that can do the old behavior
 - Selecting an already "selected" shop tab when a different pane is open (ie outfit manager, color picker, etc) now properly switches to it.
 
 
-== V1.10d - 6 December 2023 ==
+## V1.10d - 6 December 2023
 - Fixed bug causing color history to stay in delete mode when it shouldn't
 
 
-== V.10c - 9 October 2023 ==
+## V.10c - 9 October 2023
 - Changed default color detect to account for weird color values
 
 
-== V1.10b - 30 June 2023 ==
+## V1.10b - 30 June 2023
 - share code now scrolls item into view
 - Allow traversing color swatches using up/down arrow keys
 
 
-== V1.10 - 1 May 2023 ==
+## V1.10 - 1 May 2023
 - [Bug] Clicking scale slider will no longer prevent left/right arrow keys from traversing item grid
 - Scale slider code polished - track hitbox increased & clicking anywhere on track now starts drag
 - Share code support added
 - "Outfit" manager for saving shaman items like in the tfm dressroom
 
 
-== V1.9 - 25 February 2023 ==
+## V1.9 - 25 February 2023
 - Each category now has newest item selected by default
 - Items can no longer be unselected; there will always be something selected in a given category
 - Ported over TFM dressroom changes:
@@ -82,23 +83,23 @@
 		- `com.piterwilson` lib source polished + moved `com.paulcoyle`'s `AngularColour` into it
 
 
-== V1.8b - 17 February 2023 ==
+## V1.8b - 17 February 2023
 - One item in each category may now be selected
 	- changing back to a tab pane with a selected item will now change active item back to it
 - Item selected by default on launch is now newest small box, not oldest
 
 
-== V1.8 - 24 January 2023 ==
+## V1.8 - 24 January 2023
 - Removed duplicate balloon (hardcoded)
 - Added ability to traverse through item buttons using left/right arrow key (suggestion by Barberserk)
 
 
-== V1.7b - 19 October 2022 ==
+## V1.7b - 19 October 2022
 - Hovering over color swatch square on color picker will temporarily invert the corresponding color on the target item until hovering is stopped
 - Tweaked top bar on shop tab panes to have a larger item preview size
 
 
-== V1.7 - 6 October 2022 ==
+## V1.7 - 6 October 2022
 - Added randomize color button to item color picker page
 - Undo button added on color picker - clicking it will show colors previously used on the specific color swatch for that specific item.
 - Updated color buttons to look nicer
@@ -112,31 +113,31 @@
 - Recent colors now remembered across dressrooms in the app
 - Increased max costumes to check constant + made the checking more efficient
 
-== V1.6 - 6 May 2022 ==
+## V1.6 - 6 May 2022
 - Android support
 - Color picker now has show a recent list of colors along the bottom
 
-== V1.5 - 23 February 2021 ==
+## V1.5 - 23 February 2021
 - Shaman orbs added
 
 
-== V1.4 - 2 January 2020 ==
+## V1.4 - 2 January 2020
 - Added support for being externally loaded by AIR app
 
 
-== V1.3 - 9 June 2018 ==
+## V1.3 - 9 June 2018
 - Code cleanup / validation for "strict" compilation
 - Small changes to code strucutre (including old file removal)
 - Re-added infobar download button (for consitent name/scale for wiki)
 
 
-== V1.2 - 16 December 2017 ==
+## V1.2 - 16 December 2017
 - Increased color swatches to 10 so there are enough for all items.
 - Item resource swfs now loaded based on config.json
 - Renamed "Costumes" to "GameAssets" and changed it from a singleton to a static class.
 
 
-== V1.1 - 6 September 2017 ==
+## V1.1 - 6 September 2017
 - Adding various languages
 - Moved over TFM Dressroom rework:
 	- V1.5
@@ -165,5 +166,5 @@
 		- Imgur upload option added.
 		- Resources are no longer cached.
 
-== V1.0 - 4 July 2017 ==
+## V1.0 - 4 July 2017
 - Initial (rough) Commit - fully functional
