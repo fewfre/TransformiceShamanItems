@@ -44,7 +44,7 @@ package app.world
 		private var shopTabs       : ShopTabList;
 		private var _toolbox       : Toolbox;
 		
-		private var _shareScreen   : LinkTray;
+		private var _shareScreen   : ShareScreen;
 		private var _langScreen    : LangScreen;
 		private var _aboutScreen   : AboutScreen;
 
@@ -67,9 +67,9 @@ package app.world
 		private function _buildWorld(pStage:Stage) {
 			GameAssets.init();
 
-			/****************************
-			* Create CustomItem
-			*****************************/
+			/////////////////////////////
+			// Create CustomItem
+			/////////////////////////////
 			var parms:String = null;
 			if(!Fewf.isExternallyLoaded) {
 				try {
@@ -83,9 +83,9 @@ package app.world
 
 			this.character = new CustomItem(GameAssets.boxes_small[0], parms).setXY(185, 275).appendTo(this);
 
-			/****************************
-			* Setup UI
-			*****************************/
+			/////////////////////////////
+			// Setup UI
+			/////////////////////////////
 			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).setXY(450, 10)
 				.appendTo(this).drawAsTray();
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
@@ -142,21 +142,16 @@ package app.world
 					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
-			/****************************
-			* Screens
-			*****************************/
-			_shareScreen = new LinkTray({ x:pStage.stageWidth * 0.5, y:pStage.stageHeight * 0.5 });
-			_shareScreen.addEventListener(Event.CLOSE, _onShareScreenClosed);
-			
-			_langScreen = new LangScreen({  });
-			_langScreen.addEventListener(Event.CLOSE, _onLangScreenClosed);
+			/////////////////////////////
+			// Screens
+			/////////////////////////////
+			_shareScreen = new ShareScreen().on(Event.CLOSE, _onShareScreenClosed);
+			_langScreen = new LangScreen().on(Event.CLOSE, _onLangScreenClosed);
+			_aboutScreen = new AboutScreen().on(Event.CLOSE, _onAboutScreenClosed);
 
-			_aboutScreen = new AboutScreen();
-			_aboutScreen.addEventListener(Event.CLOSE, _onAboutScreenClosed);
-
-			/****************************
-			* Create item panes
-			*****************************/
+			/////////////////////////////
+			// Create item panes
+			/////////////////////////////
 			for each(var tType:ItemType in ItemType.ALL) {
 				_paneManager.addPane(tType.toString(), _setupItemPane(tType));
 				// // Based on what the character is wearing at start, toggle on the appropriate buttons.
@@ -168,9 +163,9 @@ package app.world
 			
 			Fewf.dispatcher.addEventListener(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _onSaveItemDataAsImage);
 			
-			/****************************
-			* Other panes
-			*****************************/
+			/////////////////////////////
+			// Static Panes
+			/////////////////////////////
 			var tPane:SidePane = null;
 			
 			// Outfit Pane

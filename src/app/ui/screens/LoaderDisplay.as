@@ -1,15 +1,12 @@
 package app.ui.screens
 {
+	import app.ui.common.RoundedRectangle;
 	import com.fewfre.display.TextTranslated;
-	import com.fewfre.utils.*;
 	import com.fewfre.events.FewfEvent;
-	import app.data.*;
-	import app.ui.common.*;
-	import flash.display.*;
-	import flash.events.*
-	import flash.text.*;
-	import flash.display.MovieClip;
-	
+	import com.fewfre.utils.AssetManager;
+	import com.fewfre.utils.Fewf;
+	import flash.events.ProgressEvent;
+
 	public class LoaderDisplay extends RoundedRectangle
 	{
 		private var _loadingSpinner	: LoadingSpinner;
@@ -18,7 +15,8 @@ package app.ui.screens
 		
 		// Constructor
 		// pData = { x:Number, y:Number }
-		public function LoaderDisplay(pData:Object) {
+		public function LoaderDisplay(pData:Object=null) {
+			pData = pData || {};
 			pData.origin = 0.5;
 			super(500, 200, pData);
 			this.drawAsTray();
