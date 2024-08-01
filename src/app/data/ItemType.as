@@ -23,5 +23,14 @@ package app.data
 		
 		// This is required for proper auto string convertion on `trace`/`Dictionary` and such - enums should always have
 		public function toString() : String { return _value.toString(); }
+		public static function fromString(pValue:String) : ItemType {
+			if(!pValue) return null;
+			for each(var type:ItemType in ALL) {
+				if(type.toString() == pValue) {
+					return type;
+				}
+			}
+			return null;
+		}
 	}
 }

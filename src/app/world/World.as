@@ -126,8 +126,8 @@ package app.world
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
-			var tLangButton = addChild(new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }));
-			tLangButton.addEventListener(ButtonBase.CLICK, _onLangButtonClicked);
+			var tLangButton:LangButton = new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }).appendTo(this)
+				.on(ButtonBase.CLICK, _onLangButtonClicked) as LangButton;
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
@@ -166,36 +166,30 @@ package app.world
 			/////////////////////////////
 			// Static Panes
 			/////////////////////////////
-			var tPane:SidePane = null;
-			
 			// Outfit Pane
-			tPane = _paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode, function(){ return character.getShareCodeFewfreSyntax(); }));
-			tPane.addEventListener(Event.CLOSE, function(pEvent:Event){
-				_paneManager.openPane(character.getCurrentItemData().type.toString());
-			});
+			_paneManager.addPane(TAB_OUTFITS, new OutfitManagerTabPane(character, _useShareCode, function(){ return character.getShareCodeFewfreSyntax(); }))
+				.on(Event.CLOSE, function(pEvent:Event){ _paneManager.openPane(character.getCurrentItemData().type.toString()); });
 			
 			// Color Picker Pane
-			tPane = _paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}));
-			tPane.addEventListener(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged);
-			tPane.addEventListener(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview);
-			tPane.addEventListener(Event.CLOSE, _onColorPickerBackClicked);
-			tPane.addEventListener(ColorPickerTabPane.EVENT_ITEM_ICON_CLICKED, function(e){
-				_onColorPickerBackClicked(e);
-				_removeItem(getColorPickerPane().infoBar.itemData.type);
-			});
+			_paneManager.addPane(COLOR_PANE_ID, new ColorPickerTabPane({}))
+				.on(ColorPickerTabPane.EVENT_COLOR_PICKED, _onColorPickChanged)
+				.on(ColorPickerTabPane.EVENT_PREVIEW_COLOR, _onColorPickHoverPreview)
+				.on(Event.CLOSE, _onColorPickerBackClicked)
+				.on(ColorPickerTabPane.EVENT_ITEM_ICON_CLICKED, function(e){
+					_onColorPickerBackClicked(e);
+					_removeItem(getColorPickerPane().infoBar.itemData.type);
+				});
 			
 			// Color Finder Pane
-			tPane = _paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({ }));
-			tPane.addEventListener(Event.CLOSE, _onColorFinderBackClicked);
-			tPane.addEventListener(ColorFinderPane.EVENT_ITEM_ICON_CLICKED, function(e){
-				_onColorFinderBackClicked(e);
-				_removeItem(getColorFinderPane().infoBar.itemData.type);
-			});
+			_paneManager.addPane(COLOR_FINDER_PANE_ID, new ColorFinderPane({ }))
+				.on(Event.CLOSE, _onColorFinderBackClicked)
+				.on(ColorFinderPane.EVENT_ITEM_ICON_CLICKED, function(e){
+					_onColorFinderBackClicked(e);
+					_removeItem(getColorFinderPane().infoBar.itemData.type);
+				});
 			
 			// Select First Pane
 			shopTabs.tabs[0].toggleOn();
-			
-			tPane = null;
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
