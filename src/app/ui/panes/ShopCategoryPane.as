@@ -166,7 +166,7 @@ package app.ui.panes
 		}
 		
 		private function _addRemoveFavoriteToggled(e:FewfEvent) : void {
-			var pushed:Boolean = e.data.pushed, tId:String = _infoBar.itemData.id;
+			var pushed:Boolean = e.data.pushed, tId:String = _infobar.itemData.id;
 			if(pushed) {
 				FavoriteItemsLocalStorageManager.addFavoriteId(_type, tId);
 			} else {
