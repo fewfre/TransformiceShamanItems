@@ -32,7 +32,7 @@ package app.ui.common
 			if(pData.originX != null) { originX = pData.originX; }
 			if(pData.originY != null) { originY = pData.originY; }
 		}
-		public function setXY(pX:Number, pY:Number) : RoundedRectangle { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : RoundedRectangle { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): RoundedRectangle { target.addChild(this); return this; }
 		
 		/****************************

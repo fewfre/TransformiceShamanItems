@@ -116,12 +116,12 @@ package app.ui.panes.infobar
 			
 			if(!pData.showBackButton) {
 				_colorWheel = new ScaleButton({ x:80, y:24, obj:new $ColorWheel() }).appendTo(this) as ScaleButton;
-				_colorWheel.setXY(_imageCont.x + _imageCont.Width + _colorWheel.Image.width*0.5 + 10, 25)
+				_colorWheel.move(_imageCont.x + _imageCont.Width + _colorWheel.Image.width*0.5 + 10, 25)
 					.on(ButtonBase.CLICK, dispatchEventHandler(COLOR_WHEEL_CLICKED));
 				showColorWheel(false);
 			} else {
 				_backButton = new ScaleButton({ x:80, y:24, obj:new $BackArrow() }).appendTo(this) as ScaleButton;
-				_backButton.setXY(_imageCont.x + _imageCont.Width + _backButton.Image.width*0.5 + 10, 25)
+				_backButton.move(_imageCont.x + _imageCont.Width + _backButton.Image.width*0.5 + 10, 25)
 					.on(MouseEvent.MOUSE_UP, dispatchEventHandler(BACK_CLICKED));
 				_rearrangeLeftButtonsTray();
 			}
@@ -139,13 +139,13 @@ package app.ui.panes.infobar
 			*********************/
 			if(pData.showEyeDropper) {
 				_eyeDropperButton = new SpriteButton({ size:BTN_SIZE, obj_scale:0.45, obj:new $EyeDropper() })
-					.setXY(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
+					.move(0, BTN_Y).appendTo(_leftButtonsTray) as SpriteButton;
 				_eyeDropperButton.on(ButtonBase.CLICK, dispatchEventHandler(EYE_DROPPER_CLICKED));
 				_eyeDropperButton.disable().alpha = 0;
 			}
 			if(pData.showFavorites) {
 				_favoriteButton = new SpriteButton({ size:BTN_SIZE, obj:new $HeartEmpty(), data:{ pushed:false } });
-				_favoriteButton.setXY(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
+				_favoriteButton.move(pData.showEyeDropper ? BTN_SIZE+3 : 0, BTN_Y).appendTo(_leftButtonsTray)
 					.on(ButtonBase.CLICK, function(e):void{
 						_updateFavoriteButton(!_favoriteButton.data.pushed);
 						dispatchEvent(new FewfEvent(FAVORITE_CLICKED, { pushed:_favoriteButton.data.pushed }));
@@ -159,7 +159,7 @@ package app.ui.panes.infobar
 			if(pData.gridManagement) {
 				var widgetProps:Object = pData.gridManagement is Boolean ? {} : pData.gridManagement; // If a boolean ("true") use defaults
 				widgetProps.hideRandomizeLock = true; // Shaman items app never uses this
-				_gridManagementWidget = new GridManagementWidget(widgetProps).setXY(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
+				_gridManagementWidget = new GridManagementWidget(widgetProps).move(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
 				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.LEFT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); })
@@ -181,7 +181,7 @@ package app.ui.panes.infobar
 				hideImageCont();
 			}
 		}
-		public function setXY(pX:Number, pY:Number) : Infobar { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : Infobar { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): Infobar { target.addChild(this); return this; }
 		public function on(type:String, listener:Function): Infobar { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): Infobar { this.removeEventListener(type, listener); return this; }

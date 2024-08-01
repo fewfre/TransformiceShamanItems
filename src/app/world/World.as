@@ -81,16 +81,16 @@ package app.world
 				} catch (error:Error) { };
 			}
 
-			this.character = new CustomItem(GameAssets.boxes_small[0], parms).setXY(185, 275).appendTo(this);
+			this.character = new CustomItem(GameAssets.boxes_small[0], parms).move(185, 275).appendTo(this);
 
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).setXY(450, 10)
+			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
 			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
 			
-			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).setXY(375, 10).appendTo(this);
+			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).move(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			var tabs:Vector.<Object> = new <Object>[
 				{ text:"tab_box_small", event:ItemType.BOX_SMALL.toString() },
@@ -112,7 +112,7 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox(character, _onShareCodeEntered).setXY(188, 28).appendTo(this)
+			_toolbox = new Toolbox(character, _onShareCodeEntered).move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked).on(Toolbox.IMGUR_CLICKED, _onImgurButtonClicked)
@@ -120,7 +120,7 @@ package app.world
 				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange);
 			
 			// Outfit Button
-			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).setXY(_toolbox.x+167, _toolbox.y+12.5+21)
+			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
 				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			
 			/////////////////////////////
@@ -131,14 +131,14 @@ package app.world
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
-				.setXY(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
+				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
 				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
-			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).setXY(0, -1).appendTo(aboutButton)
+			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
 			
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
-				.setXY(22, pStage.stageHeight-17-28)
+				.move(22, pStage.stageHeight-17-28)
 					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			

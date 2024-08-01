@@ -39,7 +39,7 @@ package app.world.elements
 
 			if(_itemData != null) updateItem();
 		}
-		public function setXY(pX:Number, pY:Number) : CustomItem { x = pX; y = pY; return this; }
+		public function move(pX:Number, pY:Number) : CustomItem { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): CustomItem { target.addChild(this); return this; }
 
 		public function updateItem() {

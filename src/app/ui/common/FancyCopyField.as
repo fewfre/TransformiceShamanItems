@@ -60,7 +60,7 @@ package app.ui.common
 			
 			// Copy button
 			_button = new CopyButton({ size:bsize, origin:0.5 }).appendTo(_tray)
-				.setXY(width - padX - bsize/2 + 2, height/2)
+				.move(width - padX - bsize/2 + 2, height/2)
 				.on(ButtonBase.CLICK, _onCopyButtonClicked) as CopyButton;
 			_button.changeIcon(true);
 		}

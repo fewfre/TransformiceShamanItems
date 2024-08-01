@@ -49,7 +49,7 @@ package app.ui.panes
 			_infoBar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
-			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).setXY(7, 60+5).appendTo(this);
+			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, 60+5).appendTo(this);
 			_renderFavorites();
 		}
 		

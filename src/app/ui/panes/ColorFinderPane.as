@@ -56,7 +56,7 @@ package app.ui.panes
 				.on(Infobar.ITEM_PREVIEW_CLICKED, function(e){ dispatchEvent(new Event(EVENT_ITEM_ICON_CLICKED)); });
 			
 			// Scrollbox used for lazy cropping of dragged around item
-			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 390-60).setXY(5, 5+60);
+			_scrollbox = new FancyScrollbox(ConstantsApp.PANE_WIDTH, 390-60).move(5, 5+60);
 			addChild(_scrollbox);
 			
 			_tray = addChild(new MovieClip()) as MovieClip;
@@ -110,7 +110,7 @@ package app.ui.panes
 			*********************/
 			var tSliderWidth = ConstantsApp.PANE_WIDTH * 0.4;
 			_scaleSlider = new FancySlider(tSliderWidth)
-				.setXY(-tSliderWidth*0.5, -110)
+				.moveSelf(-tSliderWidth*0.5, -110)
 				.setSliderParams(1, 5, 1)
 				.appendTo(_tray);
 			_scaleSlider.addEventListener(FancySlider.CHANGE, _onSliderChange);
@@ -132,7 +132,7 @@ package app.ui.panes
 			var tTFWidth:Number = 65, tTFHeight:Number = 18, tTFPaddingX:Number = 5, tTFPaddingY:Number = 5;
 			// So much easier than doing it with those darn native text field options which have no padding.
 			var tTextBackground:RoundedRectangle = new RoundedRectangle(tTFWidth+tTFPaddingX*2, tTFHeight+tTFPaddingY*2, { origin:0.5 })
-				.setXY(15, 170).appendTo(_tray).draw(0xFFFFFF, 7, 0x444444);
+				.move(15, 170).appendTo(_tray).draw(0xFFFFFF, 7, 0x444444);
 			
 			_text = tTextBackground.addChild(new TextField()) as TextField;
 			_text.type = TextFieldType.DYNAMIC;
@@ -145,11 +145,11 @@ package app.ui.panes
 			
 			var tSize = tTextBackground.Height;
 			_textColorBox = new RoundedRectangle(tSize, tSize, { origin:0.5 }).appendTo(_tray)
-				.setXY(tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5, tTextBackground.y);
+				.move(tTextBackground.x - (tTextBackground.Width*0.5) - (tSize*0.5) - 5, tTextBackground.y);
 			
-			_hoverColorBox = new RoundedRectangle(35, 35, { originX:0, originY:1 }).appendTo(_tray);//.setXY(ConstantsApp.PANE_WIDTH*0.5-5, -122);
+			_hoverColorBox = new RoundedRectangle(35, 35, { originX:0, originY:1 }).appendTo(_tray);//.move(ConstantsApp.PANE_WIDTH*0.5-5, -122);
 			_hoverColorBox.visible = false;
-			/*var tHoverTextBackground:RoundedRectangle = new RoundedRectangle(_hoverColorBox.Width+8, 20, { originX:0.5, originY:1 }).setXY(-_hoverColorBox.Width*0.5, _hoverColorBox.Height+20).appendTo(_hoverColorBox);
+			/*var tHoverTextBackground:RoundedRectangle = new RoundedRectangle(_hoverColorBox.Width+8, 20, { originX:0.5, originY:1 }).move(-_hoverColorBox.Width*0.5, _hoverColorBox.Height+20).appendTo(_hoverColorBox);
 			tHoverTextBackground.draw(0xFFFFFF, 5, 0xDDDDDD, 0xDDDDDD, 0xDDDDDD);
 			tHoverTextBackground.alpha = 0.75;
 			_hoverText = _hoverColorBox.addChild(new TextField());
