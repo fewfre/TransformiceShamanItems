@@ -86,9 +86,9 @@ package app.world
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			var tShop:RoundedRectangle = new RoundedRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).move(450, 10)
+			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
-			_paneManager = tShop.addChild(new PaneManager()) as PaneManager;
+			_paneManager = new PaneManager().appendTo(tShop.root);
 			
 			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).move(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);

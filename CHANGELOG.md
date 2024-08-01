@@ -1,6 +1,7 @@
 ## V1.11c - 28 July 2024
 - Redesign for "copy share code" text fields / copy button to make it feel more polished
 - [Code] Some code tweaks, including polish for popup screens
+- [Code] `RoundedRectangle` rewritten + renamed to `RoundRectangle` and moved to `com.fewfre.display`
 
 ## V1.11b - 27 June 2024
 - [Code] Rewrote grid button logic such that only 1 grid is needed for additional buttons in same cell (such as delete button)

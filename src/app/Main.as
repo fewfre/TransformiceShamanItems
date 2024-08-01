@@ -40,7 +40,7 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
-			_loaderDisplay = addChild( new LoaderDisplay({ x:stage.stageWidth * 0.5, y:stage.stageHeight * 0.5 }) ) as LoaderDisplay;
+			_loaderDisplay = addChild( new LoaderDisplay(stage.stageWidth * 0.5, stage.stageHeight * 0.5) ) as LoaderDisplay;
 			
 			_startPreload();
 		}
