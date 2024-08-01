@@ -1,4 +1,5 @@
 ## V1.11d - 31 July 2024
+- [Code] Color picker logic polished
 - [Code] `RoundedRectangle` rewritten + renamed to `RoundRectangle` and moved to `com.fewfre.display`
 
 

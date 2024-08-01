@@ -1,13 +1,15 @@
-package app.ui
+package app.ui.panes.colorpicker
 {
-	import com.piterwilson.utils.*;
-	import com.fewfre.display.*;
-	import com.fewfre.events.FewfEvent;
 	import app.data.ConstantsApp;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
-	import flash.display.*;
+	import app.ui.buttons.ColorButton;
+	import app.ui.buttons.PushButton;
+	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.DisplayWrapper;
+	import com.fewfre.display.RoundRectangle;
+	import com.fewfre.events.FewfEvent;
 	import ext.ParentApp;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	
 	public class RecentColorsListDisplay extends Sprite
 	{
@@ -26,7 +28,8 @@ package app.ui
 		public function get isDeleteModeOn():Boolean { return _deleteToggleButton.pushed; }
 		
 		// Constructor
-		public function RecentColorsListDisplay() {
+		public function RecentColorsListDisplay()
+		{
 			super();
 			this.visible = false; // turned on in render()
 			
@@ -40,19 +43,13 @@ package app.ui
 			var deleteWidth:Number = 50;
 			var bgWidth:Number = ConstantsApp.PANE_WIDTH - 20 - deleteWidth, bgHeight = 24;
 			
-			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 });;
+			_deleteToggleButton = new DeleteButton({ x:bgWidth*0.5-25-2, width:deleteWidth, height:bgHeight, obj:new $Trash(), obj_scale:0.85 }).appendTo(this) as DeleteButton;
 			_deleteToggleButton.y += -_deleteToggleButton.Height * 0.5;
-			_deleteToggleButton.addEventListener(PushButton.TOGGLE, function():void{ render(); });
-			addChild(_deleteToggleButton);
+			_deleteToggleButton.on(PushButton.TOGGLE, function():void{ render(); });
 			
 			// Add BG
-			_bg = new RoundRectangle(bgWidth, bgHeight, { x:-deleteWidth*0.5+2, origin:0.5 });
-			addChild(_bg.root);
-			
-			_verticalRule = new Shape();
-			_verticalRule.x = _bg.width*0.5 - 2.5;
-			_verticalRule.y = -_bg.height*0.5 + 2.5;
-			_bg.addChild(_verticalRule);
+			_bg = new RoundRectangle(bgWidth, bgHeight).move(-deleteWidth*0.5+2, 0).toOrigin(0.5).toRadius(5).appendTo(this);
+			_verticalRule = DisplayWrapper.wrap(new Shape(), _bg.root).move(_bg.width*0.5 - 2.5, -_bg.height*0.5 + 2.5).asShape;
 		}
 		public function move(pX:Number, pY:Number) : RecentColorsListDisplay { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): RecentColorsListDisplay { pParent.addChild(this); return this; }
@@ -79,7 +76,7 @@ package app.ui
 			
 			this.visible = RECENTS.length > 0;
 			var bgBorderColor = isDeleteModeOn ? 0x780f11 : 0;//0x0f474f;
-			_bg.toRadius(5).draw3d(0x6f6b64, bgBorderColor);
+			_bg.draw3d(0x6f6b64, bgBorderColor);
 			
 			_verticalRule.graphics.clear();
 			_verticalRule.graphics.lineStyle(5, bgBorderColor, 1, false, "normal", "square");
@@ -87,28 +84,24 @@ package app.ui
 			_verticalRule.graphics.lineTo(0, _bg.height-5);
 			
 			// Render new buttons
-			var maxColors = 12;
-			var len = Math.min(RECENTS.length, maxColors);
+			var maxColors:int = 12, len = Math.min(RECENTS.length, maxColors);
 			var tTrayWidth = _bg.width - 5, tSpacingX = 2.5, tBtnWidth = (tTrayWidth-(tSpacingX*maxColors)-tSpacingX*2)/maxColors,
-			tX = _bg.x-_bg.width/2 + tBtnWidth*0.5 + tSpacingX*2;
+			xx = _bg.x-_bg.width/2 + tBtnWidth*0.5 + tSpacingX*2;
 			for(var i:int = 0; i < len; i++) {
-				var color:int = RECENTS[i];
-				
-				var btn = new ColorButton({ x:tX + (i*(tBtnWidth+tSpacingX)), width:tBtnWidth, height:17, color:color });
-				if(isDeleteModeOn) {
-					(function(btn){
-						var nou:MovieClip = new $No();
-						nou.scaleX = nou.scaleY = 0.2;
-						nou.alpha = 0;
-						btn.addChild(nou);
-						btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
-						btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
-					})(btn);
-				}
-				btn.addEventListener(ButtonBase.CLICK, _onRecentColorBtnClicked);
-				addChild(btn);
+				var btn:ColorButton = _createColorButton(RECENTS[i], tBtnWidth).move(xx + (i*(tBtnWidth+tSpacingX)), 0).appendTo(this)
+					.onButtonClick(_onRecentColorBtnClicked) as ColorButton;
 				_recentColorButtons.push(btn);
 			}
+		}
+		
+		private function _createColorButton(pColor:int, pWidth:Number) : ColorButton {
+			var btn:ColorButton = new ColorButton({ width:pWidth, height:17, color:pColor });
+			if(isDeleteModeOn) {
+				var nou:Sprite = DisplayWrapper.wrap(new $No(), btn).toScale(0.2).toAlpha(0).asSprite;
+				btn.addEventListener(ButtonBase.OVER, function(){ nou.alpha = 0.5 });
+				btn.addEventListener(ButtonBase.OUT, function(){ nou.alpha = 0 });
+			}
+			return btn;
 		}
 		
 		public function toggleOffDeleteMode() : void {

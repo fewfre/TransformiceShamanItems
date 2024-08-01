@@ -15,7 +15,6 @@ package app.ui.panes.colorpicker
 		*****************************/
 		// Storage
 		private var _currentLockListId : String;
-		public function get currentLockListId() : String { return _currentLockListId; }
 		
 		// Constructor
 		public function LockHistoryMap() {}
