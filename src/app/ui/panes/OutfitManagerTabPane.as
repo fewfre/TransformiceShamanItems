@@ -44,7 +44,7 @@ package app.ui.panes
 				.on(Infobar.BACK_CLICKED, function(e):void{ dispatchEvent(new Event(Event.CLOSE)); });
 			
 			this.grid.reverse(); // Start reversed so that new outfits get added to start of list
-			this.infoBar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
+			this.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ selectRandomOutfit(); });
 			
 			// Custom infobar buttons
 			var size = 40, xx = ConstantsApp.PANE_WIDTH - size, yy = 11;

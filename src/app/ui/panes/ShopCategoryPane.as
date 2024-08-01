@@ -46,7 +46,7 @@ package app.ui.panes
 			
 			selectedButtonIndex = -1;
 			this.addInfoBar( new Infobar({ showEyeDropper:true, gridManagement:true, showFavorites:true }) );
-			_infoBar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
+			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
 			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, 60+5).appendTo(this);

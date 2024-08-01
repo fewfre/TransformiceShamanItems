@@ -165,8 +165,8 @@ package app.ui.panes.colorpicker
 					_selectSwatch(pNum);
 				})
 				.on(ColorSwatch.SHOW_PREVIEW, function(){
-					if(!!infoBar.itemData) {
-						dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infoBar.itemData.type, id:infoBar.itemData.id, colorI:pNum }));
+					if(!!infobar.itemData) {
+						dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, { type:infobar.itemData.type, id:infobar.itemData.id, colorI:pNum }));
 					}
 				})
 				.on(ColorSwatch.HIDE_PREVIEW, function(){ dispatchEvent(new FewfEvent(EVENT_PREVIEW_COLOR, null)); })
@@ -263,7 +263,7 @@ package app.ui.panes.colorpicker
 		*****************************/
 		// Return a key unique to both this item and this swatch
 		private function _getHistoryDictKey(swatchI:int) {
-			return !infoBar.itemData ? ["misc", swatchI].join('_') : [infoBar.itemData.type, infoBar.itemData.id, swatchI].join('_');
+			return !infobar.itemData ? ["misc", swatchI].join('_') : [infobar.itemData.type, infobar.itemData.id, swatchI].join('_');
 		}
 		private function _addHistory(color:int, swatchI:int) {
 			var itemID = _getHistoryDictKey(swatchI);
