@@ -163,7 +163,7 @@ package app.ui.panes.infobar
 			/********************
 			* Right Side Buttons
 			*********************/
-			_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).setXY(this.Width-BTN_SIZE, BTN_Y).appendTo(this) as SpriteButton;
+			_downloadButton = SpriteButton.withObject(new $SimpleDownload(), 0.45, { size:BTN_SIZE }).move(this.Width-BTN_SIZE, BTN_Y).appendTo(this) as SpriteButton;
 			_downloadButton.on(ButtonBase.CLICK, _onDownloadClicked);
 			_downloadButton.disable().alpha = 0;
 			
