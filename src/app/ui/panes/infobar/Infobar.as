@@ -168,7 +168,7 @@ package app.ui.panes.infobar
 			_downloadButton.disable().alpha = 0;
 			
 			// Line seperating infobar and contents below it.
-			addChild( GameAssets.createHorizontalRule(5, 53, this.Width-10) );
+			GameAssets.createHorizontalRule(5, 53, this.Width-10).appendTo(this);
 			
 			if(pData.hideItemPreview) {
 				hideImageCont();

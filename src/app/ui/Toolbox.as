@@ -16,6 +16,7 @@ package app.ui
 	import com.fewfre.display.RoundRectangle;
 	import app.ui.common.FrameBase;
 	import app.ui.common.FancySlider;
+	import com.fewfre.events.FewfEvent;
 	
 	public class Toolbox extends MovieClip
 	{
@@ -104,7 +105,8 @@ package app.ui
 			/********************
 			* Under Toolbox
 			*********************/
-			addChild(new PasteShareCodeInput({ x:18, y:33, onChange:onShareCodeEntered }));
+				new PasteShareCodeInput().appendTo(this).move(18, 33)
+					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ onShareCodeEntered(e.data.code, e.data.update); });
 		}
 		public function move(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }
 		public function appendTo(target:Sprite): Toolbox { target.addChild(this); return this; }
