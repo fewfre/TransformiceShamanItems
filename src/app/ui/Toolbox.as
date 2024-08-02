@@ -1,6 +1,5 @@
 package app.ui
 {
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.ImgurApi;
 	import app.data.*;
@@ -33,7 +32,7 @@ package app.ui
 		
 		// Storage
 		public var scaleSlider       : FancySlider;
-		private var _downloadButton  : ButtonBase;
+		private var _downloadButton  : SpriteButton;
 		private var _imgurButton     : SpriteButton;
 		private var _clipboardButton : SpriteButton;
 		
@@ -48,8 +47,8 @@ package app.ui
 			var tDownloadTray:FrameBase = addChild(new FrameBase({ x:-bg.width*0.5 + 33, y:9, width:66, height:66, origin:0.5 })) as FrameBase;
 			
 			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
-				.on(ButtonBase.CLICK, dispatchEventHandler(SAVE_CLICKED))
-				.appendTo(tDownloadTray);
+				.onButtonClick(dispatchEventHandler(SAVE_CLICKED))
+				.appendTo(tDownloadTray) as SpriteButton;
 			
 			/********************
 			* Toolbar Buttons
@@ -59,48 +58,48 @@ package app.ui
 			tTray.x = -(bg.width*0.5) + (tTrayWidth*0.5) + (bg.width - tTrayWidth);
 			
 			var tButtonSize = 28, tButtonSizeSpace=5, tButtonXInc=tButtonSize+tButtonSizeSpace;
-			var tX = 0, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
+			var xx = 0, yy = 0, tButtonsOnLeft = 0, tButtonOnRight = 0;
 			
 			// ### Left Side Buttons ###
-			tX = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
+			xx = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
 			new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }).appendTo(tTray)
-				.move(tX+tButtonXInc*tButtonsOnLeft, yy)
-				.on(ButtonBase.CLICK, dispatchEventHandler(SHARE_CLICKED));
+				.move(xx+tButtonXInc*tButtonsOnLeft, yy)
+				.onButtonClick(dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
 			if(!Fewf.isExternallyLoaded) {
 				_imgurButton = new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $ImgurIcon(), origin:0.5 })
-					.move(tX+tButtonXInc*tButtonsOnLeft, yy)
-					.on(ButtonBase.CLICK, dispatchEventHandler(IMGUR_CLICKED))
+					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
+					.onButtonClick(dispatchEventHandler(IMGUR_CLICKED))
 					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			} else {
 				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
-					.move(tX+tButtonXInc*tButtonsOnLeft, yy)
-					.on(ButtonBase.CLICK, dispatchEventHandler(CLIPBOARD_CLICKED))
+					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
+					.onButtonClick(dispatchEventHandler(CLIPBOARD_CLICKED))
 					.appendTo(tTray) as SpriteButton;
 				tButtonsOnLeft++;
 			}
 			
 			// ### Right Side Buttons ###
-			tX = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
+			xx = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
 			// // Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
 			// new SpriteButton({ size:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }).appendTo(tTray)
 			// 	.move(tX-tButtonXInc*tButtonOnRight, yy)
-			// 	.on(ButtonBase.CLICK, dispatchEventHandler(RANDOM_CLICKED));
+			// 	.onButtonClick(dispatchEventHandler(RANDOM_CLICKED));
 			
 			/********************
 			* Scale slider
 			*********************/
 			var tTotalButtons:Number = tButtonsOnLeft+tButtonOnRight;
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
-			tX = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
-			scaleSlider = new FancySlider(tSliderWidth).moveSelf(tX, yy)
+			xx = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
+			scaleSlider = new FancySlider(tSliderWidth).move(xx, yy)
 				.setSliderParams(1, 4, pCharacter.outfit.scaleX)
-				.appendTo(tTray);
-			scaleSlider.addEventListener(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
+				.appendTo(tTray)
+				.on(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			
 			/********************
 			* Under Toolbox

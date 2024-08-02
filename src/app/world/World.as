@@ -1,39 +1,31 @@
 package app.world
 {
-	import com.adobe.images.*;
-	import com.piterwilson.utils.*;
-	import com.fewfre.utils.AssetManager;
-	import com.fewfre.display.*;
-	import com.fewfre.events.*;
-	import com.fewfre.utils.*;
-
-	import app.ui.*;
-	import app.ui.panes.*;
-	import app.ui.screens.*;
-	import app.ui.buttons.*;
-	import app.ui.common.*;
 	import app.data.*;
-	import app.world.data.*;
-	import app.world.elements.*;
-
-	import flash.display.*;
-	import flash.text.*;
-	import flash.events.*
-	import flash.external.*;
-	import flash.geom.*;
-	import flash.net.*;
-	import flash.utils.*;
-	import flash.display.MovieClip;
-	import app.ui.panes.ColorPickerTabPane;
-	import app.ui.panes.ColorFinderPane;
-	import flash.ui.Keyboard;
-	import app.ui.panes.colorpicker.ColorPickerTabPane;
-	import ext.ParentApp;
+	import app.ui.*;
+	import app.ui.buttons.*;
+	import app.ui.panes.*;
+	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.base.PaneManager;
 	import app.ui.panes.base.SidePane;
-	import app.ui.panes.base.ButtonGridSidePane;
-	import app.ui.panes.infobar.Infobar;
+	import app.ui.panes.ColorFinderPane;
+	import app.ui.panes.colorpicker.ColorPickerTabPane;
+	import app.ui.panes.ColorPickerTabPane;
 	import app.ui.panes.infobar.GridManagementWidget;
+	import app.ui.panes.infobar.Infobar;
+	import app.ui.screens.*;
+	import app.world.data.*;
+	import app.world.elements.*;
+	
+	import com.fewfre.display.*;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.*;
+	import ext.ParentApp;
+	
+	import flash.display.*;
+	import flash.events.*
+	import flash.external.ExternalInterface;
+	import flash.ui.Keyboard;
+	import flash.utils.setTimeout;
 	
 	public class World extends MovieClip
 	{
@@ -121,25 +113,26 @@ package app.world
 			
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
-				.on(ButtonBase.CLICK, function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
+				.onButtonClick(function(pEvent:Event){ _paneManager.openPane(TAB_OUTFITS); });
 			
 			/////////////////////////////
 			// Bottom Left Area
 			/////////////////////////////
-			var tLangButton:LangButton = new LangButton({ x:22, y:pStage.stageHeight-17, width:30, height:25, origin:0.5 }).appendTo(this)
-				.on(ButtonBase.CLICK, _onLangButtonClicked) as LangButton;
+			var tLangButton:SpriteButton = LangScreen.createLangButton({ width:30, height:25, origin:0.5 })
+				.move(22, pStage.stageHeight-17).appendTo(this)
+				.onButtonClick(_onLangButtonClicked) as SpriteButton;
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
 				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
-				.on(ButtonBase.CLICK, _onAboutButtonClicked) as SpriteButton;
+				.onButtonClick(_onAboutButtonClicked) as SpriteButton;
 			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
 			
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
-				.move(22, pStage.stageHeight-17-28)
-					.on(ButtonBase.CLICK, function():void{ ParentApp.reopenSelectionLauncher()(); });
+					.move(22, pStage.stageHeight-17-28)
+					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			
 			/////////////////////////////

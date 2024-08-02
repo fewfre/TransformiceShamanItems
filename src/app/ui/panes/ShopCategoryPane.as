@@ -12,7 +12,6 @@ package app.ui.panes
 	import app.ui.screens.LoadingSpinner;
 	import app.world.data.BitmapItemData;
 	import app.world.data.ItemData;
-	import com.fewfre.display.ButtonBase;
 	import com.fewfre.display.Grid;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
@@ -150,7 +149,7 @@ package app.ui.panes
 				tItemData = GameAssets.getItemFromTypeID(_type, tId);
 				if(tItemData) {
 					_favoritesGrid.add(new SpriteButton({ size:_favoritesGrid.cellSize, obj:GameAssets.getItemImage(tItemData), obj_scale:"auto", data:tItemData })
-						.on(ButtonBase.CLICK, _favoriteClicked));
+						.onButtonClick(_favoriteClicked));
 				}
 			}
 			
