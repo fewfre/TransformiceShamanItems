@@ -45,9 +45,8 @@ package app.data
 			if(Fewf.assets.getData("config").badges) {
 				var url:String, urlSmall:String;
 				for each(var badgeFile:String in Fewf.assets.getData("config").badges) {
-					// url = (Fewf.swfUrlBase ? Fewf.swfUrlBase+"resources/badges/" : "badges/")+badgeFile;
-					url = Fewf.swfUrlBase+"resources/badges/"+badgeFile;
-					urlSmall = Fewf.swfUrlBase+"resources/badges/"+badgeFile.replace('L', '');
+					url = "badges/"+badgeFile;
+					urlSmall = "badges/"+badgeFile.replace('L', '');
 					badges.push(new BitmapItemData(ItemType.BADGE, url, urlSmall));
 				}
 				// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on badges tab
