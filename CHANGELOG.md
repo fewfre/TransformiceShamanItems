@@ -1,7 +1,14 @@
+## V1.11e - 3 August 2024
+- Imgur feature overhaul
+	- Now works in air app (only worked on browser before)
+	- Moved button from being on main toolbar to being on the share screen
+	- Instead of forcing the user to open the link for the uploaded file, the imgur link now appears in a "copy" input
+- [Code] Some small `I18n` and `fewfre` lib tweaks
+
+
 ## V1.11d - 31 July 2024
 - [Code] Color picker logic polished
 - [Code] `RoundedRectangle` rewritten + renamed to `RoundRectangle` and moved to `com.fewfre.display`
-- [Code] Some small `I18n` and `fewfre` lib tweaks
 
 
 ## V1.11c - 28 July 2024
