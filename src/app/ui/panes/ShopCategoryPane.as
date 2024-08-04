@@ -12,6 +12,7 @@ package app.ui.panes
 	import app.ui.screens.LoadingSpinner;
 	import app.world.data.BitmapItemData;
 	import app.world.data.ItemData;
+	import app.world.events.ItemDataEvent;
 	import com.fewfre.display.Grid;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
@@ -30,7 +31,7 @@ package app.ui.panes
 		
 		public function get type():ItemType { return _type; }
 		
-		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED';
+		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED'; // ItemDataEvent
 		
 		// Constructor
 		public function ShopCategoryPane(pType:ItemType) {
@@ -91,6 +92,10 @@ package app.ui.panes
 			var btn:PushButton = _findPushButtonInCell(cell);
 			btn.toggleOn();
 			if(_flagOpen) scrollItemIntoView(cell);
+		}
+		
+		public function selectNewestItem() : void {
+			buttons[ buttons.length-1 ].toggleOn();
 		}
 		
 		/****************************
@@ -179,7 +184,7 @@ package app.ui.panes
 		*****************************/
 		protected override function _onCellPushButtonToggled(e:FewfEvent) : void {
 			super._onCellPushButtonToggled(e);
-			dispatchEvent(new FewfEvent(ITEM_TOGGLED, e.data));
+			dispatchEvent(new ItemDataEvent(ITEM_TOGGLED, e.data.itemData));
 		}
 	}
 }

@@ -26,6 +26,7 @@ package app.world
 	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
+	import app.world.events.ItemDataEvent;
 	
 	public class World extends MovieClip
 	{
@@ -150,8 +151,8 @@ package app.world
 				// // Based on what the character is wearing at start, toggle on the appropriate buttons.
 				// getTabByType(tType).toggleGridButtonWithData( character.getItemData(tType) );
 				
-				// Select newest item in each pane
-				getButtonArrayByType(tType)[ getButtonArrayByType(tType).length-1 ].toggleOn();
+				// We want each pane to always have something selected, since switching tabs switches the CustomItem shown
+				getShopPane(tType).selectNewestItem();
 			}
 			
 			Fewf.dispatcher.addEventListener(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _onSaveItemDataAsImage);
@@ -313,15 +314,14 @@ package app.world
 			tPane.scrollItemIntoView(itemBttn);
 		}
 
-		private function _onItemToggled(pEvent:FewfEvent) : void {
-			var tType:ItemType = pEvent.data.type;
-			var tItemList:Vector.<ItemData> = GameAssets.getItemDataListByType(tType);
+		private function _onItemToggled(e:ItemDataEvent) : void {
+			var tItemData:ItemData = e.itemData;
 			
 			// // Select buttons on other tabs
 			// var tButtons2:Array = null;
 			// for(var j:int = 0; j < ITEM.ALL.length; j++) {
-			// 	if(ITEM.ALL[j] == tType) { continue; }
-			// 	tButtons2 = getButtonArrayByType(ITEM.ALL[j]);
+			// 	if(ITEM.ALL[j] == tItemData.type) { continue; }
+			// 	tButtons2 = getShopPane(ITEM.ALL[j]).buttons;
 			// 	for(var i:int = 0; i < tButtons2.length; i++) {
 			// 		if (tButtons2[i].pushed)  { tButtons2[i].toggleOff(); }
 			// 	}
@@ -329,30 +329,27 @@ package app.world
 			// }
 			// tButtons2 = null;
 
-			var tPane:ShopCategoryPane = getShopPane(tType);
-			var tInfoBar:Infobar = tPane.infobar;
-			var tButton:PushButton = tPane.getButtonWithItemData(pEvent.data.itemData);
-			var tData:ItemData;
+			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfoBar:Infobar = tPane.infobar;
+			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				tData = tItemList[pEvent.data.id];
-				setCurItemID(tType, tButton.id);
-				this.character.setItemData(tData);
+				tPane.selectedButtonIndex = tButton.id;
+				this.character.setItemData(tItemData);
 
-				if(!tData.isBitmap()) {
-					tInfoBar.addInfo( tData, GameAssets.getColoredItemImage(tData) );
+				if(!tItemData.isBitmap()) {
+					tInfoBar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
 				} else {
-					var img:MovieClip = GameAssets.getColoredItemImage(tData);
+					var img:MovieClip = GameAssets.getColoredItemImage(tItemData);
 					var bitmap:Bitmap = img.getChildAt(0) as Bitmap;
-					tInfoBar.addInfo(tData, img);
+					tInfoBar.addInfo(tItemData, img);
 					// If bitmap loaded after, re-add so it can be resized
 					bitmap.addEventListener(Event.COMPLETE, function(e):void{
-						tInfoBar.addInfo(tData, GameAssets.getColoredItemImage(tData));
+						tInfoBar.addInfo(tItemData, GameAssets.getColoredItemImage(tItemData));
 					})
 				}
 				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0);
 			} else {
-				_removeItem(tType);
+				_removeItem(tItemData.type);
 			}
 		}
 
@@ -443,34 +440,11 @@ package app.world
 			removeChild(_aboutScreen);
 		}
 
-		//{REGION Get TabPane data
-			private function getShopPane(pType:ItemType) : ShopCategoryPane {
-				return _paneManager.getPane(pType.toString()) as ShopCategoryPane;
-			}
-
-			private function getInfobarByType(pType:ItemType) : Infobar {
-				return getShopPane(pType).infobar;
-			}
-
-			private function getButtonArrayByType(pType:ItemType) : Vector.<PushButton> {
-				return getShopPane(pType).buttons;
-			}
-
-			private function getCurItemID(pType:ItemType) : int {
-				return getShopPane(pType).selectedButtonIndex;
-			}
-
-			private function setCurItemID(pType:ItemType, pID:int) : void {
-				getShopPane(pType).selectedButtonIndex = pID;
-			}
-			
-			private function getColorPickerPane() : ColorPickerTabPane {
-				return _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane;
-			}
-			private function getColorFinderPane() : ColorFinderPane {
-				return _paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane;
-			}
-		//}END Get TabPane data
+		//{REGION PaneManager helpers
+			private function getShopPane(pType:ItemType) : ShopCategoryPane { return _paneManager.getPane(pType.toString()) as ShopCategoryPane; }
+			private function getColorPickerPane() : ColorPickerTabPane { return _paneManager.getPane(COLOR_PANE_ID) as ColorPickerTabPane; }
+			private function getColorFinderPane() : ColorFinderPane { return _paneManager.getPane(COLOR_FINDER_PANE_ID) as ColorFinderPane; }
+		//}END PaneManager helpers
 
 		//{REGION Color Tab
 			private function _onColorPickChanged(e:FewfEvent):void {
@@ -479,34 +453,25 @@ package app.world
 				} else {
 					this.character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
 				}
-				_refreshSelectedItemColor();
+				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 
 			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
 				// Updated preview data
 				GameAssets.swatchHoverPreviewData = pEvent.data;
 				// refresh render for anything that uses it
-				_refreshSelectedItemColor();
+				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
 			
-			private function _refreshSelectedItemColor() : void {
+			private function _refreshSelectedItemColor(pType:ItemType) : void {
 				character.updateItem();
 				
-				var pType:ItemType = this.currentlyColoringType;
-				var tItemData = this.character.getItemData(pType);
+				var tPane:ShopCategoryPane = getShopPane(pType);
+				var tItemData:ItemData = this.character.getItemData(pType);
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
-				GameAssets.copyColor(tItem, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image as MovieClip );
-				GameAssets.copyColor(tItem, getInfobarByType( pType ).Image );
+				GameAssets.copyColor(tItem, tPane.buttons[ tPane.selectedButtonIndex ].Image as MovieClip );
+				GameAssets.copyColor(tItem, tPane.infobar.Image );
 				GameAssets.copyColor(tItem, getColorPickerPane().infobar.Image);
-				/*var tMC:MovieClip = this.character.getItemFromIndex(this.currentlyColoringType);
-				if (tMC != null)
-				{
-					GameAssets.colorDefault(tMC);
-					GameAssets.copyColor( tMC, getButtonArrayByType(pType)[ getCurItemID(pType) ].Image );
-					GameAssets.copyColor(tMC, getInfobarByType(pType).Image);
-					GameAssets.copyColor(tMC, getColorPickerPane().infoBar.Image);
-					
-				}*/
 			}
 			
 			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
@@ -523,12 +488,12 @@ package app.world
 			private function _colorButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(this.currentlyColoringType) == null) { return; }
 
-				var tData:ItemData = getInfobarByType(pType).itemData;
+				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				getColorPickerPane().infobar.addInfo( tData, GameAssets.getItemImage(tData) );
 				this.currentlyColoringType = pType;
 				getColorPickerPane().init( tData.uniqId(), tData.colors, tData.defaultColors );
 				_paneManager.openPane(COLOR_PANE_ID);
-				_refreshSelectedItemColor();
+				_refreshSelectedItemColor(pType);
 			}
 
 			private function _onColorPickerBackClicked(pEvent:Event):void {
@@ -538,7 +503,7 @@ package app.world
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
 				if(this.character.getItemData(pType) == null) { return; }
 
-				var tData:ItemData = getInfobarByType(pType).itemData;
+				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
 				var tItem2:MovieClip = !tData.isBitmap() ? GameAssets.getColoredItemImage(tData) : (tData as BitmapItemData).getLargeOutfitImageAsMovieClip();
 				getColorFinderPane().infobar.addInfo( tData, tItem );
