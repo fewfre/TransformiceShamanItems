@@ -1,4 +1,5 @@
 ## V1.11e - 3 August 2024
+- Added default vanilla versions of items, as well as the Transformice map mode versions
 - Imgur feature overhaul
 	- Now works in air app (only worked on browser before)
 	- Moved button from being on main toolbar to being on the share screen

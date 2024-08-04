@@ -54,6 +54,33 @@ package app.data
 					(badges[i] as BitmapItemData).getSmallImage();
 				}
 			}
+			
+			// Adding default vanilla items
+			boxes_small.unshift(new ItemData(ItemType.BOX_SMALL, '0', { itemClass:$Objet_1 }));
+			boxes_small.unshift(new ItemData(ItemType.BOX_SMALL, 'tfm', { itemClass:$Objet_48 }));
+			
+			boxes_large.unshift(new ItemData(ItemType.BOX_LARGE, '0', { itemClass:$Objet_2 }));
+			boxes_large.unshift(new ItemData(ItemType.BOX_LARGE, 'tfm', { itemClass:$Objet_49 }));
+			
+			planks_small.unshift(new ItemData(ItemType.PLANK_SMALL, '0', { itemClass:$Objet_3 }));
+			planks_small.unshift(new ItemData(ItemType.PLANK_SMALL, 'tfm', { itemClass:$Objet_51 }));
+			
+			planks_large.unshift(new ItemData(ItemType.PLANK_LARGE, '0', { itemClass:$Objet_4 }));
+			planks_large.unshift(new ItemData(ItemType.PLANK_LARGE, 'tfm', { itemClass:$Objet_52 }));
+			
+			balls.unshift(new ItemData(ItemType.BALL, '0', { itemClass:$Objet_6 }));
+			
+			trampolines.unshift(new ItemData(ItemType.TRAMPOLINE, '0', { itemClass:$Objet_7 }));
+			
+			anvils.unshift(new ItemData(ItemType.ANVIL, '0', { itemClass:$Objet_10 }));
+			anvils.unshift(new ItemData(ItemType.ANVIL, 'tfm', { itemClass:$Objet_50 }));
+			
+			cannonballs.unshift(new ItemData(ItemType.CANNONBALL, '0', { itemClass:$Objet_17 }));
+			
+			balloons.unshift(new ItemData(ItemType.BALLOON, '0y', { itemClass:$Objet_31 }));
+			balloons.unshift(new ItemData(ItemType.BALLOON, '0g', { itemClass:$Objet_30 }));
+			balloons.unshift(new ItemData(ItemType.BALLOON, '0r', { itemClass:$Objet_29 }));
+			balloons.unshift(new ItemData(ItemType.BALLOON, '0b', { itemClass:$Objet_28 }));
 		}
 
 		// pData = { after:String, pad:int }
