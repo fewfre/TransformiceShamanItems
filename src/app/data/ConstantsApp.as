@@ -30,7 +30,7 @@ package app.data
 		/****************************
 		* Global Events
 		*****************************/
-		public static const DOWNLOAD_ITEM_DATA_IMAGE : String = "download_item_data_image"; // FewfEvent<ItemData>
+		public static const DOWNLOAD_ITEM_DATA_IMAGE : String = "download_item_data_image"; // ItemDataEvent
 		
 		/****************************
 		* Colors

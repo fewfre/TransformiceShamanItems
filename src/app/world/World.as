@@ -261,9 +261,9 @@ package app.world
 			FewfDisplayUtils.saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem");
 		}
 		
-		private function _onSaveItemDataAsImage(pEvent:FewfEvent) : void {
-			if(!pEvent.data) { return; }
-			var itemData:ItemData = pEvent.data as ItemData;
+		private function _onSaveItemDataAsImage(e:ItemDataEvent) : void {
+			if(!e.itemData) { return; }
+			var itemData:ItemData = e.itemData;
 			var tName = "shop-"+itemData.type+itemData.id;
 			if(itemData.type == ItemType.CARTOUCHE) {
 				tName = "Macaron "+itemData.id;

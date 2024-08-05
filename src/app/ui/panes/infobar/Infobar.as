@@ -8,8 +8,12 @@ package app.ui.panes.infobar
 	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.world.data.ItemData;
+	import app.world.events.ItemDataEvent;
 	import com.fewfre.display.ButtonBase;
+	import com.fewfre.display.DisplayWrapper;
+	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.display.TextTranslated;
+	import com.fewfre.events.FewfEvent;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.FewfDisplayUtils;
@@ -20,9 +24,6 @@ package app.ui.panes.infobar
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import com.fewfre.events.FewfEvent;
-	import com.fewfre.display.RoundRectangle;
-	import com.fewfre.display.DisplayWrapper;
 
 	public class Infobar extends Sprite
 	{
@@ -276,7 +277,7 @@ package app.ui.panes.infobar
 		
 		private function _onDownloadClicked(e:Event) : void {
 			if(!_itemData) { return; }
-			Fewf.dispatcher.dispatchEvent(new FewfEvent(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _itemData));
+			Fewf.dispatcher.dispatchEvent(new ItemDataEvent(ConstantsApp.DOWNLOAD_ITEM_DATA_IMAGE, _itemData));
 		}
 	}
 }
