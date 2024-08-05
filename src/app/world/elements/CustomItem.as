@@ -1,13 +1,13 @@
 package app.world.elements
 {
-	import com.piterwilson.utils.*;
 	import app.data.*;
 	import app.world.data.*;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfUtils;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.net.*;
-	import com.fewfre.utils.FewfUtils;
 
 	public class CustomItem extends Sprite
 	{
@@ -15,6 +15,9 @@ package app.world.elements
 		public var outfit:MovieClip;
 		public var animatePose:Boolean;
 		public var isOutfit:Boolean;
+		
+		private var _dragging:Boolean = false;
+		private var _dragBounds:Rectangle;
 
 		private var _itemData:ItemData;
 
@@ -28,8 +31,14 @@ package app.world.elements
 			isOutfit = pIsOutfit;
 
 			this.buttonMode = true;
-			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
-			this.addEventListener(MouseEvent.MOUSE_UP, function () { stopDrag(); });
+			this.addEventListener(MouseEvent.MOUSE_DOWN, function (e:MouseEvent) {
+				_dragging = true;
+				var bounds:Rectangle = _dragBounds.clone();
+				bounds.x -= e.localX * scaleX;
+				bounds.y -= e.localY * scaleY;
+				startDrag(false, bounds);
+			});
+			Fewf.stage.addEventListener(MouseEvent.MOUSE_UP, function () { if(_dragging) { _dragging = false; stopDrag(); } });
 
 			// Store Data
 			_itemData = item;
@@ -40,6 +49,8 @@ package app.world.elements
 		}
 		public function move(pX:Number, pY:Number) : CustomItem { x = pX; y = pY; return this; }
 		public function appendTo(pParent:Sprite): CustomItem { pParent.addChild(this); return this; }
+		
+		public function copy() : CustomItem { return new CustomItem(null, getShareCodeFewfreSyntax(), true); }
 
 		public function updateItem() {
 			var tScale = 1.75;
@@ -71,8 +82,12 @@ package app.world.elements
 			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
 		}
 		
-		public function copy() : CustomItem {
-			return new CustomItem(null, getShareCodeFewfreSyntax(), true);
+		public function setDragBounds(pX:Number, pY:Number, pWidth:Number, pHeight:Number): CustomItem {
+			_dragBounds = new Rectangle(pX, pY, pWidth, pHeight); return this;
+		}
+		public function clampCoordsToDragBounds() : void {
+			this.x = Math.max(_dragBounds.x, Math.min(_dragBounds.right, this.x));
+			this.y = Math.max(_dragBounds.y, Math.min(_dragBounds.bottom, this.y));
 		}
 		
 		public function getSaveImageDisplayObject() : DisplayObject {

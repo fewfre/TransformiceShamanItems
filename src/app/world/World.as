@@ -67,7 +67,8 @@ package app.world
 				} catch (error:Error) { };
 			}
 
-			this.character = new CustomItem(GameAssets.boxes_small[0], parms).move(185, 275).appendTo(this);
+			this.character = new CustomItem(GameAssets.boxes_small[0], parms)
+				.move(185, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
 
 			/////////////////////////////
 			// Setup UI
@@ -196,6 +197,7 @@ package app.world
 			if(this.mouseX < this.shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
 				character.scale = _toolbox.scaleSlider.value;
+				character.clampCoordsToDragBounds();
 			}
 		}
 
@@ -215,6 +217,7 @@ package app.world
 
 		private function _onScaleSliderChange(pEvent:Event):void {
 			character.scale = _toolbox.scaleSlider.value;
+			character.clampCoordsToDragBounds();
 		}
 
 		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {

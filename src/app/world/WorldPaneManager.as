@@ -24,7 +24,7 @@ package app.world
 		
 		// Shortcuts to get panes with correct typing
 		public function get colorPickerPane() : ColorPickerTabPane { return getPane(COLOR_PANE) as ColorPickerTabPane; }
-		public function get colorFinderPane() : ColorFinderPane { return getPane(COLOR_PANE) as ColorFinderPane; }
+		public function get colorFinderPane() : ColorFinderPane { return getPane(COLOR_FINDER_PANE) as ColorFinderPane; }
 		
 		/////////////////////////////
 		// Static
