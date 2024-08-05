@@ -447,21 +447,15 @@ package app.world
 				
 				var tPane:ShopCategoryPane = getShopPane(pType);
 				var tItemData:ItemData = this.character.getItemData(pType);
-				var tItem:MovieClip = GameAssets.getColoredItemImage(tItemData);
-				GameAssets.copyColor(tItem, tPane.buttons[ tPane.selectedButtonIndex ].Image as MovieClip );
-				GameAssets.copyColor(tItem, tPane.infobar.Image );
-				GameAssets.copyColor(tItem, _panes.colorPickerPane.infobar.Image);
+				
+				_refreshButtonCustomizationForItemData(tItemData);
+				tPane.infobar.refreshItemImageUsingCurrentItemData();
+				_panes.colorPickerPane.infobar.refreshItemImageUsingCurrentItemData();
 			}
 			
 			private function _refreshButtonCustomizationForItemData(data:ItemData) : void {
-				if(!data) { return; }
-				if(data.isBitmap()) { return; } // Bitmaps have no customization
-				
-				var pane:ShopCategoryPane = getShopPane(data.type);
-				var i:int = GameAssets.getItemIndexFromTypeID(data.type, data.id);
-				
-				var tItem:MovieClip = GameAssets.getColoredItemImage(data);
-				GameAssets.copyColor(tItem, pane.buttons[i].Image as MovieClip );
+				var tPane:ShopCategoryPane = getShopPane(data.type);
+				tPane.refreshButtonImage(data);
 			}
 
 			private function _colorButtonClicked(pType:ItemType) : void {

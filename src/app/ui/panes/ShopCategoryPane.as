@@ -98,6 +98,15 @@ package app.ui.panes
 			buttons[ buttons.length-1 ].toggleOn();
 		}
 		
+		public function refreshButtonImage(pItemData:ItemData) : void {
+			if(!pItemData) { return; }
+			if(pItemData.isBitmap()) { return; } // Bitmaps have no customization
+			
+			var i:int = GameAssets.getItemIndexFromTypeID(pItemData.type, pItemData.id);
+			var btn:PushButton = this.buttons[i];
+			btn.ChangeImage(GameAssets.getColoredItemImage(pItemData));
+		}
+		
 		/****************************
 		* Private
 		*****************************/
