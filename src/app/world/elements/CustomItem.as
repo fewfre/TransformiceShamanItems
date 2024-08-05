@@ -7,6 +7,7 @@ package app.world.elements
 	import flash.events.*;
 	import flash.geom.*;
 	import flash.net.*;
+	import com.fewfre.utils.FewfUtils;
 
 	public class CustomItem extends Sprite
 	{
@@ -30,9 +31,7 @@ package app.world.elements
 			this.addEventListener(MouseEvent.MOUSE_DOWN, function () { startDrag(); });
 			this.addEventListener(MouseEvent.MOUSE_UP, function () { stopDrag(); });
 
-			/****************************
-			* Store Data
-			*****************************/
+			// Store Data
 			_itemData = item;
 			
 			if(pShareCode) parseShareCode(pShareCode);
@@ -80,9 +79,30 @@ package app.world.elements
 			return _itemData.isBitmap() ? (_itemData as BitmapItemData).getFullImage() : this;
 		}
 
-		/****************************
-		* Share Code
-		*****************************/
+		/////////////////////////////
+		// Item Data
+		/////////////////////////////
+		public function getCurrentItemData() : ItemData {
+			return _itemData;
+		}
+		
+		public function getItemData(pType:ItemType) : ItemData {
+			return _itemData;
+		}
+
+		public function setItemData(pItem:ItemData) : void {
+			_itemData = pItem;
+			updateItem();
+		}
+
+		public function removeItem(pType:ItemType) : void {
+			_itemData = null;
+			updateItem();
+		}
+
+		/////////////////////////////
+		// Share Code
+		/////////////////////////////
 		public function parseShareCode(pCode:String) : Boolean {
 			if(pCode.indexOf("=") > -1) {
 				return _parseFewfreSyntax(pCode);
@@ -113,28 +133,22 @@ package app.world.elements
 		private function _intListToHexList(pColors:Vector.<uint>) : Vector.<String> {
 			var hexList = new Vector.<String>();
 			for(var i = 0; i < pColors.length; i++) {
-				hexList.push( _intToHex(pColors[i]) );
+				hexList.push( FewfUtils.colorIntToHexString(pColors[i]) );
 			}
 			return hexList;
-		}
-		private function _intToHex(pVal:int) : String {
-			return pVal.toString(16).toUpperCase();
 		}
 		
 		private function _hexArrayToIntList(pColors:Array, pDefaults:Vector.<uint>) : Vector.<uint> {
 			var ints = new Vector.<uint>();
 			for(var i = 0; i < pDefaults.length; i++) {
-				ints.push( pColors[i] ? _hexToInt(pColors[i]) : pDefaults[i] );
+				ints.push( pColors[i] ? FewfUtils.colorHexStringToInt(pColors[i]) : pDefaults[i] );
 			}
 			return ints;
 		}
-		private function _hexToInt(pVal:String) : int {
-			return parseInt(pVal, 16);
-		}
 		
-		/****************************
-		* Fewfre Share Code Syntax
-		*****************************/
+		/////////////////////////////
+		// Fewfre Share Code Syntax
+		/////////////////////////////
 		private function _parseFewfreSyntax(pCode:String) : Boolean {
 			// try {
 				var pParams = new URLVariables();
@@ -156,34 +170,6 @@ package app.world.elements
 				_itemData.type.toString()+"="+_itemDataToShareString(_itemData)
 			];
 			return parts.join("&");
-		}
-
-		/****************************
-		* Color
-		*****************************/
-		public function getColors(pType:ItemType) : Vector.<uint> {
-			return _itemData.colors;
-		}
-
-		/****************************
-		* Update Data
-		*****************************/
-		public function getCurrentItemData() : ItemData {
-			return _itemData;
-		}
-		
-		public function getItemData(pType:ItemType) : ItemData {
-			return _itemData;
-		}
-
-		public function setItemData(pItem:ItemData) : void {
-			_itemData = pItem;
-			updateItem();
-		}
-
-		public function removeItem(pType:ItemType) : void {
-			_itemData = null;
-			updateItem();
 		}
 	}
 }

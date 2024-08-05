@@ -5,6 +5,7 @@
 	- Moved button from being on main toolbar to being on the share screen
 	- Instead of forcing the user to open the link for the uploaded file, the imgur link now appears in a "copy" input
 - [Code] Some small `I18n` and `fewfre` lib tweaks
+- [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
 
 
 ## V1.11d - 31 July 2024
