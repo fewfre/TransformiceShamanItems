@@ -341,7 +341,6 @@ package app.world
 			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				tPane.selectedButtonIndex = tButton.id;
 				this.character.setItemData(tItemData);
 
 				if(!tItemData.isBitmap()) {
@@ -367,15 +366,9 @@ package app.world
 			var tTabPane:ShopCategoryPane = getShopPane(pType);
 			if(!tTabPane || tTabPane.infobar.hasData == false) { return; }
 
-			// If item has a default value, toggle it on. otherwise remove item.
-			/*if(pType == ITEM.SKIN || pType == ITEM.POSE) {*/
-				var tDefaultIndex = tTabPane.buttons.length-1;//(pType == ITEM.POSE ? GameAssets.defaultPoseIndex : GameAssets.defaultSkinIndex);
-				tTabPane.buttons[tDefaultIndex].toggleOn();
-			/*} else {
-				this.character.removeItem(pType);
-				tTabPane.infobar.removeInfo();
-				tTabPane.buttons[ tTabPane.selectedButtonIndex ].toggleOff();
-			}*/
+			// Toggle default value on (just the first item in the list)
+			var tDefaultIndex = tTabPane.buttons.length-1;
+			tTabPane.buttons[tDefaultIndex].toggleOn();
 		}
 		
 		private function _onTabClicked(pEvent:FewfEvent) : void {

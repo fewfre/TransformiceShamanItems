@@ -26,7 +26,6 @@ package app.ui.panes
 	{
 		private var _type: ItemType;
 		private var _defaultSkinColorButton: ScaleButton;
-		public var selectedButtonIndex : int;
 		public var _favoritesGrid : Grid;
 		
 		public function get type():ItemType { return _type; }
@@ -44,7 +43,6 @@ package app.ui.panes
 			// Start reversed by default
 			grid.reverse();
 			
-			selectedButtonIndex = -1;
 			this.addInfoBar( new Infobar({ showEyeDropper:true, gridManagement:true, showFavorites:true }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
@@ -127,11 +125,11 @@ package app.ui.panes
 		private function newButtonFromItemData(pItemData:ItemData, i:int) : PushButton {
 			var shopItem : MovieClip = GameAssets.getItemImage(pItemData);
 			shopItem.scaleX = shopItem.scaleY = 1;
-			return new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, obj:shopItem, id:i, data:{ type:_type, id:i, itemData:pItemData } });
+			return new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:{ type:_type, itemData:pItemData } });
 		}
 		
 		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : PushButton {
-			var shopItemButton : PushButton = new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, id:i, data:{ type:_type, id:i, itemData:pItemData } });
+			var shopItemButton : PushButton = new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, data:{ type:_type, itemData:pItemData } });
 			
 			var shopItem : Bitmap = pItemData.getSmallImage();
 			shopItemButton.ChangeImage(shopItem);
