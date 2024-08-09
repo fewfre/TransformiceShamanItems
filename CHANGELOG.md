@@ -7,6 +7,7 @@
 - [Code] Some small `I18n` and `fewfre` lib tweaks
 - [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
 - [Code] Rewrote MovieClip color update logic for when using color picker
+- (8 Aug) Added a new "Hardcoded image save size" setting on About screen that lets users save an image at a consistent placement and scale 
 
 
 ## V1.11d - 31 July 2024

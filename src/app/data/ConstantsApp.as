@@ -26,6 +26,7 @@ package app.data
 		public static const SHARED_OBJECT_KEY_GLOBAL_LANG: String = 'lang';
 		public static const SHARED_OBJECT_KEY_OUTFITS: String = 'saved-outfits';
 		public static const SHARED_OBJECT_KEY_TYPE_FAVORITES_PREFIX: String = 'favorite-items-';
+		public static const SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE: String = 'hardcoded-canvas-save-size';
 		
 		/****************************
 		* Global Events

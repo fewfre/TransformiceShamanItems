@@ -27,6 +27,8 @@
 		"tab_cannonball":		{ "text":"Boulet" },
 		"tab_balloon":			{ "text":"Ballon" },
 		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
-		"tab_badge":			{ "text":"Badge" }
+		"tab_badge":			{ "text":"Badge" },
+		
+		"setting_hardcoded_save_size": { "text":"Hardcoded image save size (leave blank to auto fit)" }
 	}
 }
