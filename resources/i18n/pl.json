@@ -27,6 +27,8 @@
 		"tab_cannonball":		{ "text":"Kule\narmatnie", "scale":0.9 },
 		"tab_balloon":			{ "text":"Balon" },
 		"tab_cartouche":		{ "text":"Kula\nszamana", "scale":0.9 },
-		"tab_badge":			{ "text":"Odznaka" }
+		"tab_badge":			{ "text":"Odznaka" },
+		
+		"setting_hardcoded_save_size": { "text":"Hardcoded image save size (leave blank to auto fit)" }
 	}
 }

@@ -21,6 +21,8 @@
 		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
 		"tab_badge":			{ "text":"Badge" },
 		
+		"setting_hardcoded_save_size": { "text":"Hardcoded image save size (leave blank to auto fit)" },
+		
 		"version":				{ "text":"Version: {0}" },
 		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },
 		

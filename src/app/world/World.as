@@ -258,7 +258,7 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			FewfDisplayUtils.saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem");
+			_saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem"); // Doesn't need a scale specified since the image is already scaled
 		}
 		
 		private function _onSaveItemDataAsImage(e:ItemDataEvent) : void {
@@ -269,9 +269,19 @@ package app.world
 				tName = "Macaron "+itemData.id;
 			}
 			if(!itemData.isBitmap()) {
-				FewfDisplayUtils.saveAsPNG(GameAssets.getColoredItemImage(itemData), tName, ConstantsApp.ITEM_SAVE_SCALE);
+				_saveAsPNG(GameAssets.getColoredItemImage(itemData), tName, ConstantsApp.ITEM_SAVE_SCALE);
 			} else {
+				// We don't want it ever using the user-defined canvas size due to not being a flash object
 				FewfDisplayUtils.saveAsPNG((itemData as BitmapItemData).getFullImage(), tName, 1);
+			}
+		}
+		
+		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number = 1) : void {
+			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
+			if(!hardcodedCanvasSaveSize) {
+				FewfDisplayUtils.saveAsPNG(pObj, pName, pScale);
+			} else {
+				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(this.character.getSaveImageDisplayObject(), pName, hardcodedCanvasSaveSize as Number);
 			}
 		}
 
