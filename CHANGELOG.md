@@ -4,10 +4,11 @@
 	- Now works in air app (only worked on browser before)
 	- Moved button from being on main toolbar to being on the share screen
 	- Instead of forcing the user to open the link for the uploaded file, the imgur link now appears in a "copy" input
+- (8 Aug) Added a new "Hardcoded image save size" setting on About screen that lets users save an image at a consistent placement and scale 
 - [Code] Some small `I18n` and `fewfre` lib tweaks
 - [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
 - [Code] Rewrote MovieClip color update logic for when using color picker
-- (8 Aug) Added a new "Hardcoded image save size" setting on About screen that lets users save an image at a consistent placement and scale 
+- [Code] (11 Aug) `ShopTabList` and (some) `PushButton` polish
 
 
 ## V1.11d - 31 July 2024

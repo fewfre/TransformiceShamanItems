@@ -80,19 +80,19 @@ package app.world
 			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).move(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			var tabs:Vector.<Object> = new <Object>[
-				{ text:"tab_box_small", event:WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL) },
-				{ text:"tab_box_large", event:WorldPaneManager.itemTypeToId(ItemType.BOX_LARGE) },
-				{ text:"tab_plank_small", event:WorldPaneManager.itemTypeToId(ItemType.PLANK_SMALL) },
-				{ text:"tab_plank_large", event:WorldPaneManager.itemTypeToId(ItemType.PLANK_LARGE) },
-				{ text:"tab_ball", event:WorldPaneManager.itemTypeToId(ItemType.BALL) },
-				{ text:"tab_trampoline", event:WorldPaneManager.itemTypeToId(ItemType.TRAMPOLINE) },
-				{ text:"tab_anvil", event:WorldPaneManager.itemTypeToId(ItemType.ANVIL) },
-				{ text:"tab_cannonball", event:WorldPaneManager.itemTypeToId(ItemType.CANNONBALL) },
-				{ text:"tab_balloon", event:WorldPaneManager.itemTypeToId(ItemType.BALLOON) },
-				{ text:"tab_cartouche", event:WorldPaneManager.itemTypeToId(ItemType.CARTOUCHE) },
+				{ text:"tab_box_small", id:WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL) },
+				{ text:"tab_box_large", id:WorldPaneManager.itemTypeToId(ItemType.BOX_LARGE) },
+				{ text:"tab_plank_small", id:WorldPaneManager.itemTypeToId(ItemType.PLANK_SMALL) },
+				{ text:"tab_plank_large", id:WorldPaneManager.itemTypeToId(ItemType.PLANK_LARGE) },
+				{ text:"tab_ball", id:WorldPaneManager.itemTypeToId(ItemType.BALL) },
+				{ text:"tab_trampoline", id:WorldPaneManager.itemTypeToId(ItemType.TRAMPOLINE) },
+				{ text:"tab_anvil", id:WorldPaneManager.itemTypeToId(ItemType.ANVIL) },
+				{ text:"tab_cannonball", id:WorldPaneManager.itemTypeToId(ItemType.CANNONBALL) },
+				{ text:"tab_balloon", id:WorldPaneManager.itemTypeToId(ItemType.BALLOON) },
+				{ text:"tab_cartouche", id:WorldPaneManager.itemTypeToId(ItemType.CARTOUCHE) },
 			];
 			if(Fewf.assets.getData("config").badges) {
-				tabs.push({ text:"tab_badge", event:WorldPaneManager.itemTypeToId(ItemType.BADGE) });
+				tabs.push({ text:"tab_badge", id:WorldPaneManager.itemTypeToId(ItemType.BADGE) });
 			}
 			this.shopTabs.populate(tabs);
 
@@ -177,7 +177,7 @@ package app.world
 				});
 			
 			// Select First Pane
-			shopTabs.tabs[0].toggleOn();
+			shopTabs.toggleOnFirstTab();
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
@@ -252,7 +252,6 @@ package app.world
 			} else {
 				// Still select the tab, just so people know what type of box/plank it is
 				var itemType:ItemType = character.getCurrentItemData().type;
-				shopTabs.UnpressAll();
 				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
 			}
 		}
@@ -315,7 +314,6 @@ package app.world
 		private function _goToItem(pItemData:ItemData) : void {
 			var itemType:ItemType = pItemData.type;
 			
-			shopTabs.UnpressAll();
 			shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
 			var tPane:ShopCategoryPane = getShopPane(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( pItemData );
