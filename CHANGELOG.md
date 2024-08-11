@@ -1,3 +1,9 @@
+## V1.11f - 11 August 2024
+- Grid buttons now properly center in empty area on all panes with custom buttons on right side of infobar
+- Folder button in color finder moved onto infobar
+- [Code] `ShopTabList` and (some) `PushButton` polish
+
+
 ## V1.11e - 3 August 2024
 - Added default vanilla versions of items, as well as the Transformice map mode versions
 - Imgur feature overhaul
@@ -8,7 +14,6 @@
 - [Code] Some small `I18n` and `fewfre` lib tweaks
 - [Code] `WorldPaneManager` added, and some tweaks to logic in `World`
 - [Code] Rewrote MovieClip color update logic for when using color picker
-- [Code] (11 Aug) `ShopTabList` and (some) `PushButton` polish
 
 
 ## V1.11d - 31 July 2024

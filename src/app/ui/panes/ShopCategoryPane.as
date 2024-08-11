@@ -43,7 +43,7 @@ package app.ui.panes
 			// Start reversed by default
 			grid.reverse();
 			
-			this.addInfoBar( new Infobar({ showEyeDropper:true, gridManagement:true, showFavorites:true }) );
+			this.addInfoBar( new Infobar({ showEyeDropper:true, showDownload:true, gridManagement:true, showFavorites:true }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
