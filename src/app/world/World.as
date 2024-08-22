@@ -251,8 +251,10 @@ package app.world
 				_updateUIBasedOnCharacter();
 			} else {
 				// Still select the tab, just so people know what type of box/plank it is
-				var itemType:ItemType = character.getCurrentItemData().type;
+				var itemData:ItemData = character.getCurrentItemData(), itemType:ItemType = itemData.type;
 				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
+				// And select the button to match new state, but don't fire click event
+				getShopPane(itemType).getButtonWithItemData(itemData).toggleOn(false);
 			}
 		}
 

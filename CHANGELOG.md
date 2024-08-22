@@ -1,3 +1,7 @@
+## V1.11g - 22 August 2024
+- [Bug] Selecting an item in outfit manager now properly selects it, so it shows up as selected when visiting the pane
+
+
 ## V1.11f - 11 August 2024
 - Grid buttons now properly center in empty area on all panes with custom buttons on right side of infobar
 - Folder button in color finder moved onto infobar
