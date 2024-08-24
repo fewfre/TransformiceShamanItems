@@ -170,11 +170,6 @@ package app.data
 			}
 			return pList;
 		}
-
-		public static function getNumOfCustomColors(pMC:MovieClip) : int {
-			// Use recursive one since the array it returns is a bit more safe for this than the vector
-			return _findDefaultColorsRecursive(pMC, []).length;
-		}
 		
 		public static function getColorsWithPossibleHoverEffect(pData:ItemData) : Vector.<uint> {
 			if(!pData.colors || !swatchHoverPreviewData) { return pData.colors; }

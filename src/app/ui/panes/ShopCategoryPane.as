@@ -96,9 +96,9 @@ package app.ui.panes
 			buttons[ buttons.length-1 ].toggleOn();
 		}
 		
+		// Update image when colors have been changed
 		public function refreshButtonImage(pItemData:ItemData) : void {
-			if(!pItemData) { return; }
-			if(pItemData.isBitmap()) { return; } // Bitmaps have no customization
+			if(!pItemData || !pItemData.isCustomizable) { return; }
 			
 			var i:int = GameAssets.getItemIndexFromTypeID(pItemData.type, pItemData.id);
 			var btn:PushButton = this.buttons[i];

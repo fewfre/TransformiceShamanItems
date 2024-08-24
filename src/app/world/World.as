@@ -354,7 +354,7 @@ package app.world
 						tInfoBar.addInfo(tItemData, GameAssets.getColoredItemImage(tItemData));
 					})
 				}
-				tInfoBar.showColorWheel(GameAssets.getNumOfCustomColors(tButton.Image as MovieClip) > 0);
+				tInfoBar.showColorWheel(tItemData.isCustomizable);
 			} else {
 				_removeItem(tItemData.type);
 			}

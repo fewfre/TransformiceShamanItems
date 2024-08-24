@@ -10,9 +10,14 @@ package app.world.data
 
 	public class BitmapItemData extends ItemData
 	{
+		// Storage
 		public var url : String;
 		public var urlSmall : String;
 		
+		// Properties
+		public override function get isCustomizable() : Boolean { return false; }
+		
+		// Constructor
 		public function BitmapItemData(pType:ItemType, pUrl:String, pUrlSmall:String=null) {
 			var id:String = pUrl.split('/').pop();
 			id = id.replace('x_', '').replace('L', '').replace('.png', '');
@@ -20,14 +25,9 @@ package app.world.data
 			this.url = pUrl;
 			this.urlSmall = pUrlSmall;
 		}
+		public override function copy() : ItemData { return new BitmapItemData(type, url, urlSmall); }
 		
-		protected override function _initDefaultColors() : void {
-			defaultColors = new Vector.<uint>();
-		}
-		
-		public override function copy() : ItemData {
-			return new BitmapItemData(type, url, urlSmall);
-		}
+		protected override function _initDefaultColors() : void { defaultColors = new Vector.<uint>(); } // Bitmaps don't use customizable colors
 		
 		public override function isBitmap() : Boolean { return true; }
 

@@ -2,6 +2,7 @@
 - ColorPicker pane now has a button for toggling all swatch locks on/off
 	- Default button once again no longer removes locks
 - [Bug] Selecting an item in outfit manager now properly selects it, so it shows up as selected when visiting the pane
+- [Code] Rewrote some customization related code to be much more straightforward, cleaner, and standardized
 
 
 ## V1.11f - 11 August 2024

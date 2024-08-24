@@ -127,7 +127,7 @@ package app.world.elements
 		}
 		
 		private function _itemDataToShareString(pData:ItemData) : String {
-			if(!pData.isBitmap() && String(pData.colors) != String(pData.defaultColors)) { // Quick way to compare two arrays with primitive types
+			if(pData.isCustomizable && String(pData.colors) != String(pData.defaultColors)) { // Quick way to compare two arrays with primitive types
 				return pData.id+"_"+_intListToHexList(pData.colors).join("+");
 			}
 			return pData.id;
@@ -141,7 +141,7 @@ package app.world.elements
 			tData = GameAssets.getItemFromTypeID(pItemType, id);
 			if(isOutfit) tData = tData.copy();
 			
-			if(colors.length > 0 && !tData.isBitmap()) { tData.colors = _hexArrayToIntList(colors, tData.defaultColors); }
+			if(colors.length > 0 && tData.isCustomizable) { tData.colors = _hexArrayToIntList(colors, tData.defaultColors); }
 			return tData;
 		}
 		
