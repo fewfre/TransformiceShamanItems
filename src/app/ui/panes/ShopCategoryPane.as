@@ -102,7 +102,7 @@ package app.ui.panes
 			
 			var i:int = GameAssets.getItemIndexFromTypeID(pItemData.type, pItemData.id);
 			var btn:PushButton = this.buttons[i];
-			btn.ChangeImage(GameAssets.getColoredItemImage(pItemData));
+			btn.setImage(GameAssets.getColoredItemImage(pItemData));
 		}
 		
 		/****************************
@@ -132,14 +132,14 @@ package app.ui.panes
 			var shopItemButton : PushButton = new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, data:{ type:_type, itemData:pItemData } });
 			
 			var shopItem : Bitmap = pItemData.getSmallImage();
-			shopItemButton.ChangeImage(shopItem);
+			shopItemButton.setImage(shopItem);
 			if(shopItem.width == 0) {
-				shopItemButton.ChangeImage(new LoadingSpinner({ speedScale:0.5 }), 0.75);
+				shopItemButton.setImage(new LoadingSpinner({ speedScale:0.5 }), 0.75);
 			}
 			
 			shopItem.addEventListener(Event.COMPLETE, function(e:Event){
 				// Bitmap image from before has loaded, but now needs to be resized/fitted, so just pass it back in.
-				shopItemButton.ChangeImage(e.currentTarget as Bitmap);
+				shopItemButton.setImage(e.currentTarget as Bitmap);
 			});
 
 			
