@@ -168,7 +168,7 @@ package app.ui.panes
 			// Update rest of UI to make room for it
 			_scrollbox.y = 65 + _favoritesGrid.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
 			_grid.y = favIds.length > 0 ? 0 : 3; // If fav grid exists, then shift grid up to avoid an extra gap between fav list and grid
-			_scrollbox.setSize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
+			_scrollbox.resize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
 		}
 		
 		private function _favoriteClicked(e:FewfEvent) : void {

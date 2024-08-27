@@ -95,7 +95,7 @@ package app.ui
 			/********************
 			* Under Toolbox
 			*********************/
-				new PasteShareCodeInput().appendTo(this).move(18, 33)
+				new PasteShareCodeInput().appendTo(this).move(18, 34)
 					.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ onShareCodeEntered(e.data.code, e.data.update); });
 		}
 		public function move(pX:Number, pY:Number) : Toolbox { x = pX; y = pY; return this; }

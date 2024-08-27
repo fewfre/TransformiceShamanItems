@@ -4,6 +4,9 @@
 - [Bug] Selecting an item in outfit manager now properly selects it, so it shows up as selected when visiting the pane
 - [Code] Rewrote some customization related code to be much more straightforward, cleaner, and standardized
 - [Code] `GameButton` updated to have the text and image display logic that Push/Sprite buttons shared moved into it, and added more helper and convenience methods for adding data without using props
+- [Code] Fixed `RoundedRectangle` 3d borders from causing the button to be 1 pixel small on width/height (long standing bug)
+	- Tweaked some values around the app to account for bigger rectangles, and did some extra polish besides
+- Fixed "scroll to item" logic so items shouldn't be cutoff anymore
 
 
 ## V1.11f - 11 August 2024
