@@ -7,6 +7,7 @@
 - [Code] Fixed `RoundedRectangle` 3d borders from causing the button to be 1 pixel small on width/height (long standing bug)
 	- Tweaked some values around the app to account for bigger rectangles, and did some extra polish besides
 - Fixed "scroll to item" logic so items shouldn't be cutoff anymore
+- [Bug] (7 Sep) Fixed a bug when using back button after selecting an item on outfit manager
 
 
 ## V1.11f - 11 August 2024

@@ -156,7 +156,7 @@ package app.world
 			/////////////////////////////
 			// Outfit Pane
 			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, _useShareCode, function(){ return character.getShareCodeFewfreSyntax(); }))
-				.on(Event.CLOSE, function(pEvent:Event){ _panes.openShopPane(character.getCurrentItemData().type); });
+				.on(Event.CLOSE, function(pEvent:Event){ _panes.openShopPane(character.getCurrentItemData().type).retoggleActiveButton(); });
 			
 			// Color Picker Pane
 			_panes.addPane(WorldPaneManager.COLOR_PANE, new ColorPickerTabPane())
