@@ -85,7 +85,7 @@ package app
 			];
 			
 			var tPack:Array, prefix:String;
-			if(Fewf.isExternallyLoaded) {
+			if(Fewf.isExternallyLoaded && _config.packs_external) {
 				tPack = _config.packs_external;
 				prefix = "";
 			} else {

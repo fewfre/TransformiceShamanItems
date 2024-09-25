@@ -157,6 +157,7 @@ function getFileLastModifiedDateTime($file) {
 	return $timestamp ? new \DateTime("@$timestamp") : null;
 }
 function fetchUrlMetaData($url) {
+	usleep(0.01 * 1000000); // hardcode a slight delay to prevent making requests to fast
 	$h = fetchHeadersOnly($url);
 	$statusCode = $h && isset($h[0]) ? explode(" ", $h[0])[1] : 0;
 	return [
@@ -165,9 +166,23 @@ function fetchUrlMetaData($url) {
 		'lastModified' => $h && isset($h['Last-Modified']) ? new \DateTime($h['Last-Modified']) : null,
 	];
 }
+// OLD WAY - seems to be blocked for some reason
+// function fetchHeadersOnly($url) {
+// 	usleep(0.01 * 1000000); // hardcode a slight delay to prevent making requests to fast
+// 	$context = stream_context_create([ 'http' => array('method' => 'HEAD') ]); // Fetch only head to make it faster and to be friendly to server
+// 	return get_headers($url, true, $context);
+// }
 function fetchHeadersOnly($url) {
-	$context = stream_context_create([ 'http' => array('method' => 'HEAD') ]); // Fetch only head to make it faster and to be friendly to server
-	return get_headers($url, true, $context);
+	$curl = curl_init();
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_FILETIME, true);
+	curl_setopt($curl, CURLOPT_NOBODY, true);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_HEADER, true);
+	$header = curl_exec($curl);
+	$info = curl_getinfo($curl);
+	curl_close($curl);
+	return $header;
 }
 
 function setProgress($state, $data = array()) {
