@@ -23,6 +23,13 @@ setProgress('starting');
 // function ping($host, $port, $timeout) { $tB = microtime(true); $fP = fSockOpen($host, $port, $errno, $errstr, $timeout); if (!$fP) { return "down"; } $tA = microtime(true); return round((($tA - $tB) * 1000), 0)." ms"; }
 // ADD_LOG( ping('www.transformice.com', 80, 100) );
 
+// Check if Atelier801 server can be accessed
+$isA801ServerOnline = fetchUrlMetaData("http://www.transformice.com/images/x_bibliotheques/x_macarons.swf");
+if(!$isA801ServerOnline['exists']) {
+	setProgress('error', [ 'message' => "Update script cannot currently access the Atelier 801 servers - it may either be down, or script might be blocked/timed out" ]);
+	exit;
+}
+
 //
 // Multi-item pack Loading
 //
