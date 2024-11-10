@@ -5,13 +5,47 @@ define('URL_TO_CHECK_IF_SCRIPT_HAS_ACCESS_TO_ASSETS', "http://www.transformice.c
 setProgress('starting');
 
 // Check if Atelier801 server can be accessed
-$isA801ServerOnline = fetchUrlMetaData(URL_TO_CHECK_IF_SCRIPT_HAS_ACCESS_TO_ASSETS);
+$isA801ServerOnline = fetchHeadersOnly(URL_TO_CHECK_IF_SCRIPT_HAS_ACCESS_TO_ASSETS);
 if(!$isA801ServerOnline['exists']) {
 	setProgress('error', [ 'message' => "Update script cannot currently access the Atelier 801 servers - it may either be down, or script might be blocked/timed out" ]);
 	exit;
 }
+////////////////////////////////////
+// Core Logic
+////////////////////////////////////
 
-updateBasicResources();
+// Basic Resources
+
+list($resourcesBasic, $externalBasic) = updateBasicResources();
+list($resourcesSingles, $externalSingles) = updateShamanItemSingleItemFiles();
+
+setProgress('updating');
+$json = getConfigJson();
+$json["packs"]["items"] = array_merge($resourcesBasic, $resourcesSingles);
+$json["packs_external"] = array_merge($externalBasic, $externalSingles);
+saveConfigJson($json);
+
+// Badges
+
+$badges = updateBadges();
+	
+setProgress('updating');
+$json = getConfigJson();
+$json["badges"] = $badges;
+saveConfigJson($json);
+
+// Finished
+
+setProgress('completed');
+echo "Update Successful!";
+
+sleep(10);
+setProgress('idle');
+
+////////////////////////////////////
+// Update Functions
+////////////////////////////////////
+
 function updateBasicResources() {
 	$resources = array();
 	$external = array();
@@ -33,7 +67,25 @@ function updateBasicResources() {
 			$external[] = $url;
 		}
 	}
+	
+	return [$resources, $external];
+}
 
+function updateShamanItemSingleItemFiles() {
+	$resources = array();
+	$external = array();
+	
+	function makeDataFromFileIndex_chamanes($type, $i) {
+		$filename = "o{$type},$i.swf";
+		$filenameLocal = "items/$filename";
+		return [
+			'filename' => $filename,
+			'filenameLocal' => $filenameLocal,
+			'localFilePath' => "../$filenameLocal",
+			'url' => "http://www.transformice.com/images/x_bibliotheques/chamanes/$filename",
+		];
+	}
+	
 	//
 	// Single item swf Loading
 	//
@@ -53,15 +105,18 @@ function updateBasicResources() {
 	foreach ($types as $typedata) {
 		list($type, $start, $typeName) = $typedata;
 		$max = ($start+100);
+		
+		$headerCheckUrlDataList = array_map(fn($i) => makeDataFromFileIndex_chamanes($type, $i), range($start, $max));
+		$headersList = fetchHeadersOnlyMulti_inChunksWithDataList_downloadIfNeeded($headerCheckUrlDataList, $typeName);
+		
+		// Check local file before adding to list, so that if there's a load issue the update script still uses the current saved version
+		setProgress('updating', [ 'message'=>"Generating list of all $typeName items" ]);
+		
 		$breakCount = 0; // quit early if enough 404s in a row
 		for ($i = $start; $i <= $max; $i++) {
 			setProgress('updating', [ 'message'=>"Item Type: $type [$typeName]", 'value'=>$i-$start+1, 'max'=>$max-$start ]);
 			
-			$filename = "o{$type},$i.swf";
-			$url = "http://www.transformice.com/images/x_bibliotheques/chamanes/$filename";
-			$filenameLocal = "items/$filename";
-			$file = "../$filenameLocal";
-			downloadFileIfNewer($url, $file);
+			list('url' => $url, 'localFilePath' => $file, 'filenameLocal' => $filenameLocal, 'filename' => $filename) = makeDataFromFileIndex_chamanes($type, $i);
 		
 			// Check local file so that if there's a load issue the update script still uses the current saved version
 			if(file_exists($file)) {
@@ -74,16 +129,10 @@ function updateBasicResources() {
 			}
 		}
 	}
-
-	setProgress('updating');
 	
-	$json = getConfigJson();
-	$json["packs"]["items"] = $resources;
-	$json["packs_external"] = $external;
-	saveConfigJson($json);
+	return [$resources, $external];
 }
 
-updateBadges();
 function updateBadges() {
 	setProgress('updating', [ 'message'=>"Badges" ]);
 	$badgeDataList = array(); // Array<"filename.png", headers>
@@ -92,7 +141,7 @@ function updateBadges() {
 	$originalStart = 352;
 	$BREAK_NUM = 5;
 	
-	function makeDataFromFileIndex($i) {
+	function makeDataFromFileIndex_badges($i) {
 		$filename = "x_{$i}L.png"; $filenameSmall = "x_{$i}.png";
 		return [
 			'filename' => $filename,
@@ -114,7 +163,7 @@ function updateBadges() {
 		$urlsSmall = array();
 		$chunkedDataList = array();
 		for ($i = $start; $i < $end; $i++) {
-			$data = makeDataFromFileIndex($i);
+			$data = makeDataFromFileIndex_badges($i);
 			$chunkedDataList[] = $data;
 			$urls[] = $data['url'];
 			$urlsSmall[] = $data['urlSmall'];
@@ -154,7 +203,7 @@ function updateBadges() {
 	$start = $originalStart;
 	$breakCount = 0; // quit early if enough 404s in a row
 	for ($i = $start; $i <= 1000; $i++) {
-		list('localFilePath' => $file, 'filename' => $filename) = makeDataFromFileIndex($i);
+		list('localFilePath' => $file, 'filename' => $filename) = makeDataFromFileIndex_badges($i);
 		
 		// Check local file so that if there's a load issue the update script still uses the current saved version
 		if(file_exists($file)) {
@@ -166,15 +215,5 @@ function updateBadges() {
 		}
 	}
 	
-	setProgress('updating');
-	
-	$json = getConfigJson();
-	$json["badges"] = $badges;
-	saveConfigJson($json);
+	return $badges;
 }
-
-setProgress('completed');
-echo "Update Successful!";
-
-sleep(10);
-setProgress('idle');

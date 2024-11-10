@@ -67,10 +67,7 @@ function LOG_PING($hostname='www.transformice.com') {
 /////////////////////////////
 // Curl related helpers
 /////////////////////////////
-function downloadFileIfNewer($url, $file) {
-	$resp = fetchUrlMetaData($url);
-	downloadFileIfHeadersAreNewer($url, $file, $resp);
-}
+function downloadFileIfNewer($url, $file) { downloadFileIfHeadersAreNewer($url, $file, fetchHeadersOnly($url)); }
 function downloadFileIfHeadersAreNewer($url, $file, $fancyHeaders) {
 	if($fancyHeaders['exists'] && $fancyHeaders['lastModified']) {
 		if(checkIfUrlLastModifiedNewerThanFile($fancyHeaders['lastModified'], $file)) {
@@ -79,6 +76,15 @@ function downloadFileIfHeadersAreNewer($url, $file, $fancyHeaders) {
 		}
 	}
 	return false;
+}
+function checkIfUrlLastModifiedNewerThanFile($urlLastModified, $file) {
+	$fileTime = getFileLastModifiedDateTime($file);
+	return $fileTime ? $urlLastModified > $fileTime : true; // If file doesn't exist then url is newer
+}
+function getFileLastModifiedDateTime($file) {
+	if(!file_exists($file)) return null;
+	$timestamp = filemtime($file);
+	return $timestamp ? new \DateTime("@$timestamp") : null;
 }
 // function downloadUrlToFile($url, $file) { file_put_contents($file, fopen($url, 'r')); }
 function downloadUrlToFile($url, $file) { curlPutFileContents($url, $file); }
@@ -102,46 +108,6 @@ function curlPutFileContents($url, $file) {
 	}
 	curl_close ($ch);
 	fclose($fp);
-}
-function checkIfUrlLastModifiedNewerThanFile($urlLastModified, $file) {
-	$fileTime = getFileLastModifiedDateTime($file);
-	return $fileTime ? $urlLastModified > $fileTime : true; // If file doesn't exist then url is newer
-}
-function getFileLastModifiedDateTime($file) {
-	if(!file_exists($file)) return null;
-	$timestamp = filemtime($file);
-	return $timestamp ? new \DateTime("@$timestamp") : null;
-}
-function fetchUrlMetaData($url) {
-	$h = fetchHeadersOnly($url);
-	$statusCode = $h ? explode(" ", $h)[1] : 0;
-	return [
-		'exists' => $statusCode == 200 || $statusCode == 300,
-		'statusCode' => $statusCode,
-		'lastModified' => $h && isset($h['Last-Modified']) ? new \DateTime($h['Last-Modified']) : null,
-	];
-}
-// OLD WAY - seems to be blocked for some reason
-// function fetchHeadersOnly($url) {
-// 	usleep(0.01 * 1000000); // hardcode a slight delay to prevent making requests to fast
-// 	$context = stream_context_create([ 'http' => array('method' => 'HEAD') ]); // Fetch only head to make it faster and to be friendly to server
-// 	return get_headers($url, true, $context);
-// }
-function fetchHeadersOnly($url) {
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_FILETIME, true);
-	curl_setopt($ch, CURLOPT_NOBODY, true);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HEADER, true);
-	$header = curl_exec($ch);
-	// $info = curl_getinfo($ch);
-	if (curl_errno($ch)) {
-		$error_msg = curl_error($ch);
-		ADD_LOG("[fetchHeadersOnly] URL: $url -- $error_msg");
-	}
-	curl_close($ch);
-	return $header;
 }
 // Note: Status is at [0] since it has no associated header name
 // HTTP/1.1 200 OK\r\nContent-Length: 1050186\r\nLast-Modified: Thu, 17 Feb 2022 11:00:04 GMT\r\n\r\n
@@ -177,6 +143,22 @@ function makeFancyHeaderAssocFromNormalHeaderAssoc($headersAssoc) {
 		'fileSize' => $fileSizeStr ? (int)$fileSizeStr : 0,
 	];
 }
+function fetchHeadersOnly($url) {
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_FILETIME, true);
+	curl_setopt($ch, CURLOPT_NOBODY, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HEADER, true);
+	$header = curl_exec($ch);
+	// $info = curl_getinfo($ch);
+	if (curl_errno($ch)) {
+		$error_msg = curl_error($ch);
+		ADD_LOG("[fetchHeadersOnly] URL: $url -- $error_msg");
+	}
+	curl_close($ch);
+	return makeFancyHeaderAssocFromNormalHeaderAssoc( parseHeadersStringIntoAssoc($header) );
+}
 function fetchHeadersOnlyMulti($urls) {
 	$mh = curl_multi_init(); // build the multi-curl handle
 	$handles = array();
@@ -210,4 +192,55 @@ function fetchHeadersOnlyMulti($urls) {
 	}
 	curl_multi_close($mh);
 	return $headersMulti;
+}
+/**
+ * While not the most efficient, this works by passing in a list off url data in the full range we want to check, even if most at the end are duds.
+ * However, since this checks them in chunks, any extras in the later chunks will be ignored
+ * @param array{ url:string, ... } $listOfUrlsWithData
+ * @return array{ array{ url:string, headers:FancyHeaders, ... } }
+ */
+function fetchHeadersOnlyMulti_inChunksWithDataList($listOfUrlsWithData, $progressTopic, $chunkSize=32, $breakMax=5) {
+	$chunksOfUrlData = array_chunk($listOfUrlsWithData, $chunkSize); $chunksOfUrlDataLength = count($chunksOfUrlData);
+	
+	$dataList = array();
+	$breakCount = 0; // quit early if enough 404s in a row
+	for ($coudI=0; $coudI < $chunksOfUrlDataLength; $coudI++) { 
+		setProgress('updating', [ 'message'=>"Fetching file headers for $progressTopic: [Chunk] $coudI, [Chunk Size] $chunkSize", "value" => $coudI+1, "max" => $chunksOfUrlDataLength ]);
+		$chunkedDataList = $chunksOfUrlData[$coudI];
+		
+		$urls = array_map(fn($data) => $data['url'], $chunkedDataList);
+		$chunkHeadersList = fetchHeadersOnlyMulti($urls);
+		
+		$len = min(count($chunkedDataList), count($chunkHeadersList));
+		for ($i = 0; $i < $len; $i++) {
+			$data = $chunkedDataList[$i];
+			$data['headers'] = $chunkHeadersList[$i];
+			
+			if($chunkHeadersList[$i] && $chunkHeadersList[$i]['exists']) {
+				$dataList[] = $data;
+				$breakCount = 0;
+			} else {
+				$breakCount++;
+				if($breakCount > $breakMax) { break; }
+			}
+		}
+		if($breakCount > $breakMax) { break; }
+	}
+	
+	return $dataList;
+}
+/**
+ * While not the most efficient, this works by passing in a list off url data in the full range we want to check, even if most at the end are duds.
+ * However, since this checks them in chunks, any extras in the later chunks will be ignored
+ * @param array{ url:string, filename:string, localFilePath:string, ... } $listOfUrlsWithData
+ * @return array{ array{ url:string, filename:string, localFilePath:string, headers:FancyHeaders, ... } }
+ */
+function fetchHeadersOnlyMulti_inChunksWithDataList_downloadIfNeeded($listOfUrlsWithData, $progressTopic, $chunkSize=32, $breakMax=5) {
+	$dataList = fetchHeadersOnlyMulti_inChunksWithDataList($listOfUrlsWithData, $progressTopic, $chunkSize, $breakMax);
+	// loop through returned headers and download the missing ones / ones that have been updated
+	foreach ($dataList as $data) {
+		setProgress('updating', [ 'message'=>"Downloading $progressTopic file if needed: {$data['filename']}" ]);
+		downloadFileIfHeadersAreNewer($data['url'], $data['localFilePath'], $data['headers']);
+	}
+	return $dataList;
 }
