@@ -10,6 +10,7 @@ if(!$isA801ServerOnline['exists']) {
 	setProgress('error', [ 'message' => "Update script cannot currently access the Atelier 801 servers - it may either be down, or script might be blocked/timed out" ]);
 	exit;
 }
+
 ////////////////////////////////////
 // Core Logic
 ////////////////////////////////////
@@ -106,8 +107,9 @@ function updateShamanItemSingleItemFiles() {
 		list($type, $start, $typeName) = $typedata;
 		$max = ($start+100);
 		
+		// Fetch headers and download any files that need downloading
 		$headerCheckUrlDataList = array_map(fn($i) => makeDataFromFileIndex_chamanes($type, $i), range($start, $max));
-		$headersList = fetchHeadersOnlyMulti_inChunksWithDataList_downloadIfNeeded($headerCheckUrlDataList, $typeName);
+		fetchHeadersOnlyMulti_inChunksWithDataList_downloadIfNeeded($headerCheckUrlDataList, $typeName);
 		
 		// Check local file before adding to list, so that if there's a load issue the update script still uses the current saved version
 		setProgress('updating', [ 'message'=>"Generating list of all $typeName items" ]);
@@ -116,7 +118,7 @@ function updateShamanItemSingleItemFiles() {
 		for ($i = $start; $i <= $max; $i++) {
 			setProgress('updating', [ 'message'=>"Item Type: $type [$typeName]", 'value'=>$i-$start+1, 'max'=>$max-$start ]);
 			
-			list('url' => $url, 'localFilePath' => $file, 'filenameLocal' => $filenameLocal, 'filename' => $filename) = makeDataFromFileIndex_chamanes($type, $i);
+			list('url' => $url, 'localFilePath' => $file, 'filenameLocal' => $filenameLocal) = makeDataFromFileIndex_chamanes($type, $i);
 		
 			// Check local file so that if there's a load issue the update script still uses the current saved version
 			if(file_exists($file)) {
