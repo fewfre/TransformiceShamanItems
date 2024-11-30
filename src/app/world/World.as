@@ -68,16 +68,16 @@ package app.world
 			}
 
 			this.character = new CustomItem(GameAssets.boxes_small[0], parms)
-				.move(185, 275).setDragBounds(0+4, 73+4, 375-8, Fewf.stage.stageHeight-73-8).appendTo(this);
+				.move(185, 275).setDragBounds(0+4, 73+4, 375-8, ConstantsApp.APP_HEIGHT-73-8).appendTo(this);
 
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.APP_HEIGHT).move(450, 10)
+			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
 			_panes = new WorldPaneManager().appendTo(tShop.root) as WorldPaneManager;
 			
-			this.shopTabs = new ShopTabList(70, ConstantsApp.APP_HEIGHT).move(375, 10).appendTo(this);
+			this.shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this);
 			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
 			var tabs:Vector.<Object> = new <Object>[
 				{ text:"tab_box_small", id:WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL) },
@@ -114,19 +114,19 @@ package app.world
 			// Bottom Left Area
 			/////////////////////////////
 			var tLangButton:SpriteButton = LangScreen.createLangButton({ width:30, height:25, origin:0.5 })
-				.move(22, pStage.stageHeight-17).appendTo(this)
+				.move(22, ConstantsApp.APP_HEIGHT-17).appendTo(this)
 				.onButtonClick(_onLangButtonClicked) as SpriteButton;
 			
 			// About Screen Button
 			var aboutButton:SpriteButton = new SpriteButton({ size:25, origin:0.5 }).appendTo(this)
-				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), pStage.stageHeight - 17)
+				.move(tLangButton.x+(tLangButton.Width/2)+2+(25/2), ConstantsApp.APP_HEIGHT - 17)
 				.onButtonClick(_onAboutButtonClicked) as SpriteButton;
 			new TextBase("?", { size:22, color:0xFFFFFF, bold:true, origin:0.5 }).move(0, -1).appendTo(aboutButton)
 			
 			
 			if(!!(ParentApp.reopenSelectionLauncher())) {
 				new ScaleButton({ obj:new $BackArrow(), obj_scale:0.5, origin:0.5 }).appendTo(this)
-					.move(22, pStage.stageHeight-17-28)
+					.move(22, ConstantsApp.APP_HEIGHT-17-28)
 					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
 			

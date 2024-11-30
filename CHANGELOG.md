@@ -1,3 +1,7 @@
+## V1.12 - ?????
+- [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen.
+
+
 ## V1.11g - 22 August 2024
 - ColorPicker pane now has a button for toggling all swatch locks on/off
 	- Default button once again no longer removes locks
