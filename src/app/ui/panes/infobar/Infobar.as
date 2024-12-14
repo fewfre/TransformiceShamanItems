@@ -60,7 +60,7 @@ package app.ui.panes.infobar
 		// Properties
 		public function get hasData() : Boolean { return _itemData != null; }
 		public function get itemData() : ItemData { return _itemData; }
-		// public function get isRefreshLocked() : Boolean { return !!_gridManagementWidget && _gridManagementWidget.isRefreshLocked; }
+		public function get isRefreshLocked() : Boolean { return !!_gridManagementWidget && _gridManagementWidget.isRefreshLocked; }
 		public function get colorWheelEnabled() : Boolean { return !!_colorWheel && _colorWheel.enabled; }
 		
 		
@@ -156,6 +156,7 @@ package app.ui.panes.infobar
 				widgetProps.hideRandomizeLock = true; // Shaman items app never uses this
 				_gridManagementWidget = new GridManagementWidget(widgetProps).move(this.Width*0.5-20+(144/2), BTN_Y).appendTo(this);
 				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_CLICKED, function(e):void{ dispatchEvent(e); })
+				_gridManagementWidget.on(GridManagementWidget.RANDOMIZE_LOCK_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.REVERSE_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.LEFT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); })
 				_gridManagementWidget.on(GridManagementWidget.RIGHT_ARROW_CLICKED, function(e):void{ dispatchEvent(e); });
@@ -255,6 +256,7 @@ package app.ui.panes.infobar
 		}
 		
 		public function refreshItemImageUsingCurrentItemData() : void {
+			if(!_itemData) return;
 			changeImage(GameAssets.getColoredItemImage(_itemData));
 		}
 		

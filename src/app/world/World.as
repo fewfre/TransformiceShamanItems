@@ -73,28 +73,24 @@ package app.world
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
+			shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this).on(ShopTabList.TAB_CLICKED, _onTabClicked);
+			shopTabs.addTab("tab_box_small", WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL));
+			shopTabs.addTab("tab_box_large", WorldPaneManager.itemTypeToId(ItemType.BOX_LARGE));
+			shopTabs.addTab("tab_plank_small", WorldPaneManager.itemTypeToId(ItemType.PLANK_SMALL));
+			shopTabs.addTab("tab_plank_large", WorldPaneManager.itemTypeToId(ItemType.PLANK_LARGE));
+			shopTabs.addTab("tab_ball", WorldPaneManager.itemTypeToId(ItemType.BALL));
+			shopTabs.addTab("tab_trampoline", WorldPaneManager.itemTypeToId(ItemType.TRAMPOLINE));
+			shopTabs.addTab("tab_anvil", WorldPaneManager.itemTypeToId(ItemType.ANVIL));
+			shopTabs.addTab("tab_cannonball", WorldPaneManager.itemTypeToId(ItemType.CANNONBALL));
+			shopTabs.addTab("tab_balloon", WorldPaneManager.itemTypeToId(ItemType.BALLOON));
+			shopTabs.addTab("tab_cartouche", WorldPaneManager.itemTypeToId(ItemType.CARTOUCHE));
+			if(Fewf.assets.getData("config").badges) {
+				shopTabs.addTab("tab_badge", WorldPaneManager.itemTypeToId(ItemType.BADGE));
+			}
+			
 			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
 			_panes = new WorldPaneManager().appendTo(tShop.root) as WorldPaneManager;
-			
-			this.shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this);
-			this.shopTabs.addEventListener(ShopTabList.TAB_CLICKED, _onTabClicked);
-			var tabs:Vector.<Object> = new <Object>[
-				{ text:"tab_box_small", id:WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL) },
-				{ text:"tab_box_large", id:WorldPaneManager.itemTypeToId(ItemType.BOX_LARGE) },
-				{ text:"tab_plank_small", id:WorldPaneManager.itemTypeToId(ItemType.PLANK_SMALL) },
-				{ text:"tab_plank_large", id:WorldPaneManager.itemTypeToId(ItemType.PLANK_LARGE) },
-				{ text:"tab_ball", id:WorldPaneManager.itemTypeToId(ItemType.BALL) },
-				{ text:"tab_trampoline", id:WorldPaneManager.itemTypeToId(ItemType.TRAMPOLINE) },
-				{ text:"tab_anvil", id:WorldPaneManager.itemTypeToId(ItemType.ANVIL) },
-				{ text:"tab_cannonball", id:WorldPaneManager.itemTypeToId(ItemType.CANNONBALL) },
-				{ text:"tab_balloon", id:WorldPaneManager.itemTypeToId(ItemType.BALLOON) },
-				{ text:"tab_cartouche", id:WorldPaneManager.itemTypeToId(ItemType.CARTOUCHE) },
-			];
-			if(Fewf.assets.getData("config").badges) {
-				tabs.push({ text:"tab_badge", id:WorldPaneManager.itemTypeToId(ItemType.BADGE) });
-			}
-			this.shopTabs.populate(tabs);
 
 			/////////////////////////////
 			// Top Area
@@ -337,24 +333,24 @@ package app.world
 			// }
 			// tButtons2 = null;
 
-			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfoBar:Infobar = tPane.infobar;
+			var tPane:ShopCategoryPane = getShopPane(tItemData.type), tInfobar:Infobar = tPane.infobar;
 			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
 				this.character.setItemData(tItemData);
 
 				if(!tItemData.isBitmap()) {
-					tInfoBar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
+					tInfobar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
 				} else {
 					var img:MovieClip = GameAssets.getColoredItemImage(tItemData);
 					var bitmap:Bitmap = img.getChildAt(0) as Bitmap;
-					tInfoBar.addInfo(tItemData, img);
+					tInfobar.addInfo(tItemData, img);
 					// If bitmap loaded after, re-add so it can be resized
 					bitmap.addEventListener(Event.COMPLETE, function(e):void{
-						tInfoBar.addInfo(tItemData, GameAssets.getColoredItemImage(tItemData));
+						tInfobar.addInfo(tItemData, GameAssets.getColoredItemImage(tItemData));
 					})
 				}
-				tInfoBar.showColorWheel(tItemData.isCustomizable);
+				tInfobar.showColorWheel(tItemData.isCustomizable);
 			} else {
 				_removeItem(tItemData.type);
 			}
