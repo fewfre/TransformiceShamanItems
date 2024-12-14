@@ -386,7 +386,7 @@ package app.world
 			return -1;
 		}
 
-		// private function _onRandomizeDesignClicked(pEvent:Event) : void {
+		// private function _onRandomizeDesignClicked(e:Event) : void {
 		// 	for(var i:int = 0; i < ITEM.LAYERING.length; i++) {
 		// 		_randomItemOfType(ITEM.LAYERING[i]);
 		// 	}
@@ -399,7 +399,7 @@ package app.world
 		}
 
 		//{REGION Screen Logic
-			private function _onShareButtonClicked(pEvent:Event) : void {
+			private function _onShareButtonClicked(e:Event) : void {
 				var tURL = "";
 				try {
 					if(Fewf.isExternallyLoaded) {
@@ -415,10 +415,10 @@ package app.world
 				_shareScreen.open(tURL, character);
 				addChild(_shareScreen);
 			}
-			private function _onShareScreenClosed(pEvent:Event) : void { removeChild(_shareScreen); }
+			private function _onShareScreenClosed(e:Event) : void { removeChild(_shareScreen); }
 
-			private function _onLangButtonClicked(pEvent:Event) : void { _langScreen.open(); addChild(_langScreen); }
-			private function _onLangScreenClosed(pEvent:Event) : void { removeChild(_langScreen); }
+			private function _onLangButtonClicked(e:Event) : void { _langScreen.open(); addChild(_langScreen); }
+			private function _onLangScreenClosed(e:Event) : void { removeChild(_langScreen); }
 
 			private function _onAboutButtonClicked(e:Event) : void { _aboutScreen.open(); addChild(_aboutScreen); }
 			private function _onAboutScreenClosed(e:Event) : void { removeChild(_aboutScreen); }
