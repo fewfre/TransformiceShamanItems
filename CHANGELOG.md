@@ -1,6 +1,7 @@
 ## V1.12 - 14 December 2024
 - [Code] Rewrote `ShopTabList` to be more dynamic
 - [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen.
+- [Bug] Fixed Export/Import buttons on outfit manager
 
 
 ## V1.11g - 22 August 2024
