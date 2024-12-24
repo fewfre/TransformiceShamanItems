@@ -68,10 +68,14 @@ package app.ui.panes
 		}
 		
 		public function toggleGridButtonWithData(pData:ItemData, pScrollIntoView:Boolean=false) : PushButton {
-			if(pData) {
-				var tIndex:int = GameAssets.getItemIndexFromTypeID(_type, pData.id);
-				buttons[ tIndex ].toggleOn();
-				return buttons[tIndex];
+			var cell:DisplayObject = getCellWithItemData(pData);
+			if(cell) {
+				var btn:PushButton = _findPushButtonInCell(cell);
+				btn.toggleOn();
+				try {
+					if(pScrollIntoView) scrollItemIntoView(cell);
+				} catch(e){}
+				return btn;
 			}
 			return null;
 		}
