@@ -15,6 +15,10 @@ package app.data
 	{
 		private static const _MAX_COSTUMES_TO_CHECK_TO:Number = 999;
 		
+		// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
+		private static const DUPLICATES_TO_SKIP:Vector.<Object> = new <Object>[
+			{ type:ItemType.BALLOON, id:"26" }, { type:ItemType.BALL, id:"60" } ];
+		
 		public static var boxes_small: Vector.<ItemData>;
 		public static var boxes_large: Vector.<ItemData>;
 		public static var planks_small: Vector.<ItemData>;
@@ -87,10 +91,8 @@ package app.data
 		private static function _setupCostumeList(type:ItemType, base:String, pData:Object) : Vector.<ItemData> {
 			var list:Vector.<ItemData> = new Vector.<ItemData>(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
-			
 			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
-				// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
-				if(i == 26 && type == ItemType.BALLOON) {
+				if( DUPLICATES_TO_SKIP.some(function(o:Object,_,_):Boolean{ return o.type == type && o.id == i; })) {
 					continue;
 				}
 				
