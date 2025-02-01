@@ -53,7 +53,7 @@ package app.world.elements
 		public function copy() : CustomItem { return new CustomItem(null, getShareCodeFewfreSyntax(), true); }
 
 		public function updateItem() {
-			var tScale = 1.75;
+			var tScale = ConstantsApp.DEFAULT_CHARACTER_SCALE;
 			if(outfit != null) { tScale = outfit.scaleX; removeChild(outfit); }
 			
 			if(!_itemData.isBitmap()) { outfit = new (_itemData.itemClass)(); }

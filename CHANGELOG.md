@@ -1,3 +1,7 @@
+## V1.12b - 1 February 2025
+- Added button above scale slider (only appears when hovering over slider) to set character scale to default scale
+
+
 ## V1.12 - 14 December 2024
 - [Code] Rewrote `ShopTabList` to be more dynamic
 - [Bug] Changed code using stage width/height to use a new constant to avoid an issue where things would be placed offscreen.

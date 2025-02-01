@@ -17,12 +17,13 @@ package app.data
 		/****************************
 		* General
 		*****************************/
-		public static const VERSION           : String = "1.12";
+		public static const VERSION           : String = "1.12b";
 		public static const SOURCE_URL        : String = "https://github.com/fewfre/TransformiceShamanItems/blob/master/CHANGELOG.md";
 		public static const DISCORD_URL       : String = "https://discord.gg/DREPH9GqWw";
 		
 		public static const NUM_ITEMS_PER_ROW : int = 7;
 		
+		public static const DEFAULT_CHARACTER_SCALE : Number = 1.75;
 		public static const ITEM_SAVE_SCALE   : int = 8; // Power of two is probably best
 		
 		public static const SHARED_OBJECT_KEY_GLOBAL_LANG: String = 'lang';

@@ -100,7 +100,8 @@ package app.world
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
 				
-				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange);
+				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange)
+				.on(Toolbox.DEFAULT_SCALE_CLICKED, _onScaleSliderDefaultClicked);
 			
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
@@ -211,8 +212,13 @@ package app.world
 			}
 		}
 
-		private function _onScaleSliderChange(pEvent:Event):void {
+		private function _onScaleSliderChange(e:Event):void {
 			character.scale = _toolbox.scaleSlider.value;
+			character.clampCoordsToDragBounds();
+		}
+
+		private function _onScaleSliderDefaultClicked(e:Event):void {
+			character.scale = _toolbox.scaleSlider.value = ConstantsApp.DEFAULT_CHARACTER_SCALE;
 			character.clampCoordsToDragBounds();
 		}
 
