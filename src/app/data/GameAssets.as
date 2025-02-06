@@ -17,7 +17,7 @@ package app.data
 		
 		// hardcoded skip for duplicate items in game files - TODO: add values to config maybe?
 		private static const DUPLICATES_TO_SKIP:Vector.<Object> = new <Object>[
-			{ type:ItemType.BALLOON, id:"26" }, { type:ItemType.BALL, id:"60" } ];
+			{ type:ItemType.BALLOON, id:"26" } ];
 		
 		public static var boxes_small: Vector.<ItemData>;
 		public static var boxes_large: Vector.<ItemData>;
