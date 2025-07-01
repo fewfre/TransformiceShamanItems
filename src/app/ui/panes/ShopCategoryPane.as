@@ -98,7 +98,7 @@ package app.ui.panes
 		}
 		
 		public function selectNewestItem() : void {
-			buttons[ buttons.length-1 ].toggleOn();
+			if(buttons.length > 0) buttons[ buttons.length-1 ].toggleOn();
 		}
 		
 		// Update image when colors have been changed
