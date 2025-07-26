@@ -58,10 +58,10 @@ package app
 			_defaultLang = Fewf.i18n.getDefaultLang();
 			
 			// Some slight analytics
-			Fewf.assets.lazyLoadImageUrlAsBitmap("https://fewfre.com/images/avatar.jpg?tag=tfmsi-swf&pref="+encodeURIComponent(JSON.stringify({
-				source: Fewf.isExternallyLoaded ? 'app' : Fewf.isBrowserLoaded ? 'browser' : 'direct',
-				lang: _defaultLang
-			})));
+			// Fewf.assets.lazyLoadImageUrlAsBitmap("https://fewfre.com/images/avatar.jpg?tag=tfmsi-swf&pref="+encodeURIComponent(JSON.stringify({
+			// 	source: Fewf.isExternallyLoaded ? 'app' : Fewf.isBrowserLoaded ? 'browser' : 'direct',
+			// 	lang: _defaultLang
+			// })));
 			
 			_startInitialLoad();
 		}
