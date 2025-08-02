@@ -25,6 +25,8 @@
 		"setting_hardcoded_save_scale_placeholder": { "text":"App uses 1-4 (default: 1.75)" },
 		"setting_hardcoded_save_size_label":        { "text":"Hardcoded PNG save size" },
 		"setting_hardcoded_save_size_placeholder":  { "text":"Leave blank to auto fit" },
+	
+		"outfit_manager_help":     { "text":"Here you can save your current outfit for later use! In case you want to backup, share, or transfer your list of outfits, you can also export/import outfits using the buttons on the top right." },
 		
 		"version":				{ "text":"Version: {0}" },
 		"translated_by":		{ "text":"Translated by: Your Name here (or remove/blank this line to not show)" },

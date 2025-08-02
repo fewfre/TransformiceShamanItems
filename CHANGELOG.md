@@ -3,6 +3,8 @@
 - Updated I18n system to be a bit more streamlined + it now always loads the default app language (english) before loading other languages so that other language files not having a message still shows something
 - Added a new setting to default the save scale to a hardcoded value instead of using current scale of mouse
 - The "go to" button on "outfit manager" now opens the color picker for it (if it has one) instead of just bringing you to the item
+- Added some help text to the outfit manager (until there's more than 1 row)
+- `TextBase` updated to have `enableWordWrapUsingWidth` instead of having a hacky implementation multiple places
 
 
 ## V1.12b - 1 February 2025
