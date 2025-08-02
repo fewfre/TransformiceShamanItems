@@ -152,7 +152,9 @@ package app.world
 			// Static Panes
 			/////////////////////////////
 			// Outfit Pane
-			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, _useShareCode, function(){ return character.getShareCodeFewfreSyntax(); }))
+			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, function(){ return character.getShareCodeFewfreSyntax(); }))
+				.on(OutfitManagerTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent){ _useShareCode(e.data as String, false); })
+				.on(OutfitManagerTabPane.GOTO_ITEM_CLICKED, function(e:FewfEvent){ _useShareCode(e.data as String, true); })
 				.on(Event.CLOSE, function(pEvent:Event){ _panes.openShopPane(character.getCurrentItemData().type).retoggleActiveButton(); });
 			
 			// Color Picker Pane
@@ -251,6 +253,7 @@ package app.world
 			if(pGoToItem) {
 				// now update the infobars
 				_updateUIBasedOnCharacter();
+				_goToItemColorPicker(character.getCurrentItemData());
 			} else {
 				// Still select the tab, just so people know what type of box/plank it is
 				var itemData:ItemData = character.getCurrentItemData(), itemType:ItemType = itemData.type;
@@ -328,6 +331,12 @@ package app.world
 			var tPane:ShopCategoryPane = getShopPane(itemType);
 			var itemBttn:PushButton = tPane.toggleGridButtonWithData( pItemData );
 			tPane.scrollItemIntoView(itemBttn);
+		}
+		
+		private function _goToItemColorPicker(pItemData:ItemData) : void {
+			_goToItem(pItemData);
+			var tPane:ShopCategoryPane = getShopPane(pItemData.type);
+			if(tPane && tPane.infobar && tPane.infobar.colorWheelEnabled) _colorButtonClicked(pItemData.type);
 		}
 
 		private function _onItemToggled(e:ItemDataEvent) : void {

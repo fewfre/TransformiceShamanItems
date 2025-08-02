@@ -23,10 +23,13 @@ package app.ui.panes
 	
 	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
+		// Constants
+		public static const LOOK_CODE_SELECTED : String = "look_code_selected"; // FewfEvent<string>
+		public static const GOTO_ITEM_CLICKED : String = "goto_item_clicked"; // FewfEvent<string>
+		
 		// Storage
 		private var _character : CustomItem;
 		
-		private var _onUserLookClicked : Function;
 		private var _getLookCodeForCurrentOutfit : Function;
 		private var _exportButton      : SpriteButton;
 		private var _importButton      : SpriteButton;
@@ -34,10 +37,9 @@ package app.ui.panes
 		private var _newOutfitButtonHolder : Sprite;
 		
 		// Constructor
-		public function OutfitManagerTabPane(pCharacter:CustomItem, pOnUserLookClicked:Function, pGetLookCodeForCurrentOutfit:Function) {
+		public function OutfitManagerTabPane(pCharacter:CustomItem, pGetLookCodeForCurrentOutfit:Function) {
 			super(5);
 			_character = pCharacter;
-			_onUserLookClicked = pOnUserLookClicked;
 			_getLookCodeForCurrentOutfit = pGetLookCodeForCurrentOutfit;
 			
 			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:true }) )
@@ -127,7 +129,7 @@ package app.ui.panes
 			
 			var btn:PushButton = new PushButton({ width:grid.cellSize, height:grid.cellSize, obj:lookMC, data:{ entryId:lookEntry.id } }).appendTo(cell) as PushButton;
 			btn.on(PushButton.TOGGLE, function(){
-				_onUserLookClicked(lookEntry.lookCode, false);
+				dispatchEvent(new FewfEvent(LOOK_CODE_SELECTED, lookEntry.lookCode));
 			});
 			btn.on(MouseEvent.MOUSE_OVER, function(e){ actionTray.alpha = 1; });
 			btn.on(MouseEvent.MOUSE_OUT, function(e){ actionTray.alpha = 0; });
@@ -150,7 +152,7 @@ package app.ui.panes
 			gtcpIconHolder.addChild(gtcpIcon);
 			var goToCatPaneBtn:ScaleButton = new ScaleButton({ x:grid.cellSize-6, y:grid.cellSize-6, obj:gtcpIconHolder, obj_scale:0.5 }).appendTo(actionTray) as ScaleButton;
 			goToCatPaneBtn.on(MouseEvent.CLICK, function(e){
-				_onUserLookClicked(lookEntry.lookCode, true);
+				dispatchEvent(new FewfEvent(GOTO_ITEM_CLICKED, lookEntry.lookCode));
 				_untoggleAllCells(btn);
 			});
 			
