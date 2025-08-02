@@ -1,3 +1,9 @@
+## V1.13 - 2 August 2025
+- [Bug] Changed some assets to http protocol when using the app since some W10 users were having issues with certs
+- Updated I18n system to be a bit more streamlined + it now always loads the default app language (english) before loading other languages so that other language files not having a message still shows something
+- Added a new setting to default the save scale to a hardcoded value instead of using current scale of mouse
+
+
 ## V1.12b - 1 February 2025
 - Added button above scale slider (only appears when hovering over slider) to set character scale to default scale
 

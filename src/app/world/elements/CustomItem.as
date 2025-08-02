@@ -91,7 +91,7 @@ package app.world.elements
 		}
 		
 		public function getSaveImageDisplayObject() : DisplayObject {
-			return _itemData.isBitmap() ? (_itemData as BitmapItemData).getFullImage() : this;
+			return _itemData.isBitmap() ? (_itemData as BitmapItemData).getFullImage() : outfit;
 		}
 
 		/////////////////////////////

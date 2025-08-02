@@ -259,9 +259,15 @@ package app.world
 				getShopPane(itemType).getButtonWithItemData(itemData).toggleOn(false);
 			}
 		}
+		
+		private function _getHardcodedSaveScale() : Number {
+			var hardcodedSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
+			return hardcodedSaveScale ? hardcodedSaveScale as Number : 0;
+		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			_saveAsPNG(this.character.getSaveImageDisplayObject(), "shamanitem"); // Doesn't need a scale specified since the image is already scaled
+			var img:DisplayObject = this.character.getSaveImageDisplayObject();
+			_saveAsPNG(img, "shamanitem", img.scaleX);
 		}
 		
 		private function _onSaveItemDataAsImage(e:ItemDataEvent) : void {
@@ -279,10 +285,10 @@ package app.world
 			}
 		}
 		
-		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number = 1) : void {
+		private function _saveAsPNG(pObj:DisplayObject, pName:String, pScale:Number) : void {
 			var hardcodedCanvasSaveSize:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_CANVAS_SAVE_SIZE);
 			if(!hardcodedCanvasSaveSize) {
-				FewfDisplayUtils.saveAsPNG(pObj, pName, pScale);
+				FewfDisplayUtils.saveAsPNG(pObj, pName, _getHardcodedSaveScale() || pScale);
 			} else {
 				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(this.character.getSaveImageDisplayObject(), pName, hardcodedCanvasSaveSize as Number);
 			}
@@ -290,7 +296,7 @@ package app.world
 
 		private function _onClipboardButtonClicked(e:Event) : void {
 			try {
-				FewfDisplayUtils.copyToClipboard(character);
+				FewfDisplayUtils.copyToClipboard(character, _getHardcodedSaveScale() || this.character.outfit.scaleX);
 				_toolbox.updateClipboardButton(false, true);
 			} catch(e) {
 				_toolbox.updateClipboardButton(false, false);
