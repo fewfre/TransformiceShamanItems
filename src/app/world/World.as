@@ -256,13 +256,15 @@ package app.world
 			
 			if(pGoToItem) {
 				// now update the infobars
-				_updateUIBasedOnCharacter();
+				_goToItem( character.getCurrentItemData() );
 				if(pGoToItemColorPicker) _goToItemColorPicker(character.getCurrentItemData());
 			} else {
+				_updateUIBasedOnCharacter();
 				// Still select the tab, just so people know what type of box/plank it is
 				var itemData:ItemData = character.getCurrentItemData(), itemType:ItemType = itemData.type;
 				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
 				// And select the button to match new state, but don't fire click event
+				// getShopPane(itemType).toggleGridButtonWithData(itemData);
 				getShopPane(itemType).getButtonWithItemData(itemData).toggleOn(false);
 			}
 		}
@@ -274,7 +276,7 @@ package app.world
 		
 		private function _addRestoreAutoSaveButtonIfNeeded(autoSavedLook:String) : void {
 			// Don't show button if it's the default look
-			if(autoSavedLook && autoSavedLook != "smallbox=22") {
+			if(autoSavedLook && autoSavedLook != "smallbox="+GameAssets.boxes_small[0].id) {
 				// Make it a timeout so it's added after the initial character pose update event fires
 				var tParent : World = this;
 				setTimeout(function():void{
@@ -339,18 +341,12 @@ package app.world
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
 		// This function is required when setting data via parseParams
 		private function _updateUIBasedOnCharacter() : void {
-			// var tType:ItemType = character.getCurrentItemData().type;
-			// var tPane:ShopCategoryPane = getTabByType(tType);
-			// tPane.toggleGridButtonWithData( character.getItemData(tType) );
-			// shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(tType));
-			
-			_goToItem( character.getCurrentItemData() );
-			
-			// for each(var tType:ItemType in ItemType.ALL) {
-			// 	tPane = getTabByType(tType);
-			// 	// Based on what the character is wearing at start, toggle on the appropriate buttons.
-			// 	tPane.toggleGridButtonWithData( character.getItemData(tType) );
-			// }
+			var tPane:ShopCategoryPane;
+			for each(var tType:ItemType in ItemType.ALL) {
+				tPane = getShopPane(tType);
+				// Based on what the character is wearing at start, toggle on the appropriate buttons.
+				tPane.toggleGridButtonWithData( character.getItemData(tType), true );
+			}
 		}
 		
 		private function _goToItem(pItemData:ItemData) : void {
@@ -358,8 +354,7 @@ package app.world
 			
 			shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
 			var tPane:ShopCategoryPane = getShopPane(itemType);
-			var itemBttn:PushButton = tPane.toggleGridButtonWithData( pItemData );
-			tPane.scrollItemIntoView(itemBttn);
+			tPane.toggleGridButtonWithData(pItemData, true);
 		}
 		
 		private function _goToItemColorPicker(pItemData:ItemData) : void {
@@ -452,7 +447,7 @@ package app.world
 			private function _onShareButtonClicked(e:Event) : void {
 				var tURL = "";
 				try {
-					if(Fewf.isExternallyLoaded) {
+					if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
 						tURL = this.character.getShareCodeFewfreSyntax();
 					} else {
 						tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
