@@ -11,6 +11,9 @@ package app.world.elements
 
 	public class CustomItem extends Sprite
 	{
+		// Constants
+		public static const LOOK_UPDATED : String = "look_updated";
+		
 		// Storage
 		public var outfit:MovieClip;
 		public var animatePose:Boolean;
@@ -80,6 +83,7 @@ package app.world.elements
 			else { GameAssets.colorDefault(outfit); }
 			
 			// if(animatePose) outfit.play(); else outfit.stopAtLastFrame();
+			dispatchEvent(new Event(LOOK_UPDATED));
 		}
 		
 		public function setDragBounds(pX:Number, pY:Number, pWidth:Number, pHeight:Number): CustomItem {

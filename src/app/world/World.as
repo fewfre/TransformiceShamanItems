@@ -35,6 +35,7 @@ package app.world
 
 		private var shopTabs       : ShopTabList;
 		private var _toolbox       : Toolbox;
+		private var _restoreAutoSaveBtn: GameButton;
 		
 		private var _shareScreen   : ShareScreen;
 		private var _langScreen    : LangScreen;
@@ -69,6 +70,7 @@ package app.world
 
 			this.character = new CustomItem(GameAssets.boxes_small[0], parms)
 				.move(185, 275).setDragBounds(0+4, 73+4, 375-8, ConstantsApp.APP_HEIGHT-73-8).appendTo(this);
+			this.character.addEventListener(CustomItem.LOOK_UPDATED, _onCharacterLookUpdated);
 
 			/////////////////////////////
 			// Setup UI
@@ -106,6 +108,8 @@ package app.world
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
 				.onButtonClick(function(pEvent:Event){ _panes.openPane(WorldPaneManager.OUTFITS_PANE); });
+			
+			_addRestoreAutoSaveButtonIfNeeded(Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK));
 			
 			/////////////////////////////
 			// Bottom Left Area
@@ -154,7 +158,7 @@ package app.world
 			// Outfit Pane
 			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, function(){ return character.getShareCodeFewfreSyntax(); }))
 				.on(OutfitManagerTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent){ _useShareCode(e.data as String, false); })
-				.on(OutfitManagerTabPane.GOTO_ITEM_CLICKED, function(e:FewfEvent){ _useShareCode(e.data as String, true); })
+				.on(OutfitManagerTabPane.GOTO_ITEM_CLICKED, function(e:FewfEvent){ _useShareCode(e.data as String, true, true); })
 				.on(Event.CLOSE, function(pEvent:Event){ _panes.openShopPane(character.getCurrentItemData().type).retoggleActiveButton(); });
 			
 			// Color Picker Pane
@@ -238,7 +242,7 @@ package app.world
 			};
 		}
 		
-		private function _useShareCode(pCode:String, pGoToItem:Boolean=true):void {
+		private function _useShareCode(pCode:String, pGoToItem:Boolean=true, pGoToItemColorPicker:Boolean=false):void {
 			if(pCode.indexOf("?") > -1) {
 				pCode = pCode.substr(pCode.indexOf("?") + 1, pCode.length);
 			}
@@ -253,13 +257,37 @@ package app.world
 			if(pGoToItem) {
 				// now update the infobars
 				_updateUIBasedOnCharacter();
-				_goToItemColorPicker(character.getCurrentItemData());
+				if(pGoToItemColorPicker) _goToItemColorPicker(character.getCurrentItemData());
 			} else {
 				// Still select the tab, just so people know what type of box/plank it is
 				var itemData:ItemData = character.getCurrentItemData(), itemType:ItemType = itemData.type;
 				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
 				// And select the button to match new state, but don't fire click event
 				getShopPane(itemType).getButtonWithItemData(itemData).toggleOn(false);
+			}
+		}
+		
+		private function _onCharacterLookUpdated(e:Event) : void {
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, character.getShareCodeFewfreSyntax());
+			_removeRestoreAutoSaveButton();
+		}
+		
+		private function _addRestoreAutoSaveButtonIfNeeded(autoSavedLook:String) : void {
+			// Don't show button if it's the default look
+			if(autoSavedLook && autoSavedLook != "smallbox=22") {
+				// Make it a timeout so it's added after the initial character pose update event fires
+				var tParent : World = this;
+				setTimeout(function():void{
+					// If auto saved outfit, prompt user to use or not
+					(_restoreAutoSaveBtn = GameButton.rect(120, 16)).setText("restore_auto_save_btn", { size:10 }).toOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(tParent)
+						.onButtonClick(function(e:FewfEvent):void{ _useShareCode(e.data.look, true); });
+				}, 100);
+			}
+		}
+		private function _removeRestoreAutoSaveButton() : void {
+			if(_restoreAutoSaveBtn && _restoreAutoSaveBtn.parent) {
+				_restoreAutoSaveBtn.parent.removeChild(_restoreAutoSaveBtn);
+				_restoreAutoSaveBtn = null;
 			}
 		}
 		
@@ -299,7 +327,8 @@ package app.world
 
 		private function _onClipboardButtonClicked(e:Event) : void {
 			try {
-				FewfDisplayUtils.copyToClipboard(character, _getHardcodedSaveScale() || this.character.outfit.scaleX);
+				var img:DisplayObject = this.character.getSaveImageDisplayObject();
+				FewfDisplayUtils.copyToClipboard(img, _getHardcodedSaveScale() || img.scaleX);
 				_toolbox.updateClipboardButton(false, true);
 			} catch(e) {
 				_toolbox.updateClipboardButton(false, false);

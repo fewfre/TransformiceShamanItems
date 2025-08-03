@@ -6,6 +6,7 @@
 - Added some help text to the outfit manager (until there's more than 1 row)
 - `TextBase` updated to have `enableWordWrapUsingWidth` instead of having a hacky implementation multiple places
 - Undo button added to outfit manager (only appears when an outfit is deleted), allowing user to undo all outfits deleted during the current session
+- Auto save feature added that will remember your current outfit when you close the app, and will prompt you to restore it when re-opening it
 
 
 ## V1.12b - 1 February 2025
