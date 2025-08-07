@@ -30,7 +30,7 @@ package app.world
 	public class World extends MovieClip
 	{
 		// Storage
-		private var character      : CustomItem;
+		private var _character     : CustomItem;
 		private var _panes         : WorldPaneManager;
 
 		private var shopTabs       : ShopTabList;
@@ -68,9 +68,9 @@ package app.world
 				} catch (error:Error) { };
 			}
 
-			this.character = new CustomItem(GameAssets.boxes_small[0], parms)
-				.move(185, 275).setDragBounds(0+4, 73+4, 375-8, ConstantsApp.APP_HEIGHT-73-8).appendTo(this);
-			this.character.addEventListener(CustomItem.LOOK_UPDATED, _onCharacterLookUpdated);
+			_character = new CustomItem(new OutfitData().setItemData(GameAssets.boxes_small[0]).parseShareCodeSelf(parms))
+				.move(185, 275).setDragBounds(0+4, 73+4, 375-8, ConstantsApp.APP_HEIGHT-73-8).appendTo(this)
+				.on(CustomItem.LOOK_UPDATED, _onCharacterLookUpdated);
 
 			/////////////////////////////
 			// Setup UI
@@ -97,7 +97,7 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox(character, _onShareCodeEntered).move(188, 28).appendTo(this)
+			_toolbox = new Toolbox(_onShareCodeEntered).move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
@@ -156,10 +156,10 @@ package app.world
 			// Static Panes
 			/////////////////////////////
 			// Outfit Pane
-			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(character, function(){ return character.getShareCodeFewfreSyntax(); }))
+			_panes.addPane(WorldPaneManager.OUTFITS_PANE, new OutfitManagerTabPane(function(){ return _character.outfitData.stringify_fewfreSyntax(); }))
 				.on(OutfitManagerTabPane.LOOK_CODE_SELECTED, function(e:FewfEvent){ _useShareCode(e.data as String, false); })
 				.on(OutfitManagerTabPane.GOTO_ITEM_CLICKED, function(e:FewfEvent){ _useShareCode(e.data as String, true, true); })
-				.on(Event.CLOSE, function(pEvent:Event){ _panes.openShopPane(character.getCurrentItemData().type).retoggleActiveButton(); });
+				.on(Event.CLOSE, function(pEvent:Event){ _panes.openShopPane(_character.getCurrentItemData().type).retoggleActiveButton(); });
 			
 			// Color Picker Pane
 			_panes.addPane(WorldPaneManager.COLOR_PANE, new ColorPickerTabPane())
@@ -199,8 +199,8 @@ package app.world
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
 			if(this.mouseX < this.shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
-				character.scale = _toolbox.scaleSlider.value;
-				character.clampCoordsToDragBounds();
+				_character.scale = _toolbox.scaleSlider.value;
+				_character.clampCoordsToDragBounds();
 			}
 		}
 
@@ -219,13 +219,13 @@ package app.world
 		}
 
 		private function _onScaleSliderChange(e:Event):void {
-			character.scale = _toolbox.scaleSlider.value;
-			character.clampCoordsToDragBounds();
+			_character.scale = _toolbox.scaleSlider.value;
+			_character.clampCoordsToDragBounds();
 		}
 
 		private function _onScaleSliderDefaultClicked(e:Event):void {
-			character.scale = _toolbox.scaleSlider.value = ConstantsApp.DEFAULT_CHARACTER_SCALE;
-			character.clampCoordsToDragBounds();
+			_character.scale = _toolbox.scaleSlider.value = ConstantsApp.DEFAULT_CHARACTER_SCALE;
+			_character.clampCoordsToDragBounds();
 		}
 
 		private function _onShareCodeEntered(pCode:String, pProgressCallback:Function):void {
@@ -248,20 +248,20 @@ package app.world
 			}
 			
 			// Now update pose
-			character.parseShareCode(pCode);
-			character.updateItem();
+			_character.outfitData.parseShareCode(pCode);
+			_character.updateItem();
 			
-			// for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(character.getItemData(tType)); }
-			_refreshButtonCustomizationForItemData(character.getCurrentItemData());
+			// for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(_character.getItemData(tType)); }
+			_refreshButtonCustomizationForItemData(_character.getCurrentItemData());
 			
 			if(pGoToItem) {
 				// now update the infobars
-				_goToItem( character.getCurrentItemData() );
-				if(pGoToItemColorPicker) _goToItemColorPicker(character.getCurrentItemData());
+				_goToItem( _character.getCurrentItemData() );
+				if(pGoToItemColorPicker) _goToItemColorPicker(_character.getCurrentItemData());
 			} else {
 				_updateUIBasedOnCharacter();
 				// Still select the tab, just so people know what type of box/plank it is
-				var itemData:ItemData = character.getCurrentItemData(), itemType:ItemType = itemData.type;
+				var itemData:ItemData = _character.getCurrentItemData(), itemType:ItemType = itemData.type;
 				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
 				// And select the button to match new state, but don't fire click event
 				// getShopPane(itemType).toggleGridButtonWithData(itemData);
@@ -270,7 +270,7 @@ package app.world
 		}
 		
 		private function _onCharacterLookUpdated(e:Event) : void {
-			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, character.getShareCodeFewfreSyntax());
+			Fewf.sharedObject.setData(ConstantsApp.SHARED_OBJECT_KEY_AUTO_SAVE_LOOK, _character.outfitData.stringify_fewfreSyntax());
 			_removeRestoreAutoSaveButton();
 		}
 		
@@ -299,7 +299,7 @@ package app.world
 		}
 
 		private function _onSaveClicked(pEvent:Event) : void {
-			var img:DisplayObject = this.character.getSaveImageDisplayObject();
+			var img:DisplayObject = _character.getSaveImageDisplayObject();
 			_saveAsPNG(img, "shamanitem", img.scaleX);
 		}
 		
@@ -323,13 +323,13 @@ package app.world
 			if(!hardcodedCanvasSaveSize) {
 				FewfDisplayUtils.saveAsPNG(pObj, pName, _getHardcodedSaveScale() || pScale);
 			} else {
-				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(this.character.getSaveImageDisplayObject(), pName, hardcodedCanvasSaveSize as Number);
+				FewfDisplayUtils.saveAsPNGWithFixedCanvasSize(_character.getSaveImageDisplayObject(), pName, hardcodedCanvasSaveSize as Number);
 			}
 		}
 
 		private function _onClipboardButtonClicked(e:Event) : void {
 			try {
-				var img:DisplayObject = this.character.getSaveImageDisplayObject();
+				var img:DisplayObject = _character.getSaveImageDisplayObject();
 				FewfDisplayUtils.copyToClipboard(img, _getHardcodedSaveScale() || img.scaleX);
 				_toolbox.updateClipboardButton(false, true);
 			} catch(e) {
@@ -345,7 +345,7 @@ package app.world
 			for each(var tType:ItemType in ItemType.ALL) {
 				tPane = getShopPane(tType);
 				// Based on what the character is wearing at start, toggle on the appropriate buttons.
-				tPane.toggleGridButtonWithData( character.getItemData(tType), true );
+				tPane.toggleGridButtonWithData( _character.getItemData(tType), true );
 			}
 		}
 		
@@ -382,7 +382,7 @@ package app.world
 			var tButton:PushButton = tPane.getButtonWithItemData(tItemData);
 			// If clicked button is toggled on, equip it. Otherwise remove it.
 			if(tButton.pushed) {
-				this.character.setItemData(tItemData);
+				_character.setItemData(tItemData);
 
 				if(!tItemData.isBitmap()) {
 					tInfobar.addInfo( tItemData, GameAssets.getColoredItemImage(tItemData) );
@@ -448,16 +448,16 @@ package app.world
 				var tURL = "";
 				try {
 					if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
-						tURL = this.character.getShareCodeFewfreSyntax();
+						tURL = _character.outfitData.stringify_fewfreSyntax();
 					} else {
 						tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-						tURL += "?"+this.character.getShareCodeFewfreSyntax();
+						tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
 					}
 				} catch (error:Error) {
 					tURL = "<error creating link>";
 				};
 
-				_shareScreen.open(tURL, character);
+				_shareScreen.open(tURL, _character.outfit);
 				addChild(_shareScreen);
 			}
 			private function _onShareScreenClosed(e:Event) : void { removeChild(_shareScreen); }
@@ -472,9 +472,9 @@ package app.world
 		//{REGION Color Tab
 			private function _onColorPickChanged(e:FewfEvent):void {
 				if(e.data.allUpdated) {
-					this.character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
+					_character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
 				} else {
-					this.character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
+					_character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
 				}
 				_refreshSelectedItemColor(this.currentlyColoringType);
 			}
@@ -487,10 +487,10 @@ package app.world
 			}
 			
 			private function _refreshSelectedItemColor(pType:ItemType) : void {
-				character.updateItem();
+				_character.updateItem();
 				
 				var tPane:ShopCategoryPane = getShopPane(pType);
-				var tItemData:ItemData = this.character.getItemData(pType);
+				var tItemData:ItemData = _character.getItemData(pType);
 				if(!tItemData) { return; }
 				
 				_refreshButtonCustomizationForItemData(tItemData);
@@ -505,7 +505,7 @@ package app.world
 			}
 
 			private function _colorButtonClicked(pType:ItemType) : void {
-				if(this.character.getItemData(this.currentlyColoringType) == null) { return; }
+				if(_character.getItemData(this.currentlyColoringType) == null) { return; }
 
 				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				_panes.colorPickerPane.infobar.addInfo( tData, GameAssets.getItemImage(tData) );
@@ -520,7 +520,7 @@ package app.world
 			}
 
 			private function _eyeDropButtonClicked(pType:ItemType) : void {
-				if(this.character.getItemData(pType) == null) { return; }
+				if(_character.getItemData(pType) == null) { return; }
 
 				var tData:ItemData = getShopPane(pType).infobar.itemData;
 				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);

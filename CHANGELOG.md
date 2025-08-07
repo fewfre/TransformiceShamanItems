@@ -1,3 +1,8 @@
+## V1.13b - ???
+- [Code] Split a large chunk of data storage out of Character and into `OutfitData`
+- [Code] Added new `ItemDisplay` class for rendering an item, so that `CustomItem` doesn't have to be used
+
+
 ## V1.13 - 3 August 2025
 - [Bug] Changed some assets to http protocol when using the app since some W10 users were having issues with certs
 - Updated I18n system to be a bit more streamlined + it now always loads the default app language (english) before loading other languages so that other language files not having a message still shows something

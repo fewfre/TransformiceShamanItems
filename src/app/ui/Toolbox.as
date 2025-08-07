@@ -1,21 +1,20 @@
 package app.ui
 {
-	import com.fewfre.utils.Fewf;
 	import app.data.*;
 	import app.ui.*;
 	import app.ui.buttons.*;
-	import flash.display.*;
-	import flash.net.*;
-	import ext.ParentApp;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import app.world.elements.CustomItem;
-	import flash.utils.setTimeout;
-	import flash.events.Event;
-	import com.fewfre.display.RoundRectangle;
-	import app.ui.common.FrameBase;
 	import app.ui.common.FancySlider;
+	import app.ui.common.FrameBase;
+	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import ext.ParentApp;
+	import flash.display.*;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.net.*;
+	import flash.utils.setTimeout;
 	
 	public class Toolbox extends MovieClip
 	{
@@ -42,7 +41,7 @@ package app.ui
 		
 		// Constructor
 		// onShareCodeEntered: (code, (state:String)=>void)=>void
-		public function Toolbox(pCharacter:CustomItem, onShareCodeEntered:Function) {
+		public function Toolbox(onShareCodeEntered:Function) {
 			var bg:RoundRectangle = new RoundRectangle(365, 35).toOrigin(0.5).drawAsTray().appendTo(this);
 			
 			/********************
@@ -95,7 +94,7 @@ package app.ui
 			var tSliderWidth:Number = tTrayWidth - tButtonXInc*(tTotalButtons) - 20;
 			xx = -tSliderWidth*0.5+(tButtonXInc*((tButtonsOnLeft-tButtonOnRight)*0.5))-1;
 			_scaleSlider = new FancySlider(tSliderWidth).move(xx, yy)
-				.setSliderParams(1, 4, pCharacter.outfit.scaleX)
+				.setSliderParams(1, 4, ConstantsApp.DEFAULT_CHARACTER_SCALE)
 				.appendTo(tTray)
 				.on(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			

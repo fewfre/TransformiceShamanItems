@@ -104,7 +104,7 @@ package app.ui.screens
 			var url = _getImgurUploadUrl();
 			if(!url) { pCallback(null, "Imgur api not found."); return; }
 			
-			var tPNG:ByteArray = PNGEncoder.encode(FewfDisplayUtils.displayObjectToBitmapData(img));
+			var tPNG:ByteArray = PNGEncoder.encode(FewfDisplayUtils.displayObjectToBitmapData(img, img.scaleX));
 			new SimpleUrlLoader(url).setToPost().addFormDataHeader()
 				.addData("base64", FewfDisplayUtils.encodeByteArrayAsString(tPNG))
 				.onComplete(function(resp){

@@ -1,25 +1,25 @@
 package app.ui.panes
 {
-	import com.fewfre.display.*;
-	import com.fewfre.utils.Fewf;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import com.fewfre.events.FewfEvent;
-	import app.data.*;
-	import app.ui.*;
+	import app.data.ConstantsApp;
 	import app.ui.buttons.*;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.display.MovieClip;
-	import flash.utils.ByteArray;
-	import flash.net.FileReference;
-	import flash.net.FileFilter;
-	import flash.utils.setTimeout;
-	import app.world.data.ItemData;
 	import app.ui.panes.base.ButtonGridSidePane;
-	import com.fewfre.utils.FewfUtils;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
+	import app.world.data.ItemData;
+	import app.world.data.OutfitData;
+	import app.world.elements.ItemDisplay;
+	import com.fewfre.display.*;
+	import com.fewfre.events.FewfEvent;
+	import com.fewfre.utils.Fewf;
+	import com.fewfre.utils.FewfDisplayUtils;
+	import com.fewfre.utils.FewfUtils;
+	import flash.display.*;
+	import flash.display.MovieClip;
+	import flash.events.*;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
+	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 	
 	public class OutfitManagerTabPane extends ButtonGridSidePane
 	{
@@ -28,8 +28,6 @@ package app.ui.panes
 		public static const GOTO_ITEM_CLICKED : String = "goto_item_clicked"; // FewfEvent<string>
 		
 		// Storage
-		private var _character : CustomItem;
-		
 		private var _getLookCodeForCurrentOutfit : Function;
 		private var _exportButton      : SpriteButton;
 		private var _importButton      : SpriteButton;
@@ -40,9 +38,8 @@ package app.ui.panes
 		private var _helpText          : TextTranslated;
 		
 		// Constructor
-		public function OutfitManagerTabPane(pCharacter:CustomItem, pGetLookCodeForCurrentOutfit:Function) {
+		public function OutfitManagerTabPane(pGetLookCodeForCurrentOutfit:Function) {
 			super(5);
-			_character = pCharacter;
 			_getLookCodeForCurrentOutfit = pGetLookCodeForCurrentOutfit;
 			
 			this.addInfobar( new Infobar({ showBackButton:true, hideItemPreview:true, gridManagement:true }) )
@@ -140,7 +137,7 @@ package app.ui.panes
 		}
 		
 		public function _addLookButton(lookEntry:LookEntry) : void {
-			var lookMC = new CustomItem(null, lookEntry.lookCode, true);
+			var lookMC = new ItemDisplay(new OutfitData().parseShareCodeSelf(lookEntry.lookCode).getCurrentItemData());
 			var cell:Sprite = new Sprite();
 			var actionTray:Sprite = new Sprite(); actionTray.alpha = 0;
 			
@@ -280,11 +277,12 @@ package app.ui.panes
 		
 		private function _onImportSelected(e:Event) : void {
 			try {
+				var tempOutfitDataForTesting:OutfitData = new OutfitData();
 				var importedLooks = e.target.data.toString().split('\n');
 				var oldLooks:Array = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_OUTFITS) || [];
 				for(var i:int = importedLooks.length-1; i >= 0; i--) {
 					// Don't allow an import file with invalid code
-					if(this._character.parseShareCode(importedLooks[i]) === false) {
+					if(tempOutfitDataForTesting.parseShareCode(importedLooks[i]) === false) {
 						throw 'Invalid code in list';
 					}
 					// Remove duplicates being imported
