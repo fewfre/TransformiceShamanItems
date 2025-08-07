@@ -97,13 +97,16 @@ package app.world
 			/////////////////////////////
 			// Top Area
 			/////////////////////////////
-			_toolbox = new Toolbox(_onShareCodeEntered).move(188, 28).appendTo(this)
+			_toolbox = new Toolbox().move(188, 28).appendTo(this)
 				.on(Toolbox.SAVE_CLICKED, _onSaveClicked)
 				.on(Toolbox.SHARE_CLICKED, _onShareButtonClicked)
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
 				
 				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange)
 				.on(Toolbox.DEFAULT_SCALE_CLICKED, _onScaleSliderDefaultClicked);
+				
+			new PasteShareCodeInput().appendTo(this).move(206, 62)
+				.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); });
 			
 			// Outfit Button
 			new ScaleButton({ origin:0.5, obj:new $Outfit(), obj_scale:0.4 }).appendTo(this).move(_toolbox.x+167, _toolbox.y+12.5+21)
