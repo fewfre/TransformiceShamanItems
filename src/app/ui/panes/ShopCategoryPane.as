@@ -4,9 +4,9 @@ package app.ui.panes
 	import app.data.FavoriteItemsLocalStorageManager;
 	import app.data.GameAssets;
 	import app.data.ItemType;
+	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
 	import app.ui.screens.LoadingSpinner;
@@ -130,11 +130,11 @@ package app.ui.panes
 		private function newButtonFromItemData(pItemData:ItemData, i:int) : PushButton {
 			var shopItem : MovieClip = GameAssets.getItemImage(pItemData);
 			shopItem.scaleX = shopItem.scaleY = 1;
-			return new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, obj:shopItem, data:{ type:_type, itemData:pItemData } });
+			return new PushButton(grid.cellSize).setAllowToggleOff(false).setImage(shopItem).setData({ type:_type, itemData:pItemData }) as PushButton;
 		}
 		
 		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : PushButton {
-			var shopItemButton : PushButton = new PushButton({ allowToggleOff:false, width:grid.cellSize, height:grid.cellSize, data:{ type:_type, itemData:pItemData } });
+			var shopItemButton : PushButton = new PushButton(grid.cellSize).setAllowToggleOff(false).setData({ type:_type, itemData:pItemData }) as PushButton;
 			
 			var shopItem : Bitmap = pItemData.getSmallImage();
 			shopItemButton.setImage(shopItem);
@@ -165,7 +165,7 @@ package app.ui.panes
 			for each(var tId:String in favIds) {
 				tItemData = GameAssets.getItemFromTypeID(_type, tId);
 				if(tItemData) {
-					_favoritesGrid.add(new SpriteButton({ size:_favoritesGrid.cellSize, obj:GameAssets.getItemImage(tItemData), obj_scale:"auto", data:tItemData })
+					_favoritesGrid.add(new GameButton(_favoritesGrid.cellSize).setImage(GameAssets.getItemImage(tItemData)).setData(tItemData)
 						.onButtonClick(_favoriteClicked));
 				}
 			}
@@ -177,7 +177,7 @@ package app.ui.panes
 		}
 		
 		private function _favoriteClicked(e:FewfEvent) : void {
-			var itemData:ItemData = (e.currentTarget as SpriteButton).data as ItemData;
+			var itemData:ItemData = (e.currentTarget as GameButton).data as ItemData;
 			toggleGridButtonWithData(itemData, true);
 		}
 		

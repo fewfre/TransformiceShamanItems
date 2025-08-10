@@ -3,7 +3,7 @@ package app.ui.screens
 	import app.data.ConstantsApp;
 	import app.data.GameAssets;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
+	import app.ui.buttons.GameButton;
 	import com.fewfre.data.I18n;
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.RoundRectangle;
@@ -53,12 +53,12 @@ package app.ui.screens
 			var bsize:Number = 80;
 			
 			// Github / Changelog Button
-			new SpriteButton({ size:bsize, obj_scale:1, obj:new $GitHubIcon(), origin:0.5 }).appendTo(this)
+			new GameButton(bsize).setImage(new $GitHubIcon()).setOrigin(0.5).appendTo(this)
 				.move(tWidth*0.5 - bsize/2 - 15, tHeight*0.5 - bsize/2 - 15)
 				.onButtonClick(_onSourceClicked);
 				
 			// Discord Button
-			new SpriteButton({ size:bsize, origin:0.5, obj:new $DiscordLogo(), origin:0.5 }).appendTo(this)
+			new GameButton(bsize).setImage(new $DiscordLogo()).setOrigin(0.5).appendTo(this)
 				.move(-tWidth*0.5 + bsize/2 + 15, tHeight*0.5 - bsize/2 - 15)
 				.onButtonClick(_onDiscordClicked);
 		
@@ -70,7 +70,7 @@ package app.ui.screens
 			///////////////////////
 			// Close Button
 			///////////////////////
-			ScaleButton.withObject(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
+			new ScaleButton(new $WhiteX()).move(tWidth/2 - 5, -tHeight/2 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): AboutScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): AboutScreen { this.removeEventListener(type, listener); return this; }

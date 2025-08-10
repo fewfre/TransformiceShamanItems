@@ -1,8 +1,8 @@
 package app.ui.screens
 {
 	import app.data.GameAssets;
+	import app.ui.buttons.GameButton;
 	import app.ui.buttons.ScaleButton;
-	import app.ui.buttons.SpriteButton;
 	import app.ui.common.FancyCopyField;
 	import com.adobe.images.PNGEncoder;
 	import com.fewfre.display.ButtonBase;
@@ -24,7 +24,7 @@ package app.ui.screens
 		private var _copyField : FancyCopyField;
 		
 		private var _imgurSpriteToUpload : Sprite;
-		private var _imgurButton : SpriteButton;
+		private var _imgurButton : GameButton;
 		private var _imgurTray : Sprite;
 		private var _imgurCopyField : FancyCopyField;
 		
@@ -47,10 +47,10 @@ package app.ui.screens
 			
 			// Imgur
 			if(!!_getImgurUploadUrl()) {
-				_imgurButton = SpriteButton.withObject(new $ImgurIcon(), 0.45, { size:28, origin:0.5 })
+				_imgurButton = new GameButton(28).setImage(new $ImgurIcon(), 0.45).setOrigin(0.5)
 						.move(-tWidth/2 + 20, -tHeight/2 + 20)
 						.onButtonClick(_onImgurButtonClicked)
-						.appendTo(this) as SpriteButton;
+						.appendTo(this) as GameButton;
 				
 				_imgurTray = DisplayWrapper.wrap(new Sprite(), this).move(0, -tHeight/2 - 35).asSprite;
 				var ibg:RoundRectangle = new RoundRectangle(tWidth-50+20, 56).toOrigin(0.5).drawAsTray().appendTo(_imgurTray);
@@ -61,7 +61,7 @@ package app.ui.screens
 			}
 			
 			// Close Button
-			new ScaleButton({ x:tWidth*0.5 - 5, y:-tHeight*0.5 + 5, obj:new $WhiteX() }).appendTo(this).onButtonClick(_onCloseClicked);
+			new ScaleButton(new $WhiteX()).move(tWidth*0.5 - 5, -tHeight*0.5 + 5).appendTo(this).onButtonClick(_onCloseClicked);
 		}
 		public function on(type:String, listener:Function): ShareScreen { this.addEventListener(type, listener); return this; }
 		public function off(type:String, listener:Function): ShareScreen { this.removeEventListener(type, listener); return this; }

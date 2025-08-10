@@ -30,11 +30,11 @@ package app.ui
 		public static const RANDOM_CLICKED        = "random_clicked";
 		
 		// Storage
-		private var _downloadButton  : SpriteButton;
-		private var _clipboardButton : SpriteButton;
+		private var _downloadButton  : GameButton;
+		private var _clipboardButton : GameButton;
 		
 		private var _scaleSlider        : FancySlider;
-		private var _defaultScaleButton : SpriteButton;
+		private var _defaultScaleButton : GameButton;
 		
 		// Properties
 		public function get scaleSlider() : FancySlider { return _scaleSlider; }
@@ -48,9 +48,9 @@ package app.ui
 			*********************/
 			var tDownloadTray:FrameBase = new FrameBase(66, 66).move(-bg.width*0.5 + 33, 9).appendTo(this);
 			
-			_downloadButton = new SpriteButton({ size:46, obj:new $LargeDownload(), origin:0.5 })
+			_downloadButton = new GameButton(46).setImage(new $LargeDownload()).setOrigin(0.5)
 				.onButtonClick(dispatchEventHandler(SAVE_CLICKED))
-				.appendTo(tDownloadTray.root) as SpriteButton;
+				.appendTo(tDownloadTray.root) as GameButton;
 			
 			/********************
 			* Toolbar Buttons
@@ -65,16 +65,16 @@ package app.ui
 			// ### Left Side Buttons ###
 			xx = -tTrayWidth*0.5 + tButtonSize*0.5 + tButtonSizeSpace;
 			
-			new SpriteButton({ size:tButtonSize, obj_scale:0.45, obj:new $Link(), origin:0.5 }).appendTo(tTray)
+			new GameButton(tButtonSize).setImage(new $Link(), 0.45).setOrigin(0.5).appendTo(tTray)
 				.move(xx+tButtonXInc*tButtonsOnLeft, yy)
 				.onButtonClick(dispatchEventHandler(SHARE_CLICKED));
 			tButtonsOnLeft++;
 			
 			if(Fewf.isExternallyLoaded) {
-				_clipboardButton = new SpriteButton({ size:tButtonSize, obj_scale:0.415, obj:new $CopyIcon(), origin:0.5 })
+				_clipboardButton = new GameButton(tButtonSize).setImage(new $CopyIcon(), 0.415).setOrigin(0.5).appendTo(tTray)
 					.move(xx+tButtonXInc*tButtonsOnLeft, yy)
 					.onButtonClick(dispatchEventHandler(CLIPBOARD_CLICKED))
-					.appendTo(tTray) as SpriteButton;
+					.appendTo(tTray) as GameButton;
 				tButtonsOnLeft++;
 			}
 			
@@ -97,10 +97,8 @@ package app.ui
 				.appendTo(tTray)
 				.on(FancySlider.CHANGE, dispatchEventHandler(SCALE_SLIDER_CHANGE));
 			
-			_defaultScaleButton = SpriteButton.rect(100, 14);
-			_defaultScaleButton.setText('btn_color_defaults').toOrigin(0.5).move(xx+tSliderWidth/2, yy-16.5).appendTo(tTray)
+			(_defaultScaleButton = new GameButton(100, 14)).setText('btn_color_defaults').setOrigin(0.5).move(xx+tSliderWidth/2, yy-16.5).appendTo(tTray).setAlpha(0)
 				.onButtonClick(dispatchEventHandler(DEFAULT_SCALE_CLICKED));
-			_defaultScaleButton.alpha = 0;
 				
 			scaleSlider.on(MouseEvent.MOUSE_OVER, function():void{ _defaultScaleButton.alpha = 0.8; });
 			_defaultScaleButton.on(MouseEvent.MOUSE_OVER, function():void{ _defaultScaleButton.alpha = 0.8; });
@@ -121,7 +119,7 @@ package app.ui
 		
 		public function updateClipboardButton(normal:Boolean, elseYes:Boolean=true) : void {
 			if(!_clipboardButton) return;
-			_clipboardButton.ChangeImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
+			_clipboardButton.setImage(normal ? new $CopyIcon() : elseYes ? new $Yes() : new $No());
 		}
 		
 		///////////////////////
