@@ -1,8 +1,9 @@
-## V1.13b - ???
+## V1.13b - 10 August 2025
 - [Code] Split a large chunk of data storage out of Character and into `OutfitData`
 - [Code] Added new `ItemDisplay` class for rendering an item, so that `CustomItem` doesn't have to be used
 - [Code] `PasteShareCodeInput` moved out of `Toolbox` and directly into `World`
 - [Code] Polish of button-related components
+- Added randomize button to toolbar
 
 
 ## V1.13 - 3 August 2025

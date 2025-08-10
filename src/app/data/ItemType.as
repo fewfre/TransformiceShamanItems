@@ -17,6 +17,9 @@ package app.data
 		public static const ALL : Vector.<ItemType> = new <ItemType>[
 			BOX_SMALL, BOX_LARGE, PLANK_SMALL, PLANK_LARGE, BALL, TRAMPOLINE, ANVIL, CANNONBALL, BALLOON, CARTOUCHE, BADGE ];
 		
+		public static const ALL_NORMAL : Vector.<ItemType> = new <ItemType>[
+			BOX_SMALL, BOX_LARGE, PLANK_SMALL, PLANK_LARGE, BALL, TRAMPOLINE, ANVIL, CANNONBALL, BALLOON ];
+		
 		// Enum Storage + Constructor
 		private var _value: String;
 		function ItemType(pValue:String) { _value = pValue; }

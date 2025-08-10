@@ -103,7 +103,9 @@ package app.world
 				.on(Toolbox.CLIPBOARD_CLICKED, _onClipboardButtonClicked)
 				
 				.on(Toolbox.SCALE_SLIDER_CHANGE, _onScaleSliderChange)
-				.on(Toolbox.DEFAULT_SCALE_CLICKED, _onScaleSliderDefaultClicked);
+				.on(Toolbox.DEFAULT_SCALE_CLICKED, _onScaleSliderDefaultClicked)
+				
+				.on(Toolbox.RANDOM_CLICKED, _onRandomizeDesignClicked);
 				
 			new PasteShareCodeInput().appendTo(this).move(206, 62)
 				.on(PasteShareCodeInput.CHANGE, function(e:FewfEvent):void{ _onShareCodeEntered(e.data.code, e.data.update); });
@@ -431,13 +433,14 @@ package app.world
 			}
 			return -1;
 		}
-
-		// private function _onRandomizeDesignClicked(e:Event) : void {
-		// 	for(var i:int = 0; i < ITEM.LAYERING.length; i++) {
-		// 		_randomItemOfType(ITEM.LAYERING[i]);
-		// 	}
-		// 	_randomItemOfType(ITEM.POSE);
-		// }
+		private function _onRandomizeDesignClicked(e:Event) : void {
+			// for(var i:int = 0; i < ItemType.LAYERING.length; i++) {
+			// 	_randomItemOfType(ItemType.LAYERING[i]);
+			// }
+			var tItemType:ItemType = ItemType.ALL_NORMAL[ Math.floor(ItemType.ALL_NORMAL.length * Math.random()) ];
+			_randomItemOfType(tItemType);
+			_goToItem(_character.getItemData(tItemType));
+		}
 
 		private function _randomItemOfType(pType:ItemType) : void {
 			var pane:ShopCategoryPane = getShopPane(pType);

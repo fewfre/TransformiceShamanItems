@@ -81,10 +81,11 @@ package app.ui
 			// ### Right Side Buttons ###
 			xx = tTrayWidth*0.5-(tButtonSize*0.5 + tButtonSizeSpace);
 
-			// // Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
-			// new SpriteButton({ size:tButtonSize, obj_scale:1, obj:new $Dice(), origin:0.5 }).appendTo(tTray)
-			// 	.move(tX-tButtonXInc*tButtonOnRight, yy)
-			// 	.onButtonClick(dispatchEventHandler(RANDOM_CLICKED));
+			// Dice icon based on https://www.iconexperience.com/i_collection/icons/?icon=dice
+			new GameButton(tButtonSize).setImage(new $Dice()).setOrigin(0.5).appendTo(tTray)
+				.move(xx-tButtonXInc*tButtonOnRight, yy)
+				.onButtonClick(dispatchEventHandler(RANDOM_CLICKED));
+			tButtonOnRight++;
 			
 			/********************
 			* Scale slider
