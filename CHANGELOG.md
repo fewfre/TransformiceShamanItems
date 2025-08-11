@@ -3,6 +3,7 @@
 - [Code] Added new `ItemDisplay` class for rendering an item, so that `CustomItem` doesn't have to be used
 - [Code] `PasteShareCodeInput` moved out of `Toolbox` and directly into `World`
 - [Code] Polish of button-related components
+	- [Bug] (11 Aug) Fixed bug added into `ColorButton` causing it to always return a null color
 - Added randomize button to toolbar
 
 
