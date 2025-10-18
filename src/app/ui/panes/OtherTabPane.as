@@ -39,30 +39,25 @@ package app.ui.panes
 			var grid:Grid = new Grid(ConstantsApp.PANE_WIDTH - 32, 1 + hasBadges + hasBanners).move(xx,0).appendTo(this);
 			
 			grid.add(makeGridCell(grid.cellSize, GameAssets.getItemImage(GameAssets.cartouches[0]), 10, 10, function(){
-				return new GameButton(grid.cellSize, sizey).setOrigin(0, 0.5).setText('tab_cartouche', { size:16 })//.setImage(GameAssets.getItemImage(GameAssets.cartouches[0]))
+				return new GameButton(grid.cellSize, sizey).setOrigin(0, 0.5).setText('tab_cartouche', { size:16 })
 					.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(CARTOUCHE_CLICKED)); })
 			}));
 			
 			if(hasBadges) {
 				grid.add(makeGridCell(grid.cellSize, (GameAssets.badges[0] as BitmapItemData).getSmallImage(), -20, 0, function(){
-					return new GameButton(grid.cellSize, sizey).setOrigin(0, 0.5).setText('tab_badge', { size:16 })//.setImage((GameAssets.badges[0] as BitmapItemData).getSmallImage())
+					return new GameButton(grid.cellSize, sizey).setOrigin(0, 0.5).setText('tab_badge', { size:16 })
 						.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(BADGE_CLICKED)); });
 				}));
 			}
 			
 			if(hasBanners) {
 				grid.add(makeGridCell(grid.cellSize, (GameAssets.banners[0] as BitmapItemData).getSmallImage(), -60, -5, function(){
-					return new GameButton(grid.cellSize, sizey).setOrigin(0, 0.5).setText('tab_banner', { size:16 })//.setImage((GameAssets.banners[0] as BitmapItemData).getFullImage())
+					return new GameButton(grid.cellSize, sizey).setOrigin(0, 0.5).setText('tab_banner', { size:16 })
 						.onButtonClick(function(e:Event):void{ dispatchEvent(new Event(BANNER_CLICKED)); });
 				}));
 			}
 			
 			grid.y = ConstantsApp.SHOP_HEIGHT/2 + 25;
-			
-			// yy = grid.cells[0].y + grid.cellSize - 10;
-			// new TextTranslated('tab_cartouche').appendToT(grid).moveT(grid.cells[0].x + grid.cellSize/2, yy).size = 16;
-			// if(hasBadges) new TextTranslated('tab_badge').appendToT(grid).moveT(grid.cells[1].x + grid.cellSize/2, yy).size = 16;
-			// if(hasBanners) new TextTranslated('tab_banner').appendToT(grid).moveT(grid.cells[2].x + grid.cellSize/2, yy).size = 16;
 			
 		}
 		
