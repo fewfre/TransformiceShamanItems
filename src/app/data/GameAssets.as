@@ -32,6 +32,7 @@ package app.data
 		public static var balloons: Vector.<ItemData>;
 		public static var cartouches: Vector.<ItemData>;
 		public static var badges: Vector.<ItemData>; // BitmapItemData
+		public static var banners: Vector.<ItemData>; // BitmapItemData
 		
 		// { type:ITEM, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
@@ -58,6 +59,16 @@ package app.data
 				// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on badges tab
 				for(var i:int = badges.length-1; i >= 0; i--) {
 					(badges[i] as BitmapItemData).getSmallImage();
+				}
+			}
+			banners = new Vector.<ItemData>();
+			if(Fewf.assets.getData("config").banners) {
+				for each(var bannerFileUrl:String in Fewf.assets.getData("config").banners) {
+					banners.push(new BannerBitmapItemData(ItemType.BANNER, bannerFileUrl));
+				}
+				// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on banners tab
+				for(var i:int = banners.length-1; i >= 0; i--) {
+					(banners[i] as BannerBitmapItemData).getFullImage();
 				}
 			}
 			
@@ -132,6 +143,7 @@ package app.data
 				case ItemType.BALLOON:		return balloons;
 				case ItemType.CARTOUCHE:	return cartouches;
 				case ItemType.BADGE:		return badges;
+				case ItemType.BANNER:		return banners;
 				default: trace("[GameAssets](getArrayByType) Unknown type: "+pType);
 			}
 			return null;

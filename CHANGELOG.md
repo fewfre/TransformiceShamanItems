@@ -1,3 +1,8 @@
+## V1.14 - 18 October 2025
+- Added banners
+- Added a new "Other" tab, and moved cartouches, badges, and the new banner buttons into it
+
+
 ## V1.13b - 10 August 2025
 - [Code] Split a large chunk of data storage out of Character and into `OutfitData`
 - [Code] Added new `ItemDisplay` class for rendering an item, so that `CustomItem` doesn't have to be used

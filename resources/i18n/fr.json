@@ -26,8 +26,11 @@
 		"tab_anvil":			{ "text":"Enclume" },
 		"tab_cannonball":		{ "text":"Boulet" },
 		"tab_balloon":			{ "text":"Ballon" },
+		
+		"tab_other":			{ "text":"Autres" },
 		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
 		"tab_badge":			{ "text":"Badge" },
+		"tab_banner":			{ "text":"Bannière" },
 		
 		"setting_hardcoded_save_size": { "text":"Hardcoded image save size (leave blank to auto fit)" }
 	}

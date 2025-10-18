@@ -33,7 +33,7 @@ package app.world
 		private var _character     : CustomItem;
 		private var _panes         : WorldPaneManager;
 
-		private var shopTabs       : ShopTabList;
+		private var _shopTabs       : ShopTabList;
 		private var _toolbox       : Toolbox;
 		private var _restoreAutoSaveBtn: GameButton;
 		
@@ -75,20 +75,17 @@ package app.world
 			/////////////////////////////
 			// Setup UI
 			/////////////////////////////
-			shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this).on(ShopTabList.TAB_CLICKED, _onTabClicked);
-			shopTabs.addTab("tab_box_small", WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL));
-			shopTabs.addTab("tab_box_large", WorldPaneManager.itemTypeToId(ItemType.BOX_LARGE));
-			shopTabs.addTab("tab_plank_small", WorldPaneManager.itemTypeToId(ItemType.PLANK_SMALL));
-			shopTabs.addTab("tab_plank_large", WorldPaneManager.itemTypeToId(ItemType.PLANK_LARGE));
-			shopTabs.addTab("tab_ball", WorldPaneManager.itemTypeToId(ItemType.BALL));
-			shopTabs.addTab("tab_trampoline", WorldPaneManager.itemTypeToId(ItemType.TRAMPOLINE));
-			shopTabs.addTab("tab_anvil", WorldPaneManager.itemTypeToId(ItemType.ANVIL));
-			shopTabs.addTab("tab_cannonball", WorldPaneManager.itemTypeToId(ItemType.CANNONBALL));
-			shopTabs.addTab("tab_balloon", WorldPaneManager.itemTypeToId(ItemType.BALLOON));
-			shopTabs.addTab("tab_cartouche", WorldPaneManager.itemTypeToId(ItemType.CARTOUCHE));
-			if(Fewf.assets.getData("config").badges) {
-				shopTabs.addTab("tab_badge", WorldPaneManager.itemTypeToId(ItemType.BADGE));
-			}
+			_shopTabs = new ShopTabList(70, ConstantsApp.SHOP_HEIGHT).move(375, 10).appendTo(this).on(ShopTabList.TAB_CLICKED, _onTabClicked);
+			_shopTabs.addTab("tab_box_small", WorldPaneManager.itemTypeToId(ItemType.BOX_SMALL));
+			_shopTabs.addTab("tab_box_large", WorldPaneManager.itemTypeToId(ItemType.BOX_LARGE));
+			_shopTabs.addTab("tab_plank_small", WorldPaneManager.itemTypeToId(ItemType.PLANK_SMALL));
+			_shopTabs.addTab("tab_plank_large", WorldPaneManager.itemTypeToId(ItemType.PLANK_LARGE));
+			_shopTabs.addTab("tab_ball", WorldPaneManager.itemTypeToId(ItemType.BALL));
+			_shopTabs.addTab("tab_trampoline", WorldPaneManager.itemTypeToId(ItemType.TRAMPOLINE));
+			_shopTabs.addTab("tab_anvil", WorldPaneManager.itemTypeToId(ItemType.ANVIL));
+			_shopTabs.addTab("tab_cannonball", WorldPaneManager.itemTypeToId(ItemType.CANNONBALL));
+			_shopTabs.addTab("tab_balloon", WorldPaneManager.itemTypeToId(ItemType.BALLOON));
+			_shopTabs.addTab("tab_other", WorldPaneManager.OTHER_PANE);
 			
 			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
@@ -182,8 +179,14 @@ package app.world
 					_removeItem(_panes.colorFinderPane.infobar.itemData.type);
 				});
 			
+			// "Other" Pane
+			_panes.addPane(WorldPaneManager.OTHER_PANE, new OtherTabPane())
+				.on(OtherTabPane.CARTOUCHE_CLICKED, function(e:Event){ _onTabClickedById(WorldPaneManager.itemTypeToId(ItemType.CARTOUCHE)); })
+				.on(OtherTabPane.BADGE_CLICKED, function(e:Event){ _onTabClickedById(WorldPaneManager.itemTypeToId(ItemType.BADGE)); })
+				.on(OtherTabPane.BANNER_CLICKED, function(e:Event){ _onTabClickedById(WorldPaneManager.itemTypeToId(ItemType.BANNER)); });
+			
 			// Select First Pane
-			shopTabs.toggleOnFirstTab();
+			_shopTabs.toggleOnFirstTab();
 		}
 
 		private function _setupItemPane(pType:ItemType) : ShopCategoryPane {
@@ -194,13 +197,16 @@ package app.world
 			tPane.infobar.on(Infobar.ITEM_PREVIEW_CLICKED, function(){ _removeItem(pType); });
 			tPane.infobar.on(Infobar.EYE_DROPPER_CLICKED, function(){ _eyeDropButtonClicked(pType); });
 			tPane.infobar.on(GridManagementWidget.RANDOMIZE_CLICKED, function(){ _randomItemOfType(pType); });
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(pType) > -1) {
+				tPane.infobar.on(Infobar.BACK_CLICKED, function(){ _panes.openPane(WorldPaneManager.OTHER_PANE); });
+			}
 			return tPane;
 		}
 		
 		private function getShopPane(pType:ItemType) : ShopCategoryPane { return _panes.getShopPane(pType); }
 
 		private function _onMouseWheel(pEvent:MouseEvent) : void {
-			if(this.mouseX < this.shopTabs.x) {
+			if(this.mouseX < _shopTabs.x) {
 				_toolbox.scaleSlider.updateViaMouseWheelDelta(pEvent.delta);
 				_character.scale = _toolbox.scaleSlider.value;
 				_character.clampCoordsToDragBounds();
@@ -265,7 +271,7 @@ package app.world
 				_updateUIBasedOnCharacter();
 				// Still select the tab, just so people know what type of box/plank it is
 				var itemData:ItemData = _character.getCurrentItemData(), itemType:ItemType = itemData.type;
-				shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
+				_shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType), false);
 				// And select the button to match new state, but don't fire click event
 				// getShopPane(itemType).toggleGridButtonWithData(itemData);
 				getShopPane(itemType).getButtonWithItemData(itemData).toggleOn(false);
@@ -355,9 +361,13 @@ package app.world
 		private function _goToItem(pItemData:ItemData) : void {
 			var itemType:ItemType = pItemData.type;
 			
-			shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
-			var tPane:ShopCategoryPane = getShopPane(itemType);
-			tPane.toggleGridButtonWithData(pItemData, true);
+			if(ItemType.OTHER_PANE_ITEM_TYPES.indexOf(itemType) > -1) {
+				_shopTabs.toggleTabOn(WorldPaneManager.OTHER_PANE);
+				_panes.openShopPane(itemType);
+			} else {
+				_shopTabs.toggleTabOn(WorldPaneManager.itemTypeToId(itemType));
+			}
+			getShopPane(itemType).toggleGridButtonWithData(pItemData, true);
 		}
 		
 		private function _goToItemColorPicker(pItemData:ItemData) : void {
@@ -416,9 +426,12 @@ package app.world
 		}
 		
 		private function _onTabClicked(pEvent:FewfEvent) : void {
-			_panes.openPane(pEvent.data.toString());
+			_onTabClickedById(pEvent.data.toString());
+		}
+		private function _onTabClickedById(pTabId:String) : void {
+			_panes.openPane(pTabId);
 			
-			var tPane:SidePane = _panes.getPane(pEvent.data.toString());
+			var tPane:SidePane = _panes.getPane(pTabId);
 			if(tPane is ShopCategoryPane && (tPane as ShopCategoryPane).infobar.hasData) {
 				(tPane as ShopCategoryPane).retoggleActiveButton();
 			}

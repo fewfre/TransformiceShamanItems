@@ -26,6 +26,8 @@
 		"tab_anvil":			{ "text":"Kowadło" },
 		"tab_cannonball":		{ "text":"Kule\narmatnie", "scale":0.9 },
 		"tab_balloon":			{ "text":"Balon" },
+		
+		"tab_other":			{ "text":"Inne" },
 		"tab_cartouche":		{ "text":"Kula\nszamana", "scale":0.9 },
 		"tab_badge":			{ "text":"Odznaka" },
 		

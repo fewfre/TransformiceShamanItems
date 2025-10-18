@@ -37,14 +37,15 @@ package app.ui.panes
 		public function ShopCategoryPane(pType:ItemType) {
 			this._type = pType;
 			var buttonPerRow:int = 6;
-			if(_type == ItemType.PLANK_LARGE) { buttonPerRow = 4; }
+			if(_type == ItemType.PLANK_LARGE || _type == ItemType.BANNER) { buttonPerRow = 4; }
 			if(_type == ItemType.BOX_LARGE || _type == ItemType.TRAMPOLINE) { buttonPerRow = 5; }
 			super(buttonPerRow);
 			
 			// Start reversed by default
 			grid.reverse();
 			
-			this.addInfobar( new Infobar({ showEyeDropper:true, showDownload:true, gridManagement:true, showFavorites:true }) );
+			var tOtherPaneType:Boolean = ItemType.OTHER_PANE_ITEM_TYPES.indexOf(_type) > -1;
+			this.addInfobar( new Infobar({ showEyeDropper:true, showDownload:true, gridManagement:true, showFavorites:true, showBackButton:tOtherPaneType }) );
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			

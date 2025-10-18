@@ -12,6 +12,7 @@ package app.world
 		public static const COLOR_FINDER_PANE:String = "colorFinderPane";
 		
 		public static const OUTFITS_PANE:String = "outfits";
+		public static const OTHER_PANE:String = "otherPane";
 		
 		// Constructor
 		public function WorldPaneManager() {
@@ -25,6 +26,8 @@ package app.world
 		// Shortcuts to get panes with correct typing
 		public function get colorPickerPane() : ColorPickerTabPane { return getPane(COLOR_PANE) as ColorPickerTabPane; }
 		public function get colorFinderPane() : ColorFinderPane { return getPane(COLOR_FINDER_PANE) as ColorFinderPane; }
+		
+		public function get otherPane() : OtherTabPane { return getPane(OTHER_PANE) as OtherTabPane; }
 		
 		/////////////////////////////
 		// Static

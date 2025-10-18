@@ -18,8 +18,11 @@
 		"tab_anvil":			{ "text":"Anvil" },
 		"tab_cannonball":		{ "text":"Cannon-\nball", "scale":0.8 },
 		"tab_balloon":			{ "text":"Balloon" },
+		
+		"tab_other":			{ "text":"Other" },
 		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
 		"tab_badge":			{ "text":"Badge" },
+		"tab_banner":			{ "text":"Banner" },
 		
 		"setting_hardcoded_save_scale_label":       { "text":"Hardcoded save scale" },
 		"setting_hardcoded_save_scale_placeholder": { "text":"App uses 1-4 (default: 1.75)" },

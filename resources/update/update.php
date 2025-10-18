@@ -29,10 +29,12 @@ saveConfigJson($json);
 // Badges
 
 $badges = updateBadges();
+$banners = updateBanners();
 	
 setProgress('updating');
 $json = getConfigJson();
 $json["badges"] = $badges;
+$json["banners"] = $banners;
 saveConfigJson($json);
 
 // Finished
@@ -218,4 +220,47 @@ function updateBadges() {
 	}
 	
 	return $badges;
+}
+
+function updateBanners() {
+	$banners = array();
+	
+	function makeDataFromFileIndex_smiley($i) {
+		$filename = "$i.png";
+		$filenameLocal = "banners/$filename";
+		return [
+			'filename' => $filename,
+			'filenameLocal' => $filenameLocal,
+			'localFilePath' => "../$filenameLocal",
+			'url' => "https://www.transformice.com/images/x_transformice/x_banniere/$filename",
+		];
+	}
+	
+	$start = 0;
+	$max = $start + 100;
+	
+	// Fetch headers and download any files that need downloading
+	$headerCheckUrlDataList = array_map(fn($i) => makeDataFromFileIndex_smiley($i), range($start, $max));
+	fetchHeadersOnlyMulti_inChunksWithDataList_downloadIfNeeded($headerCheckUrlDataList, 'banner');
+	
+	// Check local file before adding to list, so that if there's a load issue the update script still uses the current saved version
+	setProgress('updating', [ 'message'=>"Generating list of all banners" ]);
+	
+	$breakCount = 0; // quit early if enough 404s in a row
+	for ($i = $start; $i <= $max; $i++) {
+		setProgress('updating', [ 'message'=>"$i", 'value'=>$i-$start+1, 'max'=>$max-$start ]);
+		
+		list('localFilePath' => $file, 'filenameLocal' => $filenameLocal) = makeDataFromFileIndex_smiley($i);
+	
+		// Check local file so that if there's a load issue the update script still uses the current saved version
+		if(file_exists($file)) {
+			$banners[] = $filenameLocal;
+			$breakCount = 0;
+		} else {
+			$breakCount++;
+			if($breakCount > 5) { break; }
+		}
+	}
+	
+	return $banners;
 }

@@ -26,6 +26,8 @@
 		"tab_anvil":			{ "text":"Städ" },
 		"tab_cannonball":		{ "text":"Kanonkula", "scale":0.8 },
 		"tab_balloon":			{ "text":"Ballong" },
+		
+		"tab_other":			{ "text":"Annat" },
 		"tab_cartouche":		{ "text":"Cartouche", "scale":0.85 },
 		"tab_badge":			{ "text":"Badge" },
 		

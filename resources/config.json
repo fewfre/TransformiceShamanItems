@@ -43,5 +43,11 @@
 		"x_462L.png",
 		"x_463L.png",
 		"x_464L.png"
+	],
+	
+	"banners": [
+		"banners/1.png",
+		"banners/2.png",
+		"banners/3.png"
 	]
 }
