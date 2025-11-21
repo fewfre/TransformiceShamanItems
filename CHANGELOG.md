@@ -1,6 +1,7 @@
 ## V1.14 - 18 October 2025
 - Added banners
 - Added a new "Other" tab, and moved cartouches, badges, and the new banner buttons into it
+- (8 Nov) pl translation updated + fixed "restore auto save" button to change width to fit text
 
 
 ## V1.13b - 10 August 2025

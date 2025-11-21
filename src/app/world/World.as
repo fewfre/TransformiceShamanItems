@@ -26,6 +26,7 @@ package app.world
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 	import app.world.events.ItemDataEvent;
+	import com.fewfre.data.I18n;
 	
 	public class World extends MovieClip
 	{
@@ -292,6 +293,11 @@ package app.world
 					// If auto saved outfit, prompt user to use or not
 					(_restoreAutoSaveBtn = new GameButton(120, 16)).setText("restore_auto_save_btn", { size:10 }).setOrigin(0.5).move(185, 90).setData({ look:autoSavedLook }).appendTo(tParent)
 						.onButtonClick(function(e:FewfEvent):void{ _useShareCode(e.data.look, true); });
+					// Update button width to match text
+					_restoreAutoSaveBtn.resize(_restoreAutoSaveBtn.Text.width + 10, 16);
+					Fewf.dispatcher.addEventListener(I18n.FILE_UPDATED, function(e):void{
+						if(_restoreAutoSaveBtn) _restoreAutoSaveBtn.resize(_restoreAutoSaveBtn.Text.width + 10, 16);
+					});
 				}, 100);
 			}
 		}
