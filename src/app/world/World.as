@@ -258,7 +258,8 @@ package app.world
 			}
 			
 			// Now update pose
-			_character.outfitData.parseShareCode(pCode);
+			var valid:Boolean = _character.outfitData.parseShareCode(pCode);
+			if(!valid) { throw new Error("invalid"); }
 			_character.updateItem();
 			
 			// for each(var tType:ItemType in ItemType.TYPES_WITH_SHOP_PANES) { _refreshButtonCustomizationForItemData(_character.getItemData(tType)); }

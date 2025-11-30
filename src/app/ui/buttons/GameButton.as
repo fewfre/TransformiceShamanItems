@@ -9,6 +9,9 @@ package app.ui.buttons
 	import com.fewfre.utils.FewfDisplayUtils;
 	import flash.geom.Rectangle;
 	import com.fewfre.display.TextTranslated;
+	import flash.display.Bitmap;
+	import flash.events.Event;
+	import com.fewfre.display.LoadedBitmapHolder;
 	
 	public class GameButton extends ButtonBase
 	{
@@ -57,9 +60,17 @@ package app.ui.buttons
 				.root;
 			
 			var tBounds:Rectangle = _image.getBounds(_image);
-			// Image's anchor is already centered from above, so alter postion to have image truly centered
+			// Image's anchor is already centered from above, so translate position to have image truly centered
 			_image.x -= (tBounds.width / 2 + tBounds.left)*_image.scaleX;
 			_image.y -= (tBounds.height / 2 + tBounds.top)*_image.scaleY;
+			
+			// If bitmap and unloaded (no width), properly resize image after it loads - check image width before type since less expensive 
+			if(pImage && pImage is LoadedBitmapHolder) {
+				(pImage as LoadedBitmapHolder).onLoad(function(e:Event){
+					if(!pImage) { return; }
+					setImage(_image, pDefaultScale);
+				});
+			}
 			return this;
 		}
 

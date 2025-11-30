@@ -10,6 +10,8 @@ package app.data
 	import flash.geom.*;
 	import flash.net.*;
 	import com.fewfre.display.DisplayWrapper;
+	import com.fewfre.display.LoadedBitmapHolder;
+	import app.ui.screens.LoadingSpinner;
 
 	public class GameAssets
 	{
@@ -284,9 +286,10 @@ package app.data
 		*****************************/
 		public static function getItemImage(pData:ItemData) : MovieClip {
 			if(pData.isBitmap()) {
-				var mc = new MovieClip();
-				mc.addChild((pData as BitmapItemData).getSmallImage());
-				return mc;
+				// var mc = new MovieClip();
+				// mc.addChild((pData as BitmapItemData).getSmallImage());
+				// return mc;
+				return new LoadedBitmapHolder((pData as BitmapItemData).getSmallImage(), new LoadingSpinner({ speedScale:0.5 }));
 			}
 			var tItem:MovieClip = new pData.itemClass();
 			colorDefault(tItem);

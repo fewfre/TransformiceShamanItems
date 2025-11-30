@@ -81,7 +81,7 @@ package app.world.data
 		public function parseShareCode(pCode:String) : Boolean {
 			if(!pCode) return true; // true since technically no errors, just an empty share code?
 			
-			if(pCode.indexOf("=") > -1) {
+			if(pCode.indexOf("=") > -1 && pCode.length > 1/* encase user is trying to type code in manually */) {
 				return _parseFewfreSyntax(pCode);
 			} else {
 				return false;

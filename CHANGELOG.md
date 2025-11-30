@@ -2,6 +2,8 @@
 - Added banners
 - Added a new "Other" tab, and moved cartouches, badges, and the new banner buttons into it
 - (8 Nov) pl translation updated + fixed "restore auto save" button to change width to fit text
+- (20 Nov) Fixed bug with bitmap images inside a favorites list causing it to not scale correctly and overlap other buttons
+- (30 Nov) Clipboard no longer shows when running tool chooser swf outside of AIR app (which is required for it to work).
 
 
 ## V1.13b - 10 August 2025

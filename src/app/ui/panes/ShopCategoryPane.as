@@ -21,6 +21,7 @@ package app.ui.panes
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import com.fewfre.display.LoadedBitmapHolder;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -137,19 +138,10 @@ package app.ui.panes
 		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : PushButton {
 			var shopItemButton : PushButton = new PushButton(grid.cellSize).setAllowToggleOff(false).setData({ type:_type, itemData:pItemData }) as PushButton;
 			
-			var shopItem : Bitmap = pItemData.getSmallImage();
+			var shopItem : LoadedBitmapHolder = new LoadedBitmapHolder(pItemData.getSmallImage(), new LoadingSpinner({ speedScale:0.5 }))
 			shopItemButton.setImage(shopItem);
-			if(shopItem.width == 0) {
-				shopItemButton.setImage(new LoadingSpinner({ speedScale:0.5 }), 0.75);
-			}
 			
-			shopItem.addEventListener(Event.COMPLETE, function(e:Event){
-				// Bitmap image from before has loaded, but now needs to be resized/fitted, so just pass it back in.
-				shopItemButton.setImage(e.currentTarget as Bitmap);
-			});
-
-			
-			shopItem.scaleX = shopItem.scaleY = 1; // This scale needed since it's otherwise set to 0 by autosizer if bitmap isn't loaded yet
+			// shopItem.scaleX = shopItem.scaleY = 1; // This scale needed since it's otherwise set to 0 by autosizer if bitmap isn't loaded yet
 			return shopItemButton;
 		}
 		

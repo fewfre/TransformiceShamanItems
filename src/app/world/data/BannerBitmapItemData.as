@@ -6,7 +6,6 @@ package app.world.data
 	import com.fewfre.utils.Fewf;
 	import flash.events.Event;
 	import com.fewfre.utils.FewfDisplayUtils;
-	import app.ui.screens.LoadingSpinner;
 
 	public class BannerBitmapItemData extends BitmapItemData
 	{
