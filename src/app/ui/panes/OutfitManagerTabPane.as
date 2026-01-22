@@ -136,7 +136,7 @@ package app.ui.panes
 		}
 		
 		public function _addLookButton(lookEntry:LookEntry) : void {
-			var lookMC = new ItemDisplay(new OutfitData().parseShareCodeSelf(lookEntry.lookCode).getCurrentItemData());
+			var lookMC = new ItemDisplay(new OutfitData(true).parseShareCodeSelf(lookEntry.lookCode).getCurrentItemData());
 			var cell:Sprite = new Sprite();
 			var actionTray:Sprite = new Sprite(); actionTray.alpha = 0;
 			

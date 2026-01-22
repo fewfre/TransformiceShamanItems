@@ -34,7 +34,7 @@ package app.world
 		private var _character     : CustomItem;
 		private var _panes         : WorldPaneManager;
 
-		private var _shopTabs       : ShopTabList;
+		private var _shopTabs      : ShopTabList;
 		private var _toolbox       : Toolbox;
 		private var _restoreAutoSaveBtn: GameButton;
 		
