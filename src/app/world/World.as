@@ -308,6 +308,7 @@ package app.world
 			}
 		}
 		
+	//#region Saving
 		private function _getHardcodedSaveScale() : Number {
 			var hardcodedSaveScale:Object = Fewf.sharedObject.getData(ConstantsApp.SHARED_OBJECT_KEY_HARDCODED_SAVE_SCALE);
 			return hardcodedSaveScale ? hardcodedSaveScale as Number : 0;
@@ -352,7 +353,9 @@ package app.world
 			}
 			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
 		}
+	//#endregion Saving
 
+	//#region Item Change Logic
 		// Note: does not automatically de-select previous buttons / infobars; do that before calling this
 		// This function is required when setting data via parseParams
 		private function _updateUIBasedOnCharacter() : void {
@@ -465,98 +468,98 @@ package app.world
 			var pane:ShopCategoryPane = getShopPane(pType);
 			pane.chooseRandomItem();
 		}
+	//#endregion Item Change Logic
 
-		//{REGION Screen Logic
-			private function _onShareButtonClicked(e:Event) : void {
-				var tURL = "";
-				try {
-					if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
-						tURL = _character.outfitData.stringify_fewfreSyntax();
-					} else {
-						tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-						tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
-					}
-				} catch (error:Error) {
-					tURL = "<error creating link>";
-				};
-
-				_shareScreen.open(tURL, _character.outfit);
-				addChild(_shareScreen);
-			}
-			private function _onShareScreenClosed(e:Event) : void { removeChild(_shareScreen); }
-
-			private function _onLangButtonClicked(e:Event) : void { _langScreen.open(); addChild(_langScreen); }
-			private function _onLangScreenClosed(e:Event) : void { removeChild(_langScreen); }
-
-			private function _onAboutButtonClicked(e:Event) : void { _aboutScreen.open(); addChild(_aboutScreen); }
-			private function _onAboutScreenClosed(e:Event) : void { removeChild(_aboutScreen); }
-		//}END Screen Logic
-
-		//{REGION Color Tab
-			private function _onColorPickChanged(e:FewfEvent):void {
-				if(e.data.allUpdated) {
-					_character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
+	//#region Screen Logic
+		private function _onShareButtonClicked(e:Event) : void {
+			var tURL = "";
+			try {
+				if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
+					tURL = _character.outfitData.stringify_fewfreSyntax();
 				} else {
-					_character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
+					tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
+					tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
 				}
-				_refreshSelectedItemColor(this.currentlyColoringType);
-			}
+			} catch (error:Error) {
+				tURL = "<error creating link>";
+			};
 
-			private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
-				// Updated preview data
-				GameAssets.swatchHoverPreviewData = pEvent.data;
-				// refresh render for anything that uses it
-				_refreshSelectedItemColor(this.currentlyColoringType);
+			_shareScreen.appendTo(this).open(tURL, _character.outfit);
+		}
+		private function _onShareScreenClosed(e:Event) : void { _shareScreen.removeSelf(); }
+
+		private function _onLangButtonClicked(e:Event) : void { _langScreen.appendTo(this).open(); }
+		private function _onLangScreenClosed(e:Event) : void { _langScreen.removeSelf(); }
+
+		private function _onAboutButtonClicked(e:Event) : void { _aboutScreen.appendTo(this).open(); }
+		private function _onAboutScreenClosed(e:Event) : void { _aboutScreen.removeSelf(); }
+	//}END Screen Logic
+
+	//#region Color Tab
+		private function _onColorPickChanged(e:FewfEvent):void {
+			if(e.data.allUpdated) {
+				_character.getItemData(this.currentlyColoringType).colors = e.data.allColors;
+			} else {
+				_character.getItemData(this.currentlyColoringType).colors[e.data.colorIndex] = uint(e.data.color);
 			}
+			_refreshSelectedItemColor(this.currentlyColoringType);
+		}
+
+		private function _onColorPickHoverPreview(pEvent:FewfEvent) : void {
+			// Updated preview data
+			GameAssets.swatchHoverPreviewData = pEvent.data;
+			// refresh render for anything that uses it
+			_refreshSelectedItemColor(this.currentlyColoringType);
+		}
+		
+		private function _refreshSelectedItemColor(pType:ItemType) : void {
+			_character.updateItem();
 			
-			private function _refreshSelectedItemColor(pType:ItemType) : void {
-				_character.updateItem();
-				
-				var tPane:ShopCategoryPane = getShopPane(pType);
-				var tItemData:ItemData = _character.getItemData(pType);
-				if(!tItemData) { return; }
-				
-				_refreshButtonCustomizationForItemData(tItemData);
-				tPane.infobar.refreshItemImageUsingCurrentItemData();
-				_panes.colorPickerPane.infobar.refreshItemImageUsingCurrentItemData();
-			}
+			var tPane:ShopCategoryPane = getShopPane(pType);
+			var tItemData:ItemData = _character.getItemData(pType);
+			if(!tItemData) { return; }
 			
-			private function _refreshButtonCustomizationForItemData(pItemData:ItemData) : void {
-				if(!pItemData) { return; }
-				var tPane:ShopCategoryPane = getShopPane(pItemData.type);
-				tPane.refreshButtonImage(pItemData);
-			}
+			_refreshButtonCustomizationForItemData(tItemData);
+			tPane.infobar.refreshItemImageUsingCurrentItemData();
+			_panes.colorPickerPane.infobar.refreshItemImageUsingCurrentItemData();
+		}
+		
+		private function _refreshButtonCustomizationForItemData(pItemData:ItemData) : void {
+			if(!pItemData) { return; }
+			var tPane:ShopCategoryPane = getShopPane(pItemData.type);
+			tPane.refreshButtonImage(pItemData);
+		}
 
-			private function _colorButtonClicked(pType:ItemType) : void {
-				if(_character.getItemData(this.currentlyColoringType) == null) { return; }
+		private function _colorButtonClicked(pType:ItemType) : void {
+			if(_character.getItemData(this.currentlyColoringType) == null) { return; }
 
-				var tData:ItemData = getShopPane(pType).infobar.itemData;
-				_panes.colorPickerPane.infobar.addInfo( tData, GameAssets.getItemImage(tData) );
-				this.currentlyColoringType = pType;
-				_panes.colorPickerPane.init( tData.uniqId(), tData.colors, tData.defaultColors );
-				_panes.openPane(WorldPaneManager.COLOR_PANE);
-				_refreshSelectedItemColor(pType);
-			}
+			var tData:ItemData = getShopPane(pType).infobar.itemData;
+			_panes.colorPickerPane.infobar.addInfo( tData, GameAssets.getItemImage(tData) );
+			this.currentlyColoringType = pType;
+			_panes.colorPickerPane.init( tData.uniqId(), tData.colors, tData.defaultColors );
+			_panes.openPane(WorldPaneManager.COLOR_PANE);
+			_refreshSelectedItemColor(pType);
+		}
 
-			private function _onColorPickerBackClicked(pEvent:Event):void {
-				_panes.openShopPane(_panes.colorPickerPane.infobar.itemData.type);
-			}
+		private function _onColorPickerBackClicked(pEvent:Event):void {
+			_panes.openShopPane(_panes.colorPickerPane.infobar.itemData.type);
+		}
 
-			private function _eyeDropButtonClicked(pType:ItemType) : void {
-				if(_character.getItemData(pType) == null) { return; }
+		private function _eyeDropButtonClicked(pType:ItemType) : void {
+			if(_character.getItemData(pType) == null) { return; }
 
-				var tData:ItemData = getShopPane(pType).infobar.itemData;
-				var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
-				var tItem2:MovieClip = !tData.isBitmap() ? GameAssets.getColoredItemImage(tData) : (tData as BitmapItemData).getLargeOutfitImageAsMovieClip();
-				_panes.colorFinderPane.infobar.addInfo( tData, tItem );
-				this.currentlyColoringType = pType;
-				_panes.colorFinderPane.setItem(tItem2);
-				_panes.openPane(WorldPaneManager.COLOR_FINDER_PANE);
-			}
+			var tData:ItemData = getShopPane(pType).infobar.itemData;
+			var tItem:MovieClip = GameAssets.getColoredItemImage(tData);
+			var tItem2:MovieClip = !tData.isBitmap() ? GameAssets.getColoredItemImage(tData) : (tData as BitmapItemData).getLargeOutfitImageAsMovieClip();
+			_panes.colorFinderPane.infobar.addInfo( tData, tItem );
+			this.currentlyColoringType = pType;
+			_panes.colorFinderPane.setItem(tItem2);
+			_panes.openPane(WorldPaneManager.COLOR_FINDER_PANE);
+		}
 
-			private function _onColorFinderBackClicked(pEvent:Event):void {
-				_panes.openShopPane(_panes.colorFinderPane.infobar.itemData.type);
-			}
-		//}END Color Tab
+		private function _onColorFinderBackClicked(pEvent:Event):void {
+			_panes.openShopPane(_panes.colorFinderPane.infobar.itemData.type);
+		}
+	//#endregion Color Tab
 	}
 }

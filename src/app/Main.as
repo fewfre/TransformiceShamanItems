@@ -41,7 +41,7 @@ package app
 
 			_loaderDisplay = new LoaderDisplay(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y).appendTo(this);
 			
-			_errorScreen = new ErrorScreen().on(Event.CLOSE, function(e){ removeChild(_errorScreen); });
+			_errorScreen = new ErrorScreen().on(Event.CLOSE, function(e){ _errorScreen.removeSelf(); });
 			Fewf.dispatcher.addEventListener(ErrorEvent.ERROR, function(e:ErrorEvent){ addChild(_errorScreen); _errorScreen.open(e.text || 'Unknown Error'); });
 			
 			_startPreload();
