@@ -2,13 +2,12 @@ package app.ui.screens
 {	
 	import app.data.ConstantsApp;
 	import app.data.GameAssets;
-	import app.ui.buttons.ScaleButton;
 	import app.ui.buttons.GameButton;
+	import app.ui.buttons.ScaleButton;
 	import com.fewfre.data.I18n;
 	import com.fewfre.data.I18nLangData;
 	import com.fewfre.display.RoundRectangle;
 	import com.fewfre.events.FewfEvent;
-	import com.fewfre.utils.AssetManager;
 	import com.fewfre.utils.Fewf;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -73,10 +72,9 @@ package app.ui.screens
 			Fewf.sharedObjectGlobal.setData(ConstantsApp.SHARED_OBJECT_KEY_GLOBAL_LANG, tLangData.code);
 			_close();
 			
-			var tLoaderDisplay:LoaderDisplay = addChild( new LoaderDisplay() ) as LoaderDisplay;
+			var tLoaderDisplay:LoaderDisplay = new LoaderDisplay().appendTo(this);
 			Fewf.i18n.loadLanguagesIfNeededAndUseLastLang([ tLangData.code ], function():void{
-				tLoaderDisplay.destroy();
-				removeChild( tLoaderDisplay );
+				tLoaderDisplay.removeSelf().destroy();
 				tLoaderDisplay = null;
 			});
 		}

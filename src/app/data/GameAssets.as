@@ -51,9 +51,9 @@ package app.data
 			balloons = _setupCostumeList(ItemType.BALLOON, "$Objet_28", { pad:2 });
 			cartouches = _setupCostumeList(ItemType.CARTOUCHE, "$Macaron_", {});
 			badges = new Vector.<ItemData>();
-			if(Fewf.assets.getData("config").badges) {
+			if(Fewf.config.badges) {
 				var url:String, urlSmall:String;
-				for each(var badgeFile:String in Fewf.assets.getData("config").badges) {
+				for each(var badgeFile:String in Fewf.config.badges) {
 					url = "badges/"+badgeFile;
 					urlSmall = "badges/"+badgeFile.replace('L', '');
 					badges.push(new BitmapItemData(ItemType.BADGE, url, urlSmall));
@@ -64,8 +64,8 @@ package app.data
 				}
 			}
 			banners = new Vector.<ItemData>();
-			if(Fewf.assets.getData("config").banners) {
-				for each(var bannerFileUrl:String in Fewf.assets.getData("config").banners) {
+			if(Fewf.config.banners) {
+				for each(var bannerFileUrl:String in Fewf.config.banners) {
 					banners.push(new BannerBitmapItemData(ItemType.BANNER, bannerFileUrl));
 				}
 				// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on banners tab

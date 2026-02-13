@@ -4,29 +4,28 @@ package app.world
 	import app.ui.*;
 	import app.ui.buttons.*;
 	import app.ui.panes.*;
+	import app.ui.panes.ColorFinderPane;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.base.SidePane;
-	import app.ui.panes.ColorFinderPane;
 	import app.ui.panes.colorpicker.ColorPickerTabPane;
-	import app.ui.panes.ColorPickerTabPane;
 	import app.ui.panes.infobar.GridManagementWidget;
 	import app.ui.panes.infobar.Infobar;
 	import app.ui.screens.*;
 	import app.world.data.*;
 	import app.world.elements.*;
-	
+	import app.world.events.ItemDataEvent;
+
+	import com.fewfre.data.I18n;
 	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
 	import com.fewfre.utils.*;
 	import ext.ParentApp;
-	
+
 	import flash.display.*;
-	import flash.events.*
+	import flash.events.*;
 	import flash.external.ExternalInterface;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
-	import app.world.events.ItemDataEvent;
-	import com.fewfre.data.I18n;
 	
 	public class World extends MovieClip
 	{

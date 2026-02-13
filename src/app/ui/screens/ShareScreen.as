@@ -82,7 +82,7 @@ package app.ui.screens
 		///////////////////////
 		// Imgur
 		///////////////////////
-		private function _getImgurUploadUrl() : String { return Fewf.assets.getData("config").upload2imgur_url; }
+		private function _getImgurUploadUrl() : String { return Fewf.config.upload2imgur_url; }
 		
 		private function _onImgurButtonClicked(e:Event) : void {
 			_imgurTray.visible = true;

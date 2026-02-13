@@ -5,6 +5,7 @@
 - (20 Nov) Fixed bug with bitmap images inside a favorites list causing it to not scale correctly and overlap other buttons
 - (30 Nov) Clipboard no longer shows when running tool chooser swf outside of AIR app (which is required for it to work)
 - (21 Jan 2026) Fixed bug with outfit manager not properly making copies of outfit in the correct way
+- (12 Feb 2026) [Code] `Fewf.assets.getData("config")` shortened to `Fewf.config` for ease of use and consistency, as well as import cleanup
 
 
 ## V1.13b - 10 August 2025

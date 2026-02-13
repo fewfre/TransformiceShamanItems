@@ -39,7 +39,7 @@ package app
 
 			BrowserMouseWheelPrevention.init(stage);
 
-			_loaderDisplay = addChild( new LoaderDisplay(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y) ) as LoaderDisplay;
+			_loaderDisplay = new LoaderDisplay(ConstantsApp.CENTER_X, ConstantsApp.CENTER_Y).appendTo(this);
 			
 			_errorScreen = new ErrorScreen().on(Event.CLOSE, function(e){ removeChild(_errorScreen); });
 			Fewf.dispatcher.addEventListener(ErrorEvent.ERROR, function(e:ErrorEvent){ addChild(_errorScreen); _errorScreen.open(e.text || 'Unknown Error'); });
@@ -54,7 +54,7 @@ package app
 		}
 		
 		private function _onPreloadComplete() : void {
-			_config = Fewf.assets.getData("config");
+			_config = Fewf.config;
 			_systemDetectedDefaultLang = Fewf.i18n.getSystemDetectedDefaultLangCodeOrFallback();
 			
 			if(_config) {
@@ -97,12 +97,11 @@ package app
 			}
 			for(var i:int = 0; i < tPack.length; i++) { tPacks.push(prefix+tPack[i]); }
 			
-			_load(tPacks, Fewf.assets.getData("config").cachebreaker, _onLoadComplete);
+			_load(tPacks, Fewf.config.cachebreaker, _onLoadComplete);
 		}
 		
 		private function _onLoadComplete() : void {
-			_loaderDisplay.destroy();
-			removeChild( _loaderDisplay );
+			_loaderDisplay.removeSelf().destroy();
 			_loaderDisplay = null;
 			
 			_world = addChild(new World(stage)) as World;

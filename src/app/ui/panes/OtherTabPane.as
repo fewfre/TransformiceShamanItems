@@ -3,20 +3,13 @@ package app.ui.panes
 	import app.data.*;
 	import app.ui.buttons.*;
 	import app.ui.panes.base.SidePane;
-	import app.world.data.ItemData;
-	import app.world.data.OutfitData;
-	import app.world.elements.Character;
-	import app.world.elements.Pose;
-	import com.fewfre.display.*;
-	import com.fewfre.events.FewfEvent;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import flash.display.DisplayObject;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import com.fewfre.utils.Fewf;
-	import app.world.data.BitmapItemData;
-	import flash.display.Sprite;
 	import app.ui.screens.LoadingSpinner;
+	import app.world.data.BitmapItemData;
+	import com.fewfre.display.*;
+	import com.fewfre.utils.Fewf;
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	import flash.events.Event;
 
 	public class OtherTabPane extends SidePane
 	{
@@ -33,7 +26,7 @@ package app.ui.panes
 			/////////////////////////////
 			// Sub Panes Section
 			/////////////////////////////
-			var hasBadges:Boolean = !!Fewf.assets.getData("config").badges, hasBanners = !!Fewf.assets.getData("config").banners;
+			var hasBadges:Boolean = !!Fewf.config.badges, hasBanners = !!Fewf.config.banners;
 			// Grid
 			xx = 20;
 			var grid:Grid = new Grid(ConstantsApp.PANE_WIDTH - 32, 1 + hasBadges + hasBanners).move(xx,0).appendTo(this);
