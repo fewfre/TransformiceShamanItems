@@ -1,12 +1,14 @@
 package app.ui.panes
 {
 	import app.data.*;
-	import app.ui.buttons.*;
+	import app.ui.buttons.GameButton;
+	import app.ui.common.LoadingSpinner;
 	import app.ui.panes.base.SidePane;
-	import app.ui.screens.LoadingSpinner;
 	import app.world.data.BitmapItemData;
+
 	import com.fewfre.display.*;
 	import com.fewfre.utils.Fewf;
+
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -71,7 +73,7 @@ package app.ui.panes
 		private function _addLoaderSpinnerIfNeeded(pImage:DisplayObject, pX:Number, pY:Number, pParent:Sprite) : void {
 			if(!pImage || pImage.width > 0) return;
 			
-			var spinner:LoadingSpinner = new LoadingSpinner({ speedScale:0.5 }).move(pX, pY+22).appendTo(pParent);
+			var spinner:LoadingSpinner = new LoadingSpinner().setSpeedScale(0.5).move(pX, pY+22).appendTo(pParent);
 			spinner.scaleX = spinner.scaleY = 0.60;
 			
 			pImage.addEventListener(Event.COMPLETE, function(e:Event){

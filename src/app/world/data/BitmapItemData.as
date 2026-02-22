@@ -1,12 +1,10 @@
 package app.world.data
 {
-	import app.data.*;
-	import flash.display.*;
-	import flash.geom.*;
+	import app.data.ItemType;
+	import app.ui.common.LoadingSpinner;
 	import com.fewfre.utils.Fewf;
+	import flash.display.*;
 	import flash.events.Event;
-	import com.fewfre.utils.FewfDisplayUtils;
-	import app.ui.screens.LoadingSpinner;
 
 	public class BitmapItemData extends ItemData
 	{
@@ -56,7 +54,7 @@ package app.world.data
 				// We need a bg at the same size we plan to have mc be (160) so that auto scale logic will still be correct
 				var bg:MovieClip = new MovieClip();
 				bg.graphics.drawRect(-80, -80 - 16, 160, 160);
-				bg.addChild(new LoadingSpinner({ scale:2, speedScale:0.5, y:-16 }));
+				new LoadingSpinner(2).setSpeedScale(0.5).move(0, -16).appendTo(bg);
 				mc.addChild(bg);
 			}
 			return mc;

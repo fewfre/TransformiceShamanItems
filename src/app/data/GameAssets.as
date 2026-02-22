@@ -1,17 +1,14 @@
 package app.data
 {
-	import com.adobe.images.*;
-	import com.fewfre.utils.*;
-	import com.piterwilson.utils.ColorMathUtil;
 	import app.data.*;
+	import app.ui.common.LoadingSpinner;
 	import app.world.data.*;
-	import app.world.elements.*;
-	import flash.display.*;
-	import flash.geom.*;
-	import flash.net.*;
 	import com.fewfre.display.DisplayWrapper;
 	import com.fewfre.display.LoadedBitmapHolder;
-	import app.ui.screens.LoadingSpinner;
+	import com.fewfre.utils.*;
+	import com.piterwilson.utils.ColorMathUtil;
+	import flash.display.*;
+	import flash.geom.*;
 
 	public class GameAssets
 	{
@@ -289,7 +286,7 @@ package app.data
 				// var mc = new MovieClip();
 				// mc.addChild((pData as BitmapItemData).getSmallImage());
 				// return mc;
-				return new LoadedBitmapHolder((pData as BitmapItemData).getSmallImage(), new LoadingSpinner({ speedScale:0.5 }));
+				return new LoadedBitmapHolder((pData as BitmapItemData).getSmallImage(), new LoadingSpinner().setSpeedScale(0.5));
 			}
 			var tItem:MovieClip = new pData.itemClass();
 			colorDefault(tItem);

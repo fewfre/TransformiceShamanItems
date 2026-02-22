@@ -7,21 +7,20 @@ package app.ui.panes
 	import app.ui.buttons.GameButton;
 	import app.ui.buttons.PushButton;
 	import app.ui.buttons.ScaleButton;
+	import app.ui.common.LoadingSpinner;
 	import app.ui.panes.base.ButtonGridSidePane;
 	import app.ui.panes.infobar.Infobar;
-	import app.ui.screens.LoadingSpinner;
 	import app.world.data.BitmapItemData;
 	import app.world.data.ItemData;
 	import app.world.events.ItemDataEvent;
+
 	import com.fewfre.display.Grid;
+	import com.fewfre.display.LoadedBitmapHolder;
 	import com.fewfre.events.FewfEvent;
-	import com.fewfre.utils.Fewf;
 	import com.fewfre.utils.FewfUtils;
-	import flash.display.Bitmap;
+
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
-	import flash.events.Event;
-	import com.fewfre.display.LoadedBitmapHolder;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -138,7 +137,7 @@ package app.ui.panes
 		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : PushButton {
 			var shopItemButton : PushButton = new PushButton(grid.cellSize).setAllowToggleOff(false).setData({ type:_type, itemData:pItemData }) as PushButton;
 			
-			var shopItem : LoadedBitmapHolder = new LoadedBitmapHolder(pItemData.getSmallImage(), new LoadingSpinner({ speedScale:0.5 }))
+			var shopItem : LoadedBitmapHolder = new LoadedBitmapHolder(pItemData.getSmallImage(), new LoadingSpinner().setSpeedScale(0.5))
 			shopItemButton.setImage(shopItem);
 			
 			// shopItem.scaleX = shopItem.scaleY = 1; // This scale needed since it's otherwise set to 0 by autosizer if bitmap isn't loaded yet

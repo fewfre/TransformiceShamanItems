@@ -18,6 +18,7 @@ package app.world
 	import com.fewfre.data.I18n;
 	import com.fewfre.display.*;
 	import com.fewfre.events.FewfEvent;
+	import com.fewfre.loaders.SimpleUrlLoader;
 	import com.fewfre.utils.*;
 	import ext.ParentApp;
 
@@ -37,9 +38,9 @@ package app.world
 		private var _toolbox       : Toolbox;
 		private var _restoreAutoSaveBtn: GameButton;
 		
-		private var _shareScreen   : ShareScreen;
 		private var _langScreen    : LangScreen;
 		private var _aboutScreen   : AboutScreen;
+		private var _shareScreen   : ShareScreen;
 
 		private var currentlyColoringType:ItemType=null;
 		
@@ -90,6 +91,8 @@ package app.world
 			var tShop:RoundRectangle = new RoundRectangle(ConstantsApp.SHOP_WIDTH, ConstantsApp.SHOP_HEIGHT).move(450, 10)
 				.appendTo(this).drawAsTray();
 			_panes = new WorldPaneManager().appendTo(tShop.root) as WorldPaneManager;
+			
+			_setupScreens();
 
 			/////////////////////////////
 			// Top Area
@@ -130,13 +133,6 @@ package app.world
 					.move(22, ConstantsApp.APP_HEIGHT-17-28)
 					.onButtonClick(function():void{ ParentApp.reopenSelectionLauncher()(); });
 			}
-			
-			/////////////////////////////
-			// Screens
-			/////////////////////////////
-			_shareScreen = new ShareScreen().on(Event.CLOSE, _onShareScreenClosed);
-			_langScreen = new LangScreen().on(Event.CLOSE, _onLangScreenClosed);
-			_aboutScreen = new AboutScreen().on(Event.CLOSE, _onAboutScreenClosed);
 
 			/////////////////////////////
 			// Create item panes
@@ -353,6 +349,17 @@ package app.world
 			}
 			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
 		}
+		
+		private function _getImgurUploadUrl() : String { return Fewf.config.upload2imgur_url; }
+		// pCallback: (resp:Object|*, error:string)=>void
+		private function _uploadToImgur(img:Sprite, pCallback:Function) : void {
+			var tBase64Png:String = FewfDisplayUtils.encodeBitmapDataAsBase64Png( FewfDisplayUtils.displayObjectToBitmapData(img, img.scaleX) );
+			new SimpleUrlLoader(_getImgurUploadUrl()).setToPost().addFormDataHeader()
+				.addData("base64", tBase64Png)
+				.onComplete(function(resp){ pCallback(resp); })
+				.onError(function(err:Error){ pCallback(null, "["+err.name+":"+err.errorID+"] "+err.message); })
+				.load();
+		}
 	//#endregion Saving
 
 	//#region Item Change Logic
@@ -471,28 +478,28 @@ package app.world
 	//#endregion Item Change Logic
 
 	//#region Screen Logic
-		private function _onShareButtonClicked(e:Event) : void {
-			var tURL = "";
-			try {
-				if(Fewf.isExternallyLoaded || !Fewf.isBrowserLoaded) {
-					tURL = _character.outfitData.stringify_fewfreSyntax();
-				} else {
-					tURL = ExternalInterface.call("eval", "window.location.origin+window.location.pathname");
-					tURL += "?"+_character.outfitData.stringify_fewfreSyntax();
-				}
-			} catch (error:Error) {
-				tURL = "<error creating link>";
-			};
-
-			_shareScreen.appendTo(this).open(tURL, _character.outfit);
+		private function _setupScreens() : void {
+			_langScreen = new LangScreen().onCloseRemoveSelf();
+			_aboutScreen = new AboutScreen().onCloseRemoveSelf();
+			_shareScreen = new ShareScreen(!!_getImgurUploadUrl()).onCloseRemoveSelf().on(ShareScreen.IMGUR_UPLOAD_CLICKED, _onShareUploadToImgurClicked);
 		}
-		private function _onShareScreenClosed(e:Event) : void { _shareScreen.removeSelf(); }
 
 		private function _onLangButtonClicked(e:Event) : void { _langScreen.appendTo(this).open(); }
-		private function _onLangScreenClosed(e:Event) : void { _langScreen.removeSelf(); }
-
 		private function _onAboutButtonClicked(e:Event) : void { _aboutScreen.appendTo(this).open(); }
-		private function _onAboutScreenClosed(e:Event) : void { _aboutScreen.removeSelf(); }
+		
+		private function _onShareButtonClicked(e:Event) : void {
+			var tFewfreCode:String = "";
+			try {
+				tFewfreCode = _character.outfitData.stringify_fewfreSyntax();
+			} catch (error:Error) {
+				tFewfreCode = "<error creating code>";
+			};
+
+			_shareScreen.appendTo(this).open(tFewfreCode);
+		}
+		private function _onShareUploadToImgurClicked(pEvent:Event) {
+			_uploadToImgur(_character.outfit, _shareScreen.handleImgurUploadResponse);
+		}
 	//}END Screen Logic
 
 	//#region Color Tab
