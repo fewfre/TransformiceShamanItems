@@ -7,7 +7,7 @@
 - (21 Jan 2026) Fixed bug with outfit manager not properly making copies of outfit in the correct way
 - (12 Feb 2026) [Code] `Fewf.assets.getData("config")` shortened to `Fewf.config` for ease of use and consistency, as well as import cleanup
 - (12 Feb 2026) [Code] minor rewrites/tweaks to `FancyInput` and some screens
-- (21 Feb 2026) [Code] Screen code minor rework & some imgur code split off into `Main` and accessed via events
+- (21 Feb 2026) [Code] Screen code minor rework, some imgur code split off into `Main` and accessed via events, and minor `I18n` rework
 
 
 ## V1.13b - 10 August 2025
