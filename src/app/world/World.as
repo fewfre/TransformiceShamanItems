@@ -350,11 +350,10 @@ package app.world
 			setTimeout(function(){ _toolbox.updateClipboardButton(true); }, 750);
 		}
 		
-		private function _getImgurUploadUrl() : String { return Fewf.config.upload2imgur_url; }
 		// pCallback: (resp:Object|*, error:string)=>void
 		private function _uploadToImgur(img:Sprite, pCallback:Function) : void {
 			var tBase64Png:String = FewfDisplayUtils.encodeBitmapDataAsBase64Png( FewfDisplayUtils.displayObjectToBitmapData(img, img.scaleX) );
-			new SimpleUrlLoader(_getImgurUploadUrl()).setToPost().addFormDataHeader()
+			new SimpleUrlLoader(Config.uploadToImgurUrl).setToPost().addFormDataHeader()
 				.addData("base64", tBase64Png)
 				.onComplete(function(resp){ pCallback(resp); })
 				.onError(function(err:Error){ pCallback(null, "["+err.name+":"+err.errorID+"] "+err.message); })
@@ -481,7 +480,7 @@ package app.world
 		private function _setupScreens() : void {
 			_langScreen = new LangScreen().onCloseRemoveSelf();
 			_aboutScreen = new AboutScreen().onCloseRemoveSelf();
-			_shareScreen = new ShareScreen(!!_getImgurUploadUrl()).onCloseRemoveSelf().on(ShareScreen.IMGUR_UPLOAD_CLICKED, _onShareUploadToImgurClicked);
+			_shareScreen = new ShareScreen(!!Config.uploadToImgurUrl).onCloseRemoveSelf().on(ShareScreen.IMGUR_UPLOAD_CLICKED, _onShareUploadToImgurClicked);
 		}
 
 		private function _onLangButtonClicked(e:Event) : void { _langScreen.appendTo(this).open(); }

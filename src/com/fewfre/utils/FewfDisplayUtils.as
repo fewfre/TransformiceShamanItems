@@ -8,7 +8,6 @@ package com.fewfre.utils
 	import flash.display.*;
 	import flash.events.*;
 	import flash.geom.*;
-	import flash.net.*;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 	// import flash.media.CameraRoll;
@@ -317,71 +316,30 @@ package com.fewfre.utils
 			saveImageDataToDevice(sheetData.bitmapData, pName+"_"+sheetData.frameWidth+"x"+sheetData.frameHeight+"_"+sheetData.framesCount+"frames", 'png');
 		}
 		
-		// Converts the image to a PNG bitmap and prompts the user to save.
-		public static function saveAsAnimatedGif(mc:MovieClip, pName:String, scale:Number=1, pFormat:String=null, pFinished:Function=null) {
-			if(_deviceUsesCameraRoll()) {
-				handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to mobile camera roll - please use desktop app or disable animation to copy as a still image"));
-				pFinished && pFinished();
-				return;
-			}
-			_fetchGif(mc, scale, pFormat, function(data:*, error:Error){
-				if(error) { handleErrorMessage(error); pFinished && pFinished(); return; }
+		// // Converts the image to a PNG bitmap and prompts the user to save.
+		// public static function saveAsAnimatedGif(mc:MovieClip, pName:String, scale:Number=1, pFormat:String=null, pFinished:Function=null) {
+		// 	if(_deviceUsesCameraRoll()) {
+		// 		handleErrorMessage(new Error("Sorry, animated GIFs cannot be saved to mobile camera roll - please use desktop app or disable animation to copy as a still image"));
+		// 		pFinished && pFinished();
+		// 		return;
+		// 	}
+		// 	_fetchGif(mc, scale, pFormat, function(data:*, error:Error){
+		// 		if(error) { handleErrorMessage(error); pFinished && pFinished(); return; }
 				
-				saveImageDataToDevice(data, pName, pFormat ? pFormat : 'gif');
-				pFinished && pFinished();
-			});
-		}
-		private static function _fetchGif(mc:MovieClip, scale:Number, pFormat:String, pCallback:Function) {
-			var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, -1);//pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
-			var tPNG:ByteArray = PNGEncoder.encode(sheetData.bitmapData);
+		// 		saveImageDataToDevice(data, pName, pFormat ? pFormat : 'gif');
+		// 		pFinished && pFinished();
+		// 	});
+		// }
+		// private static function _fetchGif(mc:MovieClip, scale:Number, pFormat:String, pCallback:Function) {
+		// 	var sheetData:SpritesheetData = convertMovieClipToSpriteSheet(mc, scale, -1);//pFormat && pFormat != "gif" ? -1 : 0x6A7495); // give it a bg color since gifs don't support partial opacity
+		// 	var tPNG:ByteArray = PNGEncoder.encode(sheetData.bitmapData);
 			
-			var url = Fewf.config.spritesheet2gif_url;
-			if(!url) {
-				handleErrorMessage(new Error("GIF generation api not found.", 1));
-				return;
-			}
-			
-			var request:URLRequest = new URLRequest(url);
-			request.method = URLRequestMethod.POST;
-			// request.requestHeaders.push(new URLRequestHeader("Content-type", "application/octet-stream"));
-			request.requestHeaders.push(new URLRequestHeader("enctype", "multipart/form-data"));
-			
-			var requestVars:URLVariables = new URLVariables();
-			// requestVars.sheet = tPNG;
-			requestVars.sheet_base64 = encodeByteArrayAsString(tPNG);
-			requestVars.width = sheetData.frameWidth;
-			requestVars.height = sheetData.frameHeight;
-			requestVars.framescount = sheetData.framesCount;
-			requestVars.delay = (1 / Fewf.stage.frameRate) * 100; // 100 gif ticks in a second
-			if(pFormat) requestVars.format = pFormat;
-			
-			request.data = requestVars;
-			
- 
-			var urlLoader:URLLoader = new URLLoader();
-			urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
-			urlLoader.addEventListener(Event.COMPLETE, function tOnComplete(e:Event):void{
-				urlLoader.removeEventListener(Event.COMPLETE, tOnComplete);
-				// trace('complete', e.target.data);
-				pCallback(e.target.data, null);
-			});
-			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function(e:SecurityErrorEvent){ pCallback(null, new SecurityError(e.text, e.errorID)); }, false, 0, true);
-			var status:int = 500;
-			urlLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, function(e:HTTPStatusEvent):void{
-				trace('status', e, e.target);
-				status = e.status;
-				// if(e.status >= 400) {
-				// 	handleErrorMessage(new Error("[HTTP Error]", e.status));
-				// }
-			}, false, 0, true);
-			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, function(e:IOErrorEvent){
-				pCallback(null, new Error("[HTTP Error] "+(e.target.data || "Error connecting to GIF api - make sure internet is connected"), status));
-			}, false, 0, true);
-
-			try {
-				urlLoader.load(request);
-			} catch (e:Error) { pCallback(null, e); }
-		}
+		// 	try {
+		// 		SpriteSheetToGifLoader.triggerApiToConvertSpritesheetToGif(tPNG, sheetData.frameWidth, sheetData.frameHeight, sheetData.framesCount, pFormat, pCallback)
+		// 	} catch(err:Error) {
+		// 		handleErrorMessage(err);
+		// 	}
+		// }
 		
 		// https://stackoverflow.com/a/24896808/1411473
 		private static const ENCODE_CHARS : String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";

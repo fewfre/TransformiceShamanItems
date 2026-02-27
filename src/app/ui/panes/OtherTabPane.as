@@ -28,7 +28,7 @@ package app.ui.panes
 			/////////////////////////////
 			// Sub Panes Section
 			/////////////////////////////
-			var hasBadges:Boolean = !!Fewf.config.badges, hasBanners = !!Fewf.config.banners;
+			var hasBadges:Boolean = !!Config.badges, hasBanners = !!Config.banners;
 			// Grid
 			xx = 20;
 			var grid:Grid = new Grid(ConstantsApp.PANE_WIDTH - 32, 1 + hasBadges + hasBanners).move(xx,0).appendTo(this);

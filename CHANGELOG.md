@@ -1,3 +1,9 @@
+## V1.14b - 26 February 2026
+- [Code] minor rewrites/tweaks to `FancyInput` and some screens
+- [Code] Screen code minor rework, some imgur code split off into `Main` and accessed via events, and minor `I18n` rework
+- [Code] `Fewf.assets.getData("config")` logic moved to `data.Config` for ease of use and consistency. Also did some import cleanup
+
+
 ## V1.14 - 18 October 2025
 - Added banners
 - Added a new "Other" tab, and moved cartouches, badges, and the new banner buttons into it
@@ -5,9 +11,6 @@
 - (20 Nov) Fixed bug with bitmap images inside a favorites list causing it to not scale correctly and overlap other buttons
 - (30 Nov) Clipboard no longer shows when running tool chooser swf outside of AIR app (which is required for it to work)
 - (21 Jan 2026) Fixed bug with outfit manager not properly making copies of outfit in the correct way
-- (12 Feb 2026) [Code] `Fewf.assets.getData("config")` shortened to `Fewf.config` for ease of use and consistency, as well as import cleanup
-- (12 Feb 2026) [Code] minor rewrites/tweaks to `FancyInput` and some screens
-- (21 Feb 2026) [Code] Screen code minor rework, some imgur code split off into `Main` and accessed via events, and minor `I18n` rework
 
 
 ## V1.13b - 10 August 2025
