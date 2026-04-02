@@ -107,7 +107,7 @@ function updateShamanItemSingleItemFiles() {
 	);
 	foreach ($types as $typedata) {
 		list($type, $start, $typeName) = $typedata;
-		$max = ($start+100);
+		$max = ($start+1000);
 		
 		// Fetch headers and download any files that need downloading
 		$headerCheckUrlDataList = array_map(fn($i) => makeDataFromFileIndex_chamanes($type, $i), range($start, $max));
@@ -142,17 +142,25 @@ function updateBadges() {
 	$badgeDataList = array(); // Array<"filename.png", headers>
 	
 	$CHUNK = 50;
-	$originalStart = 352;
+	$originalStart = 0;
 	$BREAK_NUM = 5;
+	
+	$skip = range(74, 119);
 	
 	function makeDataFromFileIndex_badges($i) {
 		$filename = "x_{$i}L.png"; $filenameSmall = "x_{$i}.png";
 		return [
 			'filename' => $filename,
-			'filenameSmall' => $filenameSmall,
+			'filenameLocal' => "badges/$filename",
 			'localFilePath' => "../badges/$filename",
-			'localFilePathSmall' => "../badges/$filenameSmall",
 			'url' => "http://www.transformice.com/images/x_transformice/x_badges/$filename",
+			
+			'filenameLocal_manualupload' => "badges/u/$filename",
+			'localFilePath_manualupload' => "../badges/u/$filename",
+			
+			'filenameSmall' => $filenameSmall,
+			'filenameSmallLocal' => "badges/$filenameSmall",
+			'localFilePathSmall' => "../badges/$filenameSmall",
 			'urlSmall' => "http://www.transformice.com/images/x_transformice/x_badges/$filenameSmall"
 		];
 	}
@@ -177,11 +185,12 @@ function updateBadges() {
 		$chunkHeadersListSmall = fetchHeadersOnlyMulti($urlsSmall);
 		$len = min(count($chunkedDataList), count($chunkHeadersList));
 		for ($i = 0; $i < $len; $i++) {
+			if(in_array($start+$i, $skip)) { continue; } // skip badges in this range since they don't exist, and it's a large enough range it would trigger the breakCount unintentionally
 			$data = $chunkedDataList[$i];
 			$data['headers'] = $chunkHeadersList[$i];
 			$data['headersSmall'] = $chunkHeadersListSmall[$i];
 			
-			if($chunkHeadersList[$i] && $chunkHeadersList[$i]['exists'] && $chunkHeadersListSmall[$i] && $chunkHeadersListSmall[$i]['exists']) {
+			if($chunkHeadersListSmall[$i] && $chunkHeadersListSmall[$i]['exists']) {
 				$badgeDataList[] = $data;
 				$breakCount = 0;
 			} else {
@@ -206,12 +215,15 @@ function updateBadges() {
 	$badges = array();
 	$start = $originalStart;
 	$breakCount = 0; // quit early if enough 404s in a row
-	for ($i = $start; $i <= 1000; $i++) {
-		list('localFilePath' => $file, 'filename' => $filename) = makeDataFromFileIndex_badges($i);
+	for ($i = $start; $i <= 2000; $i++) {
+		if(in_array($i, $skip)) { continue; } // skip badges in this range since they don't exist, and it's a large enough range it would trigger the breakCount unintentionally
+		list('localFilePathSmall' => $fileSmall, 'localFilePath' => $fileLarge, 'localFilePath_manualupload' => $fileManualUpload,
+			'filenameSmallLocal' => $filenameSmall, 'filenameLocal' => $filenameLarge, 'filenameLocal_manualupload' => $filenameManualUpload) = makeDataFromFileIndex_badges($i);
 		
 		// Check local file so that if there's a load issue the update script still uses the current saved version
-		if(file_exists($file)) {
-			$badges[] = $filename;
+		if(file_exists($fileSmall)) {
+			// Large version should use the downloaded version if it exists, but if not, use the manually uploaded version if that exists, otherwise null
+			$badges[] = ["s" => $filenameSmall, "l" => file_exists($fileLarge) ? $filenameLarge : (file_exists($fileManualUpload) ? $filenameManualUpload : null)];
 			$breakCount = 0;
 		} else {
 			$breakCount++;

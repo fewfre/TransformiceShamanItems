@@ -21,6 +21,11 @@ package app.ui.panes
 
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import com.fewfre.display.DisplayWrapper;
+	import app.world.data.BadgeBitmapItemData;
+	import flash.geom.ColorTransform;
+	import com.fewfre.display.TextTranslated;
 
 	public class ShopCategoryPane extends ButtonGridSidePane
 	{
@@ -32,6 +37,7 @@ package app.ui.panes
 		public function get isItemTypeLocked():Boolean { return _infobar.isRefreshLocked; }
 		
 		public static const ITEM_TOGGLED : String = 'ITEM_TOGGLED'; // ItemDataEvent
+		public static const BADGE_HELP_HEIGHT : Number = 20; // Height for the badges pane help text
 		
 		// Constructor
 		public function ShopCategoryPane(pType:ItemType) {
@@ -49,7 +55,14 @@ package app.ui.panes
 			_infobar.on(Infobar.FAVORITE_CLICKED, _addRemoveFavoriteToggled);
 			_setupGrid(GameAssets.getItemDataListByType(_type));
 			
-			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, 60+5).appendTo(this);
+			// For badges we want to include a little help blurb
+			var yy:Number = 60+5;
+			if(_type == ItemType.BADGE) {
+				new TextTranslated('badges_pane_help').setOrigin(0.5).move(ConstantsApp.SHOP_WIDTH/2, yy+BADGE_HELP_HEIGHT/2).appendTo(this);
+				yy += BADGE_HELP_HEIGHT;
+			}
+			
+			_favoritesGrid = new Grid(ConstantsApp.PANE_WIDTH, 10, 3).move(7, yy).appendTo(this);
 			_renderFavorites();
 		}
 		
@@ -117,7 +130,7 @@ package app.ui.panes
 		private function _setupGrid(pItemList:Vector.<ItemData>) : void {
 			resetGrid();
 
-			var shopItemButton : PushButton;
+			var shopItemButton : DisplayObject;
 			for(var i:int = 0; i < pItemList.length; i++) {
 				shopItemButton = !pItemList[i].isBitmap()
 					? newButtonFromItemData(pItemList[i], i)
@@ -134,14 +147,25 @@ package app.ui.panes
 			return new PushButton(grid.cellSize).setAllowToggleOff(false).setImage(shopItem).setData({ type:_type, itemData:pItemData }) as PushButton;
 		}
 		
-		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : PushButton {
-			var shopItemButton : PushButton = new PushButton(grid.cellSize).setAllowToggleOff(false).setData({ type:_type, itemData:pItemData }) as PushButton;
+		private function newButtonFromBitmapItemData(pItemData:BitmapItemData, i:int) : Sprite {
+			var cell:Sprite = new Sprite();
+			var shopItemButton : PushButton = new PushButton(grid.cellSize).setAllowToggleOff(false).setData({ type:_type, itemData:pItemData }).appendTo(cell) as PushButton;
 			
 			var shopItem : LoadedBitmapHolder = new LoadedBitmapHolder(pItemData.getSmallImage(), new LoadingSpinner().setSpeedScale(0.5))
 			shopItemButton.setImage(shopItem);
 			
+			if(pItemData.type == ItemType.BADGE) {
+				if(!pItemData.url) {
+					DisplayWrapper.wrap(new $No(), cell).toScale(0.35).move(shopItem.width-2, 8);
+				} else if((pItemData as BadgeBitmapItemData).isManualUpload) {
+					var ct:ColorTransform = new ColorTransform();
+					ct.color = 0x777777;
+					DisplayWrapper.wrap(new $Yes(), cell).toScale(0.35).move(shopItem.width-2, 8).asSprite.transform.colorTransform = ct;
+				}
+			}
+			
 			// shopItem.scaleX = shopItem.scaleY = 1; // This scale needed since it's otherwise set to 0 by autosizer if bitmap isn't loaded yet
-			return shopItemButton;
+			return cell;
 		}
 		
 		/****************************
@@ -163,9 +187,9 @@ package app.ui.panes
 			}
 			
 			// Update rest of UI to make room for it
-			_scrollbox.y = 65 + _favoritesGrid.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
+			_scrollbox.y = _favoritesGrid.y + _favoritesGrid.calculatedHeight+5; // shift it down an extra 5 so that main grid list isn't touching it (padding)
 			_grid.y = favIds.length > 0 ? 0 : 3; // If fav grid exists, then shift grid up to avoid an extra gap between fav list and grid
-			_scrollbox.resize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3))
+			_scrollbox.resize(_scrollbox.scrollPane.width, defaultScrollboxHeight - (_favoritesGrid.calculatedHeight+3) - (_type == ItemType.BADGE ? BADGE_HELP_HEIGHT : 0));
 		}
 		
 		private function _favoriteClicked(e:FewfEvent) : void {

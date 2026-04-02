@@ -11,7 +11,7 @@ package app.world.data
 	{
 		// Constructor
 		public function BannerBitmapItemData(pType:ItemType, pUrl:String) {
-			super(pType, pUrl, null);
+			super(pType, pUrl.split('/').pop(), pUrl);
 		}
 		public override function copy() : ItemData { return new BannerBitmapItemData(type, url); }
 		

@@ -30,8 +30,8 @@ package app.data
 		public static var cannonballs: Vector.<ItemData>;
 		public static var balloons: Vector.<ItemData>;
 		public static var cartouches: Vector.<ItemData>;
-		public static var badges: Vector.<ItemData>; // BitmapItemData
-		public static var banners: Vector.<ItemData>; // BitmapItemData
+		public static var badges: Vector.<ItemData>; // BadgeBitmapItemData
+		public static var banners: Vector.<ItemData>; // BannerBitmapItemData
 		
 		// { type:ITEM, id:String, colorI:int }
 		public static var swatchHoverPreviewData:Object = null;
@@ -39,6 +39,7 @@ package app.data
 		public static function init() : void {
 			boxes_small = _setupCostumeList(ItemType.BOX_SMALL, "$Objet_1", { pad:2 });
 			boxes_large = _setupCostumeList(ItemType.BOX_LARGE, "$Objet_2", { pad:2 });
+			boxes_large = boxes_large.concat(_setupCostumeList(ItemType.BOX_LARGE, "$Objet_30", { pad:2, start:100 }));
 			planks_small = _setupCostumeList(ItemType.PLANK_SMALL, "$Objet_3", { pad:2 });
 			planks_large = _setupCostumeList(ItemType.PLANK_LARGE, "$Objet_4", { pad:2 });
 			balls = _setupCostumeList(ItemType.BALL, "$Objet_6", { pad:2 });
@@ -50,14 +51,14 @@ package app.data
 			badges = new Vector.<ItemData>();
 			if(Config.badges) {
 				var url:String, urlSmall:String;
-				for each(var badgeFile:String in Config.badges) {
-					url = "badges/"+badgeFile;
-					urlSmall = "badges/"+badgeFile.replace('L', '');
-					badges.push(new BitmapItemData(ItemType.BADGE, url, urlSmall));
+				for(var i:int = 0; i < Config.badgesAsVector.length; i++) {
+					url = Config.badgesAsVector[i].large;
+					urlSmall = Config.badgesAsVector[i].small;
+					badges.push(new BadgeBitmapItemData(ItemType.BADGE, url, urlSmall));
 				}
 				// We want to start the lazy load now, and we want to load them in reverse order since they show up in that order by default on badges tab
 				for(var i:int = badges.length-1; i >= 0; i--) {
-					(badges[i] as BitmapItemData).getSmallImage();
+					(badges[i] as BadgeBitmapItemData).getSmallImage();
 				}
 			}
 			banners = new Vector.<ItemData>();
@@ -99,11 +100,11 @@ package app.data
 			balloons.unshift(new ItemData(ItemType.BALLOON, '0b', { itemClass:$Objet_28 }));
 		}
 
-		// pData = { after:String, pad:int }
+		// pData = { after:String, pad:int, start?:int }
 		private static function _setupCostumeList(type:ItemType, base:String, pData:Object) : Vector.<ItemData> {
 			var list:Vector.<ItemData> = new Vector.<ItemData>(), tClassName:String, tClass:Class;
 			var breakCount = 0; // quit early if enough nulls in a row
-			for(var i = 0; i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
+			for(var i = (pData.start || 0); i <= _MAX_COSTUMES_TO_CHECK_TO; i++) {
 				if( DUPLICATES_TO_SKIP.some(function(o:Object,ii,a):Boolean{ return o.type == type && o.id == i; })) {
 					continue;
 				}

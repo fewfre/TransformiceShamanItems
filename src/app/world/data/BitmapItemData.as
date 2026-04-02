@@ -10,20 +10,16 @@ package app.world.data
 	{
 		// Storage
 		public var url : String;
-		public var urlSmall : String;
 		
 		// Properties
 		public override function get isCustomizable() : Boolean { return false; }
 		
 		// Constructor
-		public function BitmapItemData(pType:ItemType, pUrl:String, pUrlSmall:String=null) {
-			var id:String = pUrl.split('/').pop();
-			id = id.replace('x_', '').replace('L', '').replace('.png', '');
-			super(pType, id, {});
+		public function BitmapItemData(pType:ItemType, pId:String, pUrl:String) {
+			super(pType, pId.replace('x_', '').replace('.png', ''), {});
 			this.url = pUrl;
-			this.urlSmall = pUrlSmall;
 		}
-		public override function copy() : ItemData { return new BitmapItemData(type, url, urlSmall); }
+		public override function copy() : ItemData { return new BitmapItemData(type, id, url); }
 		
 		protected override function _initDefaultColors() : void { defaultColors = new Vector.<uint>(); } // Bitmaps don't use customizable colors
 		
@@ -33,9 +29,8 @@ package app.world.data
 			return null;
 		}
 		
-		public function getSmallImage() : Bitmap {
-			return Fewf.assets.lazyLoadImageUrlAsBitmap(this.urlSmall || this.url);
-		}
+		// Override me
+		public function getSmallImage() : Bitmap { return getFullImage(); }
 		
 		public function getFullImage() : Bitmap {
 			return Fewf.assets.lazyLoadImageUrlAsBitmap(url);

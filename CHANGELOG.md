@@ -1,3 +1,12 @@
+## V1.15 - 2 April 2026
+- Badges pane now shows all badges, even those without a high definition version
+	- update script changed accordingly, and now loops through all badges from 0 until it runs out, and if no HD version exists on the TFM servers it will check if there's a custom uploaded one it can use
+	- Those without an HD version have a red x on the button
+	- Those with a custom uploaded screenshot have a gray checkmark next to them
+	- A short text blurb was added to the top of the badges pane explaining this
+- Fixed issue with new large boxes using the category id `30` instead of `02` for some reason
+
+
 ## V1.14b - 26 February 2026
 - [Code] minor rewrites/tweaks to `FancyInput` and some screens
 - [Code] Screen code minor rework, some imgur code split off into `Main` and accessed via events, and minor `I18n` rework

@@ -24,7 +24,9 @@
 	"packs": {
 		"items": [
 			"x_items_chaman.swf",
-			"x_macarons.swf"
+			"x_macarons.swf",
+			"items/o2,100.swf",
+			"items/o2,101.swf"
 		]
 	},
 	
@@ -34,15 +36,17 @@
 	],
 	
 	"badges": [
-		"x_352L.png",
-		"x_353L.png",
-		"x_354L.png",
-		"x_355L.png",
-		"x_460L.png",
-		"x_461L.png",
-		"x_462L.png",
-		"x_463L.png",
-		"x_464L.png"
+		{ "s": "badges/x_1.png", "l": null },
+		{ "s": "badges/x_286.png", "l": "badges/u/x_286L.png" },
+		{ "s": "badges/x_352.png", "l": "badges/x_352L.png" },
+		{ "s": "badges/x_353.png", "l": "badges/x_353L.png" },
+		{ "s": "badges/x_354.png", "l": "badges/x_354L.png" },
+		{ "s": "badges/x_355.png", "l": "badges/x_355L.png" },
+		{ "s": "badges/x_460.png", "l": "badges/x_460L.png" },
+		{ "s": "badges/x_461.png", "l": "badges/x_461L.png" },
+		{ "s": "badges/x_462.png", "l": "badges/x_462L.png" },
+		{ "s": "badges/x_463.png", "l": "badges/x_463L.png" },
+		{ "s": "badges/x_464.png", "l": "badges/x_464L.png" }
 	],
 	
 	"banners": [
