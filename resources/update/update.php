@@ -153,7 +153,7 @@ function updateBadges() {
 			'filename' => $filename,
 			'filenameLocal' => "badges/$filename",
 			'localFilePath' => "../badges/$filename",
-			'url' => "http://www.transformice.com/images/x_transformice/x_badges/$filename",
+			'url' => $i !== 223 ? "http://www.transformice.com/images/x_transformice/x_badges/$filename" : null, // badge 223 has the incorrect large version stored on the server so skip it
 			
 			'filenameLocal_manualupload' => "badges/u/$filename",
 			'localFilePath_manualupload' => "../badges/u/$filename",
